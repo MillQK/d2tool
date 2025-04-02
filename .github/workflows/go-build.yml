@@ -1,0 +1,41 @@
+# This workflow will build a golang project
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-go
+
+name: Go
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        go-os: [windows]
+        go-arch: [amd64]
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Go
+      uses: actions/setup-go@v4
+      with:
+        go-version: '1.24'
+
+    - name: Build for ${{ matrix.go-os }}/${{ matrix.go-arch }}
+      env:
+        GOOS: ${{ matrix.go-os }}
+        GOARCH: ${{ matrix.go-arch }}
+      run: go build -v ./... -o d2tool-${{ matrix.go-os }}-${{ matrix.go-arch }}
+
+    - name: Upload binaries
+      uses: actions/upload-artifact@v4
+      with:
+        name: d2tool-${{ matrix.go-os }}-${{ matrix.go-arch }}
+        path: d2tool-${{ matrix.go-os }}-${{ matrix.go-arch }}
+
+    - name: Test
+      run: go test -v ./...
