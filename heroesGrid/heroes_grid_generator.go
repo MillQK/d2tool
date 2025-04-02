@@ -55,7 +55,7 @@ func UpdateHeroesGrid(config UpdateHeroGridConfig) error {
 			if err != nil {
 				slog.Error("Unable to update hero grid configs", "error", err)
 			}
-			slog.Info(fmt.Sprintf("Next update in %d hours", periodicUpdateHours))
+			slog.Info(fmt.Sprintf("Next update in %d hour(s)", periodicUpdateHours))
 			time.Sleep(time.Hour * periodicUpdateHours)
 		}
 	} else {
