@@ -1,13 +1,11 @@
 package main
 
 import (
-	"bufio"
 	"context"
 	"d2tool/heroesGrid"
 	"d2tool/startup"
 	"fmt"
 	cli "github.com/urfave/cli/v3"
-	"log"
 	"log/slog"
 	"os"
 	"path"
@@ -91,7 +89,7 @@ func main() {
 	}
 
 	if err := cmd.Run(context.Background(), os.Args); err != nil {
-		log.Fatal(err)
+		slog.Error("error running command", "error", err)
 	}
 }
 
@@ -103,11 +101,12 @@ func setupLogger() {
 	}
 
 	logFilePath := path.Join(path.Dir(executablePath), "d2tool.log")
+	slog.Info("setting up logger", "path", logFilePath)
 	file, err := os.OpenFile(logFilePath, os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0666)
 	if err != nil {
 		slog.Error("unable to log file", "error", err, "path", logFilePath)
 		return
 	}
-	textHandler := slog.NewTextHandler(bufio.NewWriter(file), nil)
+	textHandler := slog.NewTextHandler(file, nil)
 	slog.SetDefault(slog.New(textHandler))
 }

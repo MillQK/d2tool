@@ -71,7 +71,7 @@ func doUpdateHeroesGrid(config UpdateHeroGridConfig) error {
 	if len(config.ConfigFilePaths) > 0 {
 		// Use provided config files
 		configFiles = config.ConfigFilePaths
-		fmt.Printf("Using %d provided hero grid config files\n", len(configFiles))
+		slog.Info(fmt.Sprintf("Using %d provided hero grid config files", len(configFiles)))
 	} else {
 		// Find Steam installation path
 		var steamPath string
@@ -80,14 +80,15 @@ func doUpdateHeroesGrid(config UpdateHeroGridConfig) error {
 			return fmt.Errorf("error finding Steam path: %w", err)
 		}
 
-		fmt.Printf("Found Steam at: %s\n", steamPath)
+		slog.Info(fmt.Sprintf("Found Steam at: %s", steamPath))
 
 		// Find all hero_grid_config.json files
 		configFiles, err = findHeroGridConfigFiles(steamPath)
 		if err != nil {
 			return fmt.Errorf("error finding hero grid config files: %w", err)
 		}
-		fmt.Printf("Found %d hero grid config files\n", len(configFiles))
+		slog.Info(fmt.Sprintf("Found %d hero grid config files", len(configFiles)))
+
 	}
 
 	// Fetch heroes data for all positions
@@ -103,7 +104,7 @@ func doUpdateHeroesGrid(config UpdateHeroGridConfig) error {
 	for _, position := range positions {
 		heroes, err := providers.FetchHeroes(position)
 		if err != nil {
-			fmt.Printf("Error fetching heroes for position %s: %v\n", position, err)
+			slog.Error(fmt.Sprintf("Error fetching heroes for position %s", position), "error", err)
 			continue
 		}
 		positionToHeroes[position] = heroes
@@ -111,12 +112,12 @@ func doUpdateHeroesGrid(config UpdateHeroGridConfig) error {
 
 	// Process each config file
 	for _, configFile := range configFiles {
-		fmt.Printf("Processing: %s\n", configFile)
+		slog.Info(fmt.Sprintf("Processing config file %s", configFile))
 		if err := processHeroGridConfig(configFile, positions, positionToHeroes); err != nil {
-			fmt.Printf("Error processing %s: %v\n", configFile, err)
+			slog.Error(fmt.Sprintf("Error processing config file %s", configFile), "error", err)
 			continue
 		}
-		fmt.Printf("Successfully updated %s\n", configFile)
+		slog.Info(fmt.Sprintf("Successfully updated config file %s", configFile))
 	}
 
 	return nil
