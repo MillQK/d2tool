@@ -35,7 +35,7 @@ jobs:
         
         if [ "$GOOS" == "windows" ]; then
           OUTPUT_NAME="${OUTPUT_NAME}.exe"
-          BUILD_ARGS="${BUILD_ARGS} -ldflags '-H windowsgui'"
+          BUILD_ARGS="${BUILD_ARGS} -ldflags -H=windowsgui"
         fi
         
         echo "GOOS=$GOOS\nGOARCH=$GOARCH\nOUTPUT_NAME=$OUTPUT_NAME\nBUILD_ARGS=$BUILD_ARGS"
