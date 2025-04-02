@@ -31,12 +31,15 @@ jobs:
         GOARCH: ${{ matrix.go-arch }}
       run: |
         OUTPUT_NAME="d2tool"
+        BUILD_ARGS=""
+        
         if [ "$GOOS" == "windows" ]; then
           OUTPUT_NAME="${OUTPUT_NAME}.exe"
+          BUILD_ARGS="${BUILD_ARGS} -ldflags '-H windowsgui'"
         fi
         
-        echo "GOOS=$GOOS GOARCH=$GOARCH OUTPUT_NAME=$OUTPUT_NAME"
-        go build -o ./bin/$OUTPUT_NAME .
+        echo "GOOS=$GOOS\nGOARCH=$GOARCH\nOUTPUT_NAME=$OUTPUT_NAME\nBUILD_ARGS=$BUILD_ARGS"
+        go build $BUILD_ARGS -o ./bin/$OUTPUT_NAME .
 
     - name: Test
       run: go test -v ./...

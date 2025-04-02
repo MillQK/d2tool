@@ -24,7 +24,7 @@ func main() {
 							"the program will be run with the heroes-grid command, so you can use all its arguments",
 						SkipFlagParsing: true,
 						Action: func(ctx context.Context, cmd *cli.Command) error {
-							return startup.StartupRegister(cmd.Args().Slice())
+							return startup.StartupRegister("heroes-grid", cmd.Args().Slice())
 						},
 					},
 					{
