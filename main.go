@@ -124,7 +124,7 @@ func createPidFile() (string, error) {
 	}
 
 	pid := os.Getpid()
-	pidFilePath := path.Join(path.Dir(executablePath), fmt.Sprintf("%s.pid", pid))
+	pidFilePath := path.Join(path.Dir(executablePath), fmt.Sprintf("%d.pid", pid))
 	file, err := os.Create(pidFilePath)
 	if err != nil {
 		return "", fmt.Errorf("unable to create pid file: %w", err)
