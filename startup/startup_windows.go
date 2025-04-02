@@ -33,7 +33,7 @@ func StartupRegister(rawArgs []string) error {
 	defer key.Close()
 
 	// Write the path of the executable to the registry
-	err = key.SetStringValue(appRegistryName, fmt.Sprintf("%s %s", appExecutable, strings.Join(rawArgs, " ")))
+	err = key.SetStringValue(appRegistryName, fmt.Sprintf("\"%s\" %s", appExecutable, strings.Join(rawArgs, " ")))
 	if err != nil {
 		slog.Warn(fmt.Sprintf("Error setting registry value: %v", err))
 		return err
