@@ -29,13 +29,21 @@ jobs:
       env:
         GOOS: ${{ matrix.go-os }}
         GOARCH: ${{ matrix.go-arch }}
-      run: go build -v ./... -o d2tool-${{ matrix.go-os }}-${{ matrix.go-arch }}
+      run: |
+      # Set the output binary name dynamically based on OS
+        OUTPUT_NAME="d2tool-${{ matrix.go-os }}-${{ matrix.go-arch }}"
+        if [ "${{ matrix.go-os }}" == "windows" ]; then
+          OUTPUT_NAME="${OUTPUT_NAME}.exe"
+        fi
+        
+        # Run the build command
+        go build -o ./bin/$OUTPUT_NAME .
+
+    - name: Test
+      run: go test -v ./...
 
     - name: Upload binaries
       uses: actions/upload-artifact@v4
       with:
         name: d2tool-${{ matrix.go-os }}-${{ matrix.go-arch }}
-        path: d2tool-${{ matrix.go-os }}-${{ matrix.go-arch }}
-
-    - name: Test
-      run: go test -v ./...
+        path: ./bin/
