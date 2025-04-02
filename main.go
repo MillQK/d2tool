@@ -1,17 +1,22 @@
 package main
 
 import (
+	"bufio"
 	"context"
 	"d2tool/heroesGrid"
 	"d2tool/startup"
 	"fmt"
 	cli "github.com/urfave/cli/v3"
 	"log"
+	"log/slog"
 	"os"
+	"path"
 	"slices"
 )
 
 func main() {
+	setupLogger()
+
 	cmd := &cli.Command{
 		Commands: []*cli.Command{
 			{
@@ -88,4 +93,21 @@ func main() {
 	if err := cmd.Run(context.Background(), os.Args); err != nil {
 		log.Fatal(err)
 	}
+}
+
+func setupLogger() {
+	executablePath, err := os.Executable()
+	if err != nil {
+		slog.Error("unable to get the executable path", "error", err)
+		return
+	}
+
+	logFilePath := path.Join(path.Dir(executablePath), "d2tool.log")
+	file, err := os.OpenFile(logFilePath, os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0666)
+	if err != nil {
+		slog.Error("unable to log file", "error", err, "path", logFilePath)
+		return
+	}
+	textHandler := slog.NewTextHandler(bufio.NewWriter(file), nil)
+	slog.SetDefault(slog.New(textHandler))
 }
