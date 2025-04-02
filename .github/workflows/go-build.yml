@@ -47,3 +47,4 @@ jobs:
       with:
         name: d2tool-${{ matrix.go-os }}-${{ matrix.go-arch }}
         path: ./bin/
+        if-no-files-found: error
