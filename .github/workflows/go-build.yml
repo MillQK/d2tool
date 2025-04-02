@@ -38,7 +38,11 @@ jobs:
           BUILD_ARGS="${BUILD_ARGS} -ldflags -H=windowsgui"
         fi
         
-        echo "GOOS=$GOOS\nGOARCH=$GOARCH\nOUTPUT_NAME=$OUTPUT_NAME\nBUILD_ARGS=$BUILD_ARGS"
+        echo "GOOS=$GOOS"
+        echo "GOARCH=$GOARCH"
+        echo "OUTPUT_NAME=$OUTPUT_NAME"
+        echo "BUILD_ARGS=$BUILD_ARGS"
+        
         go build $BUILD_ARGS -o ./bin/$OUTPUT_NAME .
 
     - name: Test
