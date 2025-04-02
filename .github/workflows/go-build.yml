@@ -30,10 +30,12 @@ jobs:
         GOOS: ${{ matrix.go-os }}
         GOARCH: ${{ matrix.go-arch }}
       run: |
-        OUTPUT_NAME="d2tool-${{ matrix.go-os }}-${{ matrix.go-arch }}"
-        if [ "${{ matrix.go-os }}" == "windows" ]; then
+        OUTPUT_NAME="d2tool-$GOOS-$GOARCH"
+        if [ "$GOOS" == "windows" ]; then
           OUTPUT_NAME="${OUTPUT_NAME}.exe"
         fi
+        
+        echo "output binary name is $OUTPUT_NAME"
         
         go build -o ./bin/$OUTPUT_NAME .
 
