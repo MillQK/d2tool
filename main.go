@@ -14,6 +14,12 @@ import (
 
 func main() {
 	setupLogger()
+	filePath, err := createPidFile()
+	if err != nil {
+		slog.Error("unable to create pid file", "error", err)
+		return
+	}
+	defer os.Remove(filePath)
 
 	cmd := &cli.Command{
 		Commands: []*cli.Command{
@@ -109,4 +115,21 @@ func setupLogger() {
 	}
 	textHandler := slog.NewTextHandler(file, nil)
 	slog.SetDefault(slog.New(textHandler))
+}
+
+func createPidFile() (string, error) {
+	executablePath, err := os.Executable()
+	if err != nil {
+		return "", fmt.Errorf("unable to get the executable path: %w", err)
+	}
+
+	pid := os.Getpid()
+	pidFilePath := path.Join(path.Dir(executablePath), fmt.Sprintf("%s.pid", pid))
+	file, err := os.Create(pidFilePath)
+	if err != nil {
+		return "", fmt.Errorf("unable to create pid file: %w", err)
+	}
+	defer file.Close()
+
+	return pidFilePath, nil
 }
