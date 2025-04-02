@@ -16,6 +16,7 @@ import (
 const (
 	positionPrefix      = "pos "
 	periodicUpdateHours = 1
+	d2tPrefix           = "[D2T]"
 )
 
 type UpdateHeroGridConfig struct {
@@ -127,7 +128,7 @@ func generateHeroGridConfigs(positions []string, positionToHero map[string][]pro
 
 	// Create a single merged config
 	mergedConfig := heroGridCategory{
-		ConfigName: fmt.Sprintf("[D2T] Heroes Meta %s", time.Now().Format("2006-01-02")),
+		ConfigName: fmt.Sprintf("%s Heroes Meta %s", d2tPrefix, time.Now().Format("2006-01-02")),
 		Categories: []heroGridPosition{},
 	}
 
@@ -143,6 +144,59 @@ func generateHeroGridConfigs(positions []string, positionToHero map[string][]pro
 	// Current Y position for vertical layout
 	currentY := 0
 
+	generateCategoryFunc := func(categoryName string, heroes []providers.Hero) {
+		infoCategory := heroGridPosition{
+			CategoryName: categoryName,
+			XPosition:    0,
+			YPosition:    currentY,
+			Width:        0,
+			Height:       0,
+			HeroIDs:      []int{},
+		}
+		mergedConfig.Categories = append(mergedConfig.Categories, infoCategory)
+		currentY += infoHeight
+
+		// Add each hero as a separate category with winrate and match count in the category name
+		for i, hero := range heroes {
+			// Calculate position in the grid
+			row := i / heroesPerRow
+			col := i % heroesPerRow
+
+			// Calculate x and y position
+			xPos := col * heroWidth
+			yPos := currentY + row*(heroHeight+heroWinrateSpacing+heroRowSpacing)
+
+			// Calculate winrate
+			winrate := float64(hero.Wins) / float64(hero.Matches) * 100
+
+			heroWinrateCategory := heroGridPosition{
+				CategoryName: fmt.Sprintf("  %.1f%%", winrate),
+				XPosition:    xPos,
+				YPosition:    yPos,
+				Width:        0,
+				Height:       0,
+				HeroIDs:      []int{},
+			}
+
+			mergedConfig.Categories = append(mergedConfig.Categories, heroWinrateCategory)
+
+			// Create category for the hero
+			heroCategory := heroGridPosition{
+				CategoryName: fmt.Sprintf("  %d", hero.Matches),
+				XPosition:    xPos,
+				YPosition:    yPos + heroWinrateSpacing,
+				Width:        heroWidth,
+				Height:       heroHeight,
+				HeroIDs:      []int{hero.HeroID},
+			}
+			mergedConfig.Categories = append(mergedConfig.Categories, heroCategory)
+		}
+
+		// Update currentY to account for all rows of heroes
+		rows := (len(heroes) + heroesPerRow - 1) / heroesPerRow // Ceiling division
+		currentY += rows*(heroHeight+heroWinrateSpacing+heroRowSpacing) + categorySpacing
+	}
+
 	// Generate categories for each position in the specified order
 	for _, position := range positions {
 		heroes := positionToHero[position]
@@ -151,113 +205,19 @@ func generateHeroGridConfigs(positions []string, positionToHero map[string][]pro
 		topRated := providers.GetTopHeroesByRating(heroes, 10)
 
 		// Add list header for top rated heroes
-		infoText := fmt.Sprintf("%s - Top Rating Heroes", position)
-		infoCategory := heroGridPosition{
-			CategoryName: infoText,
-			XPosition:    0,
-			YPosition:    currentY,
-			Width:        0,
-			Height:       0,
-			HeroIDs:      []int{},
-		}
-		mergedConfig.Categories = append(mergedConfig.Categories, infoCategory)
-		currentY += infoHeight
-
-		// Add each hero as a separate category with winrate and match count in the category name
-		for i, hero := range topRated {
-			// Calculate position in the grid
-			row := i / heroesPerRow
-			col := i % heroesPerRow
-
-			// Calculate x and y position
-			xPos := col * heroWidth
-			yPos := currentY + row*(heroHeight+heroWinrateSpacing+heroRowSpacing)
-
-			// Calculate winrate
-			winrate := float64(hero.Wins) / float64(hero.Matches) * 100
-
-			heroWinrateCategory := heroGridPosition{
-				CategoryName: fmt.Sprintf("  %.1f%%", winrate),
-				XPosition:    xPos,
-				YPosition:    yPos,
-				Width:        0,
-				Height:       0,
-				HeroIDs:      []int{},
-			}
-
-			mergedConfig.Categories = append(mergedConfig.Categories, heroWinrateCategory)
-
-			// Create category for the hero
-			heroCategory := heroGridPosition{
-				CategoryName: fmt.Sprintf("  %d", hero.Matches),
-				XPosition:    xPos,
-				YPosition:    yPos + heroWinrateSpacing,
-				Width:        heroWidth,
-				Height:       heroHeight,
-				HeroIDs:      []int{hero.HeroID},
-			}
-			mergedConfig.Categories = append(mergedConfig.Categories, heroCategory)
-		}
-
-		// Update currentY to account for all rows of heroes
-		rows := (len(topRated) + heroesPerRow - 1) / heroesPerRow // Ceiling division
-		currentY += rows*(heroHeight+heroWinrateSpacing+heroRowSpacing) + categorySpacing
+		generateCategoryFunc(
+			fmt.Sprintf("%s - Top Rating Heroes", position),
+			topRated,
+		)
 
 		// Get top 30 heroes by matches
 		topMatches := providers.GetHeroesSortedByMatches(heroes, 30)
 
 		// Add list header for top matches heroes
-		infoText = fmt.Sprintf("%s - Top Matches Heroes", position)
-		infoCategory = heroGridPosition{
-			CategoryName: infoText,
-			XPosition:    0,
-			YPosition:    currentY,
-			Width:        0,
-			Height:       0,
-			HeroIDs:      []int{},
-		}
-		mergedConfig.Categories = append(mergedConfig.Categories, infoCategory)
-		currentY += infoHeight
-
-		// Add each hero as a separate category with winrate and match count in the category name
-		for i, hero := range topMatches {
-			// Calculate position in the grid
-			row := i / heroesPerRow
-			col := i % heroesPerRow
-
-			// Calculate x and y position
-			xPos := col * heroWidth
-			yPos := currentY + row*(heroHeight+heroWinrateSpacing+heroRowSpacing)
-
-			// Calculate winrate
-			winrate := float64(hero.Wins) / float64(hero.Matches) * 100
-
-			heroWinrateCategory := heroGridPosition{
-				CategoryName: fmt.Sprintf("  %.1f%%", winrate),
-				XPosition:    xPos,
-				YPosition:    yPos,
-				Width:        0,
-				Height:       0,
-				HeroIDs:      []int{},
-			}
-
-			mergedConfig.Categories = append(mergedConfig.Categories, heroWinrateCategory)
-
-			// Create category for the hero
-			heroCategory := heroGridPosition{
-				CategoryName: fmt.Sprintf("  %d", hero.Matches),
-				XPosition:    xPos,
-				YPosition:    yPos + heroWinrateSpacing,
-				Width:        heroWidth,
-				Height:       heroHeight,
-				HeroIDs:      []int{hero.HeroID},
-			}
-			mergedConfig.Categories = append(mergedConfig.Categories, heroCategory)
-		}
-
-		// Update currentY to account for all rows of heroes
-		rows = (len(topMatches) + heroesPerRow - 1) / heroesPerRow // Ceiling division
-		currentY += rows*(heroHeight+heroWinrateSpacing+heroRowSpacing) + categorySpacing
+		generateCategoryFunc(
+			fmt.Sprintf("%s - Most Matches Heroes", position),
+			topMatches,
+		)
 	}
 
 	configs = append(configs, mergedConfig)
@@ -315,10 +275,10 @@ func processHeroGridConfig(configPath string, positions []string, positionToHero
 		return fmt.Errorf("error parsing config file: %w", err)
 	}
 
-	// Filter out configs with [D2T] prefix
+	// Filter out configs with {d2tPrefix} prefix
 	var filteredConfigs []heroGridCategory
 	for _, cfg := range config.Configs {
-		if !strings.HasPrefix(cfg.ConfigName, "[D2T]") {
+		if !strings.HasPrefix(cfg.ConfigName, d2tPrefix) {
 			filteredConfigs = append(filteredConfigs, cfg)
 		}
 	}
