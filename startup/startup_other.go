@@ -5,7 +5,7 @@ package startup
 
 import "fmt"
 
-func StartupRegister(rawArgs []string) error {
+func StartupRegister(command string, rawArgs []string) error {
 	return fmt.Errorf("this functionality is only available on Windows")
 }
 
