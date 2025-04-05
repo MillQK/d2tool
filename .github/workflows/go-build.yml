@@ -34,6 +34,7 @@ jobs:
         echo "GOARCH=$GOARCH"
         
         go install github.com/fyne-io/fyne-cross@latest
+        ls -la /home/runner/go/bin
         fyne-cross $GOOS -arch $GOARCH
 
     - name: Test
