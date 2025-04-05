@@ -26,16 +26,12 @@ jobs:
         go-version: '1.24'
 
     - name: Build for ${{ matrix.go-os }}/${{ matrix.go-arch }}
-      env:
-        GOOS: ${{ matrix.go-os }}
-        GOARCH: ${{ matrix.go-arch }}
       run: |
         echo "GOOS=$GOOS"
         echo "GOARCH=$GOARCH"
         
         go install github.com/fyne-io/fyne-cross@latest
-        ls -la /home/runner/go/bin
-        fyne-cross $GOOS -arch $GOARCH
+        fyne-cross ${{ matrix.go-os }} -arch ${{ matrix.go-arch }}
 
     - name: Test
       run: go test -v ./...
