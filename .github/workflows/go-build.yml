@@ -21,36 +21,18 @@ jobs:
     - uses: actions/checkout@v4
 
     - name: Set up Go
-      uses: actions/setup-go@v4
+      uses: actions/setup-go@v5
       with:
         go-version: '1.24'
 
     - name: Build for ${{ matrix.go-os }}/${{ matrix.go-arch }}
-      env:
-        GOOS: ${{ matrix.go-os }}
-        GOARCH: ${{ matrix.go-arch }}
       run: |
-        OUTPUT_NAME="d2tool"
-        BUILD_ARGS=""
-        
-        if [ "$GOOS" == "windows" ]; then
-          OUTPUT_NAME="${OUTPUT_NAME}.exe"
-          BUILD_ARGS="${BUILD_ARGS} -ldflags -H=windowsgui"
-        fi
-        
-        echo "GOOS=$GOOS"
-        echo "GOARCH=$GOARCH"
-        echo "OUTPUT_NAME=$OUTPUT_NAME"
-        echo "BUILD_ARGS=$BUILD_ARGS"
-        
-        go build $BUILD_ARGS -o ./bin/$OUTPUT_NAME .
-
-    - name: Test
-      run: go test -v ./...
+        go install github.com/fyne-io/fyne-cross@latest
+        fyne-cross ${{ matrix.go-os }} -arch ${{ matrix.go-arch }}
 
     - name: Upload binaries
       uses: actions/upload-artifact@v4
       with:
         name: d2tool-${{ matrix.go-os }}-${{ matrix.go-arch }}
-        path: ./bin/
+        path: ./fyne-cross/bin/${{ matrix.go-os }}-${{ matrix.go-arch }}/
         if-no-files-found: error

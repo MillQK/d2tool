@@ -2,7 +2,6 @@ package heroesGrid
 
 import (
 	"d2tool/providers"
-	"d2tool/steam"
 	"d2tool/utils"
 	"encoding/json"
 	"fmt"
@@ -14,15 +13,13 @@ import (
 )
 
 const (
-	positionPrefix      = "pos "
-	periodicUpdateHours = 1
-	d2tPrefix           = "[D2T]"
+	positionPrefix = "pos "
+	d2tPrefix      = "[D2T]"
 )
 
 type UpdateHeroGridConfig struct {
 	ConfigFilePaths []string
 	Positions       []string
-	Periodic        bool
 }
 
 // heroGridConfig represents the structure of the hero_grid_config.json file
@@ -49,46 +46,9 @@ type heroGridPosition struct {
 
 // UpdateHeroesGrid updates all hero grid config files with new hero data
 func UpdateHeroesGrid(config UpdateHeroGridConfig) error {
-	if config.Periodic {
-		slog.Info("Updating hero grid configs periodically")
-		for {
-			err := doUpdateHeroesGrid(config)
-			if err != nil {
-				slog.Error("Unable to update hero grid configs", "error", err)
-			}
-			slog.Info(fmt.Sprintf("Next update in %d hour(s)", periodicUpdateHours))
-			time.Sleep(time.Hour * periodicUpdateHours)
-		}
-	} else {
-		return doUpdateHeroesGrid(config)
-	}
-}
-
-func doUpdateHeroesGrid(config UpdateHeroGridConfig) error {
-	var configFiles []string
-	var err error
-
-	if len(config.ConfigFilePaths) > 0 {
-		// Use provided config files
-		configFiles = config.ConfigFilePaths
-		slog.Info(fmt.Sprintf("Using %d provided hero grid config files", len(configFiles)))
-	} else {
-		// Find Steam installation path
-		var steamPath string
-		steamPath, err = steam.FindSteamPath()
-		if err != nil {
-			return fmt.Errorf("error finding Steam path: %w", err)
-		}
-
-		slog.Info(fmt.Sprintf("Found Steam at: %s", steamPath))
-
-		// Find all hero_grid_config.json files
-		configFiles, err = findHeroGridConfigFiles(steamPath)
-		if err != nil {
-			return fmt.Errorf("error finding hero grid config files: %w", err)
-		}
-		slog.Info(fmt.Sprintf("Found %d hero grid config files", len(configFiles)))
-
+	if len(config.ConfigFilePaths) == 0 {
+		slog.Info("No config files provided, skipping update")
+		return nil
 	}
 
 	// Fetch heroes data for all positions
@@ -111,7 +71,7 @@ func doUpdateHeroesGrid(config UpdateHeroGridConfig) error {
 	}
 
 	// Process each config file
-	for _, configFile := range configFiles {
+	for _, configFile := range config.ConfigFilePaths {
 		slog.Info(fmt.Sprintf("Processing config file %s", configFile))
 		if err := processHeroGridConfig(configFile, positions, positionToHeroes); err != nil {
 			slog.Error(fmt.Sprintf("Error processing config file %s", configFile), "error", err)
@@ -225,8 +185,8 @@ func generateHeroGridConfigs(positions []string, positionToHero map[string][]pro
 	return configs
 }
 
-// findHeroGridConfigFiles finds all hero_grid_config.json files for all Steam users
-func findHeroGridConfigFiles(steamPath string) ([]string, error) {
+// FindHeroGridConfigFiles finds all hero_grid_config.json files for all Steam users
+func FindHeroGridConfigFiles(steamPath string) ([]string, error) {
 	userdataPath := filepath.Join(steamPath, "userdata")
 
 	// Check if userdata directory exists
