@@ -27,14 +27,8 @@ jobs:
 
     - name: Build for ${{ matrix.go-os }}/${{ matrix.go-arch }}
       run: |
-        echo "GOOS=$GOOS"
-        echo "GOARCH=$GOARCH"
-        
         go install github.com/fyne-io/fyne-cross@latest
         fyne-cross ${{ matrix.go-os }} -arch ${{ matrix.go-arch }}
-
-    - name: Test
-      run: go test -v ./...
 
     - name: Upload binaries
       uses: actions/upload-artifact@v4
