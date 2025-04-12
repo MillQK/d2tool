@@ -25,7 +25,7 @@ type Hero struct {
 
 // FetchHeroes fetches heroes data from the API for a specific position
 func FetchHeroes(position string) ([]Hero, error) {
-	url := fmt.Sprintf("https://dota2protracker.com/api/heroes/stats?mmr=7000&order_by=matches&min_matches=20&period=patch&position=%s", position)
+	url := fmt.Sprintf("https://dota2protracker.com/api/heroes/stats?mmr=7000&order_by=matches&min_matches=20&period=8&position=%s", position)
 
 	// Create a new request
 	req, err := http.NewRequest("GET", url, nil)
