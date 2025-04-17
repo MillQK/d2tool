@@ -12,7 +12,7 @@ import (
 type Hero struct {
 	HeroID      int     `json:"hero_id"`
 	Position    string  `json:"position"`
-	MMR         int     `json:"mmr"`
+	MMR         string  `json:"mmr"`
 	Period      string  `json:"period"`
 	ContestRate float64 `json:"contest_rate"`
 	Matches     int     `json:"matches"`
