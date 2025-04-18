@@ -27,14 +27,17 @@ D2Tool fetches hero statistics from Dota 2 Pro Tracker, then:
 
 - Go 1.23 or later
 - Fyne library
+- Fyne-cross library
 - Steam and Dota 2 installed
 
-### Installing Fyne
+### Installing
 
 To install the Fyne library, run:
 
 ```bash
-go get fyne.io/fyne/v2
+go get fyne.io/fyne/v2 
+go get github.com/fyne-io/fyne-cross 
+go mod tidy
 ```
 
 You may need additional dependencies for Fyne. See the [Fyne Getting Started guide](https://developer.fyne.io/started/) for platform-specific requirements.
