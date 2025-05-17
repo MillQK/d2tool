@@ -36,12 +36,12 @@ type heroGridCategory struct {
 
 // heroGridPosition represents a position category in the hero grid
 type heroGridPosition struct {
-	CategoryName string `json:"category_name"`
-	XPosition    int    `json:"x_position"`
-	YPosition    int    `json:"y_position"`
-	Width        int    `json:"width"`
-	Height       int    `json:"height"`
-	HeroIDs      []int  `json:"hero_ids"`
+	CategoryName string  `json:"category_name"`
+	XPosition    float64 `json:"x_position"`
+	YPosition    float64 `json:"y_position"`
+	Width        float64 `json:"width"`
+	Height       float64 `json:"height"`
+	HeroIDs      []int   `json:"hero_ids"`
 }
 
 // UpdateHeroesGrid updates all hero grid config files with new hero data
@@ -109,7 +109,7 @@ func generateHeroGridConfigs(positions []string, positionToHero map[string][]pro
 		infoCategory := heroGridPosition{
 			CategoryName: categoryName,
 			XPosition:    0,
-			YPosition:    currentY,
+			YPosition:    float64(currentY),
 			Width:        0,
 			Height:       0,
 			HeroIDs:      []int{},
@@ -132,8 +132,8 @@ func generateHeroGridConfigs(positions []string, positionToHero map[string][]pro
 
 			heroWinrateCategory := heroGridPosition{
 				CategoryName: fmt.Sprintf("  %.1f%%", winrate),
-				XPosition:    xPos,
-				YPosition:    yPos,
+				XPosition:    float64(xPos),
+				YPosition:    float64(yPos),
 				Width:        0,
 				Height:       0,
 				HeroIDs:      []int{},
@@ -144,8 +144,8 @@ func generateHeroGridConfigs(positions []string, positionToHero map[string][]pro
 			// Create category for the hero
 			heroCategory := heroGridPosition{
 				CategoryName: fmt.Sprintf("  %d", hero.Matches),
-				XPosition:    xPos,
-				YPosition:    yPos + heroWinrateSpacing,
+				XPosition:    float64(xPos),
+				YPosition:    float64(yPos + heroWinrateSpacing),
 				Width:        heroWidth,
 				Height:       heroHeight,
 				HeroIDs:      []int{hero.HeroID},
