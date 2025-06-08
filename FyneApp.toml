@@ -4,5 +4,5 @@ Website = "https://github.com/MillQK/d2tool"
   Icon = "d2tool-icon.png"
   Name = "D2Tool"
   ID = "com.github.millqk.d2tool"
-  Version = "0.0.1"
+  Version = "v0.0.6"
   Build = 4
