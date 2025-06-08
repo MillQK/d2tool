@@ -14,6 +14,8 @@ const (
 
 	lastUpdateTimestampMillisKey = "lastUpdateTimestampMillis"
 	lastUpdateErrorMessageKey    = "lastUpdateErrorMessage"
+
+	appLastUpdateCheckTimestampMillisKey = "appLastUpdateCheckTimestampMillis"
 )
 
 type ConfigBindings struct {
@@ -22,6 +24,8 @@ type ConfigBindings struct {
 
 	LastUpdateTimestampMillis ValueProvider[int]
 	LastUpdateErrorMessage    ValueProvider[string]
+
+	AppLastUpdateCheckTimestampMillis ValueProvider[int]
 }
 
 type ValueProvider[T any] interface {
@@ -99,6 +103,14 @@ func GetConfigBindings(preferences fyne.Preferences) *ConfigBindings {
 			},
 			setter: func(msg string) {
 				preferences.SetString(lastUpdateErrorMessageKey, msg)
+			},
+		},
+		AppLastUpdateCheckTimestampMillis: &preferencesValueProviderImpl[int]{
+			getter: func() int {
+				return preferences.IntWithFallback(appLastUpdateCheckTimestampMillisKey, 0)
+			},
+			setter: func(millis int) {
+				preferences.SetInt(appLastUpdateCheckTimestampMillisKey, millis)
 			},
 		},
 	}

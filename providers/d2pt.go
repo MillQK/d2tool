@@ -26,7 +26,15 @@ type Hero struct {
 
 // FetchHeroes fetches heroes data from the API for a specific position
 func FetchHeroes(position string) ([]Hero, error) {
-	d2ptUrl := fmt.Sprintf("https://dota2protracker.com/api/heroes/stats?mmr=7000&order_by=matches&min_matches=20&period=8&position=%s", url.QueryEscape(position))
+	params := url.Values{
+		"mmr":         {"7000"},
+		"order_by":    {"matches"},
+		"min_matches": {"20"},
+		"period":      {"8"},
+		"position":    {position},
+	}
+
+	d2ptUrl := fmt.Sprintf("https://dota2protracker.com/api/heroes/stats?%s", params.Encode())
 
 	// Create a new request
 	req, err := http.NewRequest("GET", d2ptUrl, nil)
@@ -36,6 +44,7 @@ func FetchHeroes(position string) ([]Hero, error) {
 
 	// Add required headers
 	req.Header.Add("Accept", "application/json")
+	req.Header.Add("Referer", "https://dota2protracker.com")
 
 	// Execute the request
 	resp, err := http.DefaultClient.Do(req)

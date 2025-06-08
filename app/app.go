@@ -1,8 +1,10 @@
 package app
 
 import (
+	"d2tool/github"
 	"d2tool/heroesGrid"
 	"d2tool/startup"
+	"d2tool/update"
 	"fmt"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
@@ -47,6 +49,7 @@ func RunGUI(minimized bool) {
 		container.NewTabItem("Grid configs", d2toolApp.heroesGridConfigPathsTabContent()),
 		container.NewTabItem("Positions order", d2toolApp.heroesGridPositionsOrderTabContent()),
 		container.NewTabItem("Startup", d2toolApp.startupTabContent()),
+		container.NewTabItem("App update", d2toolApp.appUpdateTabContent()),
 	)
 
 	tabs.SetTabLocation(container.TabLocationTop)
@@ -305,6 +308,99 @@ func (app *D2ToolApp) startupTabContent() *fyne.Container {
 
 	return container.NewVBox(
 		runOnStartupCheckBox,
+	)
+}
+
+func (app *D2ToolApp) appUpdateTabContent() *fyne.Container {
+	appLastUpdateTimeLabel := widget.NewLabel(lastUpdateTimeText(time.UnixMilli(int64(app.configBindings.AppLastUpdateCheckTimestampMillis.Get()))))
+	appLastUpdateTimeLabel.TextStyle = fyne.TextStyle{Bold: true}
+
+	appVersion := app.fApp.Metadata().Version
+	currentVersionLabel := widget.NewLabel("Current version: " + appVersion)
+	latestAvailableVersionLabel := widget.NewLabel("")
+
+	progressBar := widget.NewProgressBarInfinite()
+	progressBar.Hide()
+
+	forceUpdateChan := make(chan struct{})
+
+	updateService := update.NewUpdateService(
+		github.NewHttpClient(),
+		appVersion,
+	)
+
+	err := updateService.CleanupOldFiles()
+	if err != nil {
+		slog.Warn("Unable to cleanup old files", "error", err)
+	}
+
+	appUpdateCheckButton := widget.NewButton("Check for updates", func() {
+		go func() {
+			select {
+			case forceUpdateChan <- struct{}{}:
+				slog.Info("Forcing app update check")
+			default:
+				slog.Info("App update check is already in progress")
+			}
+		}()
+	})
+
+	appDownloadUpdateButton := widget.NewButton("Download update", func() {
+		go func() {
+			err := updateService.UpdateApp()
+			if err != nil {
+				slog.Error("Unable to download update", "error", err)
+				return
+			}
+		}()
+	})
+
+	appDownloadUpdateButton.Disable()
+	appDownloadUpdateButton.Hide()
+
+	go func() {
+		for {
+			select {
+			case <-updateService.OnCheckStarted:
+				progressBar.Show()
+				appUpdateCheckButton.Disable()
+				appDownloadUpdateButton.Disable()
+			case <-updateService.OnCheckFinished:
+				now := time.Now()
+				appLastUpdateTimeLabel.SetText(lastUpdateTimeText(now))
+				app.configBindings.AppLastUpdateCheckTimestampMillis.Set(int(now.UnixMilli()))
+
+				progressBar.Hide()
+				appUpdateCheckButton.Enable()
+				latestAvailableVersionLabel.SetText(fmt.Sprintf("Latest available version: %s", updateService.LatestAvailableVersion()))
+
+				if updateService.UpdateAvailable() {
+					appDownloadUpdateButton.Enable()
+					appDownloadUpdateButton.Show()
+				} else {
+					appDownloadUpdateButton.Disable()
+					appDownloadUpdateButton.Hide()
+				}
+			case <-updateService.OnUpdateStarted:
+				progressBar.Show()
+				appUpdateCheckButton.Disable()
+				appDownloadUpdateButton.Disable()
+			case <-updateService.OnUpdateFinished:
+				progressBar.Hide()
+				appUpdateCheckButton.Enable()
+			}
+		}
+	}()
+
+	go updateService.RunPeriodicUpdateCheck(forceUpdateChan)
+
+	return container.NewVBox(
+		appLastUpdateTimeLabel,
+		currentVersionLabel,
+		latestAvailableVersionLabel,
+		appUpdateCheckButton,
+		appDownloadUpdateButton,
+		progressBar,
 	)
 }
 
