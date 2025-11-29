@@ -1,1 +1,10 @@
-fyne-cross/**
+# Wails build output
+build/bin/
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
+frontend/wailsjs/
+
+# Config file (contains user-specific paths)
+d2tool_config.json
