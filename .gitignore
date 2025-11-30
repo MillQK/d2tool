@@ -4,7 +4,42 @@ build/bin/
 # Frontend
 frontend/node_modules/
 frontend/dist/
-frontend/wailsjs/
 
 # Config file (contains user-specific paths)
 d2tool_config.json
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+*.swp
+*~
+
+# Go
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+go.work
+go.work.sum
+coverage.out
+
+# Node/npm
+.npm
+npm-debug.log*
+
+# TypeScript
+*.tsbuildinfo
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Logs
+*.log
