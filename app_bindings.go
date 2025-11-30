@@ -37,6 +37,7 @@ type AppUpdateState struct {
 	UpdateAvailable     bool   `json:"updateAvailable"`
 	IsCheckingForUpdate bool   `json:"isCheckingForUpdate"`
 	IsDownloadingUpdate bool   `json:"isDownloadingUpdate"`
+	AutoUpdateEnabled   bool   `json:"autoUpdateEnabled"`
 }
 
 // --- Home Tab Bindings ---
@@ -246,11 +247,22 @@ func (a *App) GetAppUpdateState() AppUpdateState {
 	}
 
 	return AppUpdateState{
-		CurrentVersion:  AppVersion,
-		LatestVersion:   svc.LatestAvailableVersion(),
-		LastCheckTime:   lastCheckTimeStr,
-		UpdateAvailable: svc.UpdateAvailable(),
+		CurrentVersion:    AppVersion,
+		LatestVersion:     svc.LatestAvailableVersion(),
+		LastCheckTime:     lastCheckTimeStr,
+		UpdateAvailable:   svc.UpdateAvailable(),
+		AutoUpdateEnabled: a.config.GetAutoUpdateEnabled(),
 	}
+}
+
+// GetAutoUpdateEnabled returns whether auto-update is enabled
+func (a *App) GetAutoUpdateEnabled() bool {
+	return a.config.GetAutoUpdateEnabled()
+}
+
+// SetAutoUpdateEnabled enables or disables auto-updates
+func (a *App) SetAutoUpdateEnabled(enabled bool) {
+	a.config.SetAutoUpdateEnabled(enabled)
 }
 
 // CheckForAppUpdate checks for application updates
@@ -341,10 +353,11 @@ func (a *App) startBackgroundTasks() {
 					now := time.Now()
 					a.config.SetAppLastUpdateCheckTimestampMillis(now.UnixMilli())
 					runtime.EventsEmit(a.ctx, "appUpdateCheckFinished", AppUpdateState{
-						CurrentVersion:  AppVersion,
-						LatestVersion:   svc.LatestAvailableVersion(),
-						LastCheckTime:   now.Format("2006-01-02 15:04:05"),
-						UpdateAvailable: svc.UpdateAvailable(),
+						CurrentVersion:    AppVersion,
+						LatestVersion:     svc.LatestAvailableVersion(),
+						LastCheckTime:     now.Format("2006-01-02 15:04:05"),
+						UpdateAvailable:   svc.UpdateAvailable(),
+						AutoUpdateEnabled: a.config.GetAutoUpdateEnabled(),
 					})
 				case <-svc.OnUpdateStarted:
 					runtime.EventsEmit(a.ctx, "appUpdateDownloadStarted")
@@ -354,7 +367,19 @@ func (a *App) startBackgroundTasks() {
 			}
 		}()
 
-		// Run the periodic update check loop
+		// Always check for updates on startup to show latest version
+		slog.Info("Checking for updates on startup")
+		go func() {
+			time.Sleep(2 * time.Second)
+			select {
+			case ch <- struct{}{}:
+				slog.Debug("Triggered startup app update check")
+			default:
+				slog.Debug("Startup app update check already in progress")
+			}
+		}()
+
+		// Run the periodic update check loop (respects auto-update setting internally)
 		svc.RunPeriodicUpdateCheck(ch)
 	}()
 }

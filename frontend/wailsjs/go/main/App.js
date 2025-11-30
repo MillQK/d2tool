@@ -18,6 +18,10 @@ export function GetAppUpdateState() {
   return window['go']['main']['App']['GetAppUpdateState']();
 }
 
+export function GetAutoUpdateEnabled() {
+  return window['go']['main']['App']['GetAutoUpdateEnabled']();
+}
+
 export function GetGridConfigPaths() {
   return window['go']['main']['App']['GetGridConfigPaths']();
 }
@@ -52,6 +56,10 @@ export function OpenFileDialog() {
 
 export function RemoveGridConfigPath(arg1) {
   return window['go']['main']['App']['RemoveGridConfigPath'](arg1);
+}
+
+export function SetAutoUpdateEnabled(arg1) {
+  return window['go']['main']['App']['SetAutoUpdateEnabled'](arg1);
 }
 
 export function SetPositionsOrder(arg1) {

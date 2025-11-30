@@ -21,7 +21,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  1510",
+          "category_name": "  1532",
           "x_position": 0,
           "y_position": 50,
           "width": 70,
@@ -39,7 +39,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  332",
+          "category_name": "  337",
           "x_position": 70,
           "y_position": 50,
           "width": 70,
@@ -49,7 +49,7 @@
           ]
         },
         {
-          "category_name": "  53.2%",
+          "category_name": "  53.3%",
           "x_position": 140,
           "y_position": 30,
           "width": 0,
@@ -57,7 +57,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  869",
+          "category_name": "  882",
           "x_position": 140,
           "y_position": 50,
           "width": 70,
@@ -67,7 +67,7 @@
           ]
         },
         {
-          "category_name": "  52.3%",
+          "category_name": "  52.5%",
           "x_position": 210,
           "y_position": 30,
           "width": 0,
@@ -75,7 +75,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  1444",
+          "category_name": "  1463",
           "x_position": 210,
           "y_position": 50,
           "width": 70,
@@ -85,7 +85,7 @@
           ]
         },
         {
-          "category_name": "  52.7%",
+          "category_name": "  52.5%",
           "x_position": 280,
           "y_position": 30,
           "width": 0,
@@ -93,7 +93,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  1107",
+          "category_name": "  1127",
           "x_position": 280,
           "y_position": 50,
           "width": 70,
@@ -103,7 +103,7 @@
           ]
         },
         {
-          "category_name": "  52.9%",
+          "category_name": "  52.8%",
           "x_position": 350,
           "y_position": 30,
           "width": 0,
@@ -111,7 +111,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  835",
+          "category_name": "  848",
           "x_position": 350,
           "y_position": 50,
           "width": 70,
@@ -121,7 +121,7 @@
           ]
         },
         {
-          "category_name": "  51.4%",
+          "category_name": "  65.9%",
           "x_position": 420,
           "y_position": 30,
           "width": 0,
@@ -129,44 +129,8 @@
           "hero_ids": []
         },
         {
-          "category_name": "  1495",
+          "category_name": "  85",
           "x_position": 420,
-          "y_position": 50,
-          "width": 70,
-          "height": 110,
-          "hero_ids": [
-            13
-          ]
-        },
-        {
-          "category_name": "  51.5%",
-          "x_position": 490,
-          "y_position": 30,
-          "width": 0,
-          "height": 0,
-          "hero_ids": []
-        },
-        {
-          "category_name": "  1259",
-          "x_position": 490,
-          "y_position": 50,
-          "width": 70,
-          "height": 110,
-          "hero_ids": [
-            106
-          ]
-        },
-        {
-          "category_name": "  65.4%",
-          "x_position": 560,
-          "y_position": 30,
-          "width": 0,
-          "height": 0,
-          "hero_ids": []
-        },
-        {
-          "category_name": "  81",
-          "x_position": 560,
           "y_position": 50,
           "width": 70,
           "height": 110,
@@ -175,7 +139,43 @@
           ]
         },
         {
-          "category_name": "  53.9%",
+          "category_name": "  51.2%",
+          "x_position": 490,
+          "y_position": 30,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  1518",
+          "x_position": 490,
+          "y_position": 50,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            13
+          ]
+        },
+        {
+          "category_name": "  53.8%",
+          "x_position": 560,
+          "y_position": 30,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  405",
+          "x_position": 560,
+          "y_position": 50,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            14
+          ]
+        },
+        {
+          "category_name": "  57.9%",
           "x_position": 630,
           "y_position": 30,
           "width": 0,
@@ -183,13 +183,13 @@
           "hero_ids": []
         },
         {
-          "category_name": "  406",
+          "category_name": "  145",
           "x_position": 630,
           "y_position": 50,
           "width": 70,
           "height": 110,
           "hero_ids": [
-            14
+            65
           ]
         },
         {
@@ -201,7 +201,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  50.7%",
+          "category_name": "  50.9%",
           "x_position": 0,
           "y_position": 270,
           "width": 0,
@@ -209,7 +209,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  2485",
+          "category_name": "  2527",
           "x_position": 0,
           "y_position": 290,
           "width": 70,
@@ -227,7 +227,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  1510",
+          "category_name": "  1532",
           "x_position": 70,
           "y_position": 290,
           "width": 70,
@@ -237,7 +237,7 @@
           ]
         },
         {
-          "category_name": "  51.4%",
+          "category_name": "  51.2%",
           "x_position": 140,
           "y_position": 270,
           "width": 0,
@@ -245,7 +245,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  1495",
+          "category_name": "  1518",
           "x_position": 140,
           "y_position": 290,
           "width": 70,
@@ -255,7 +255,7 @@
           ]
         },
         {
-          "category_name": "  52.3%",
+          "category_name": "  52.5%",
           "x_position": 210,
           "y_position": 270,
           "width": 0,
@@ -263,7 +263,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  1444",
+          "category_name": "  1463",
           "x_position": 210,
           "y_position": 290,
           "width": 70,
@@ -273,7 +273,7 @@
           ]
         },
         {
-          "category_name": "  49.2%",
+          "category_name": "  49.4%",
           "x_position": 280,
           "y_position": 270,
           "width": 0,
@@ -281,7 +281,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  1397",
+          "category_name": "  1426",
           "x_position": 280,
           "y_position": 290,
           "width": 70,
@@ -291,7 +291,7 @@
           ]
         },
         {
-          "category_name": "  51.5%",
+          "category_name": "  51.2%",
           "x_position": 350,
           "y_position": 270,
           "width": 0,
@@ -299,7 +299,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  1259",
+          "category_name": "  1276",
           "x_position": 350,
           "y_position": 290,
           "width": 70,
@@ -309,7 +309,7 @@
           ]
         },
         {
-          "category_name": "  52.7%",
+          "category_name": "  52.5%",
           "x_position": 420,
           "y_position": 270,
           "width": 0,
@@ -317,7 +317,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  1107",
+          "category_name": "  1127",
           "x_position": 420,
           "y_position": 290,
           "width": 70,
@@ -327,7 +327,7 @@
           ]
         },
         {
-          "category_name": "  50.9%",
+          "category_name": "  50.5%",
           "x_position": 490,
           "y_position": 270,
           "width": 0,
@@ -335,7 +335,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  950",
+          "category_name": "  966",
           "x_position": 490,
           "y_position": 290,
           "width": 70,
@@ -353,7 +353,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  935",
+          "category_name": "  945",
           "x_position": 560,
           "y_position": 290,
           "width": 70,
@@ -363,7 +363,7 @@
           ]
         },
         {
-          "category_name": "  43.8%",
+          "category_name": "  44.0%",
           "x_position": 630,
           "y_position": 270,
           "width": 0,
@@ -371,7 +371,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  877",
+          "category_name": "  888",
           "x_position": 630,
           "y_position": 290,
           "width": 70,
@@ -381,7 +381,7 @@
           ]
         },
         {
-          "category_name": "  53.2%",
+          "category_name": "  53.3%",
           "x_position": 700,
           "y_position": 270,
           "width": 0,
@@ -389,7 +389,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  869",
+          "category_name": "  882",
           "x_position": 700,
           "y_position": 290,
           "width": 70,
@@ -399,7 +399,7 @@
           ]
         },
         {
-          "category_name": "  52.9%",
+          "category_name": "  52.8%",
           "x_position": 770,
           "y_position": 270,
           "width": 0,
@@ -407,7 +407,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  835",
+          "category_name": "  848",
           "x_position": 770,
           "y_position": 290,
           "width": 70,
@@ -417,7 +417,7 @@
           ]
         },
         {
-          "category_name": "  44.0%",
+          "category_name": "  44.1%",
           "x_position": 840,
           "y_position": 270,
           "width": 0,
@@ -425,7 +425,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  782",
+          "category_name": "  794",
           "x_position": 840,
           "y_position": 290,
           "width": 70,
@@ -443,7 +443,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  590",
+          "category_name": "  601",
           "x_position": 910,
           "y_position": 290,
           "width": 70,
@@ -453,7 +453,7 @@
           ]
         },
         {
-          "category_name": "  49.8%",
+          "category_name": "  50.1%",
           "x_position": 980,
           "y_position": 270,
           "width": 0,
@@ -461,7 +461,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  568",
+          "category_name": "  579",
           "x_position": 980,
           "y_position": 290,
           "width": 70,
@@ -471,7 +471,7 @@
           ]
         },
         {
-          "category_name": "  46.0%",
+          "category_name": "  45.9%",
           "x_position": 0,
           "y_position": 430,
           "width": 0,
@@ -479,7 +479,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  546",
+          "category_name": "  555",
           "x_position": 0,
           "y_position": 450,
           "width": 70,
@@ -497,7 +497,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  530",
+          "category_name": "  532",
           "x_position": 70,
           "y_position": 450,
           "width": 70,
@@ -507,7 +507,7 @@
           ]
         },
         {
-          "category_name": "  49.6%",
+          "category_name": "  49.7%",
           "x_position": 140,
           "y_position": 430,
           "width": 0,
@@ -515,7 +515,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  466",
+          "category_name": "  473",
           "x_position": 140,
           "y_position": 450,
           "width": 70,
@@ -525,7 +525,7 @@
           ]
         },
         {
-          "category_name": "  52.4%",
+          "category_name": "  52.2%",
           "x_position": 210,
           "y_position": 430,
           "width": 0,
@@ -533,7 +533,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  450",
+          "category_name": "  462",
           "x_position": 210,
           "y_position": 450,
           "width": 70,
@@ -543,7 +543,7 @@
           ]
         },
         {
-          "category_name": "  50.3%",
+          "category_name": "  49.9%",
           "x_position": 280,
           "y_position": 430,
           "width": 0,
@@ -551,7 +551,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  437",
+          "category_name": "  443",
           "x_position": 280,
           "y_position": 450,
           "width": 70,
@@ -561,7 +561,7 @@
           ]
         },
         {
-          "category_name": "  46.1%",
+          "category_name": "  46.2%",
           "x_position": 350,
           "y_position": 430,
           "width": 0,
@@ -569,7 +569,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  425",
+          "category_name": "  433",
           "x_position": 350,
           "y_position": 450,
           "width": 70,
@@ -579,7 +579,7 @@
           ]
         },
         {
-          "category_name": "  53.9%",
+          "category_name": "  53.8%",
           "x_position": 420,
           "y_position": 430,
           "width": 0,
@@ -587,7 +587,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  406",
+          "category_name": "  405",
           "x_position": 420,
           "y_position": 450,
           "width": 70,
@@ -597,7 +597,7 @@
           ]
         },
         {
-          "category_name": "  46.7%",
+          "category_name": "  46.9%",
           "x_position": 490,
           "y_position": 430,
           "width": 0,
@@ -605,7 +605,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  390",
+          "category_name": "  392",
           "x_position": 490,
           "y_position": 450,
           "width": 70,
@@ -615,7 +615,7 @@
           ]
         },
         {
-          "category_name": "  49.0%",
+          "category_name": "  48.9%",
           "x_position": 560,
           "y_position": 430,
           "width": 0,
@@ -623,7 +623,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  363",
+          "category_name": "  368",
           "x_position": 560,
           "y_position": 450,
           "width": 70,
@@ -633,7 +633,7 @@
           ]
         },
         {
-          "category_name": "  48.5%",
+          "category_name": "  48.7%",
           "x_position": 630,
           "y_position": 430,
           "width": 0,
@@ -641,7 +641,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  340",
+          "category_name": "  349",
           "x_position": 630,
           "y_position": 450,
           "width": 70,
@@ -651,7 +651,7 @@
           ]
         },
         {
-          "category_name": "  51.3%",
+          "category_name": "  51.6%",
           "x_position": 700,
           "y_position": 430,
           "width": 0,
@@ -659,7 +659,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  339",
+          "category_name": "  341",
           "x_position": 700,
           "y_position": 450,
           "width": 70,
@@ -669,7 +669,7 @@
           ]
         },
         {
-          "category_name": "  59.3%",
+          "category_name": "  49.4%",
           "x_position": 770,
           "y_position": 430,
           "width": 0,
@@ -677,26 +677,8 @@
           "hero_ids": []
         },
         {
-          "category_name": "  332",
+          "category_name": "  340",
           "x_position": 770,
-          "y_position": 450,
-          "width": 70,
-          "height": 110,
-          "hero_ids": [
-            82
-          ]
-        },
-        {
-          "category_name": "  50.0%",
-          "x_position": 840,
-          "y_position": 430,
-          "width": 0,
-          "height": 0,
-          "hero_ids": []
-        },
-        {
-          "category_name": "  332",
-          "x_position": 840,
           "y_position": 450,
           "width": 70,
           "height": 110,
@@ -705,7 +687,25 @@
           ]
         },
         {
-          "category_name": "  50.0%",
+          "category_name": "  59.3%",
+          "x_position": 840,
+          "y_position": 430,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  337",
+          "x_position": 840,
+          "y_position": 450,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            82
+          ]
+        },
+        {
+          "category_name": "  50.2%",
           "x_position": 910,
           "y_position": 430,
           "width": 0,
@@ -713,7 +713,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  294",
+          "category_name": "  297",
           "x_position": 910,
           "y_position": 450,
           "width": 70,
@@ -723,7 +723,7 @@
           ]
         },
         {
-          "category_name": "  47.0%",
+          "category_name": "  46.5%",
           "x_position": 980,
           "y_position": 430,
           "width": 0,
@@ -731,7 +731,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  270",
+          "category_name": "  273",
           "x_position": 980,
           "y_position": 450,
           "width": 70,
@@ -749,7 +749,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  54.3%",
+          "category_name": "  54.4%",
           "x_position": 0,
           "y_position": 670,
           "width": 0,
@@ -757,7 +757,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  3448",
+          "category_name": "  3506",
           "x_position": 0,
           "y_position": 690,
           "width": 70,
@@ -767,7 +767,7 @@
           ]
         },
         {
-          "category_name": "  53.6%",
+          "category_name": "  53.8%",
           "x_position": 70,
           "y_position": 670,
           "width": 0,
@@ -775,7 +775,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  2249",
+          "category_name": "  2292",
           "x_position": 70,
           "y_position": 690,
           "width": 70,
@@ -785,7 +785,7 @@
           ]
         },
         {
-          "category_name": "  54.7%",
+          "category_name": "  53.5%",
           "x_position": 140,
           "y_position": 670,
           "width": 0,
@@ -793,26 +793,8 @@
           "hero_ids": []
         },
         {
-          "category_name": "  908",
+          "category_name": "  1373",
           "x_position": 140,
-          "y_position": 690,
-          "width": 70,
-          "height": 110,
-          "hero_ids": [
-            102
-          ]
-        },
-        {
-          "category_name": "  53.2%",
-          "x_position": 210,
-          "y_position": 670,
-          "width": 0,
-          "height": 0,
-          "hero_ids": []
-        },
-        {
-          "category_name": "  1348",
-          "x_position": 210,
           "y_position": 690,
           "width": 70,
           "height": 110,
@@ -821,7 +803,25 @@
           ]
         },
         {
-          "category_name": "  52.5%",
+          "category_name": "  54.6%",
+          "x_position": 210,
+          "y_position": 670,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  920",
+          "x_position": 210,
+          "y_position": 690,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            102
+          ]
+        },
+        {
+          "category_name": "  52.3%",
           "x_position": 280,
           "y_position": 670,
           "width": 0,
@@ -829,7 +829,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  847",
+          "category_name": "  857",
           "x_position": 280,
           "y_position": 690,
           "width": 70,
@@ -839,7 +839,7 @@
           ]
         },
         {
-          "category_name": "  69.9%",
+          "category_name": "  69.3%",
           "x_position": 350,
           "y_position": 670,
           "width": 0,
@@ -847,7 +847,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  73",
+          "category_name": "  75",
           "x_position": 350,
           "y_position": 690,
           "width": 70,
@@ -857,7 +857,7 @@
           ]
         },
         {
-          "category_name": "  51.6%",
+          "category_name": "  58.0%",
           "x_position": 420,
           "y_position": 670,
           "width": 0,
@@ -865,26 +865,8 @@
           "hero_ids": []
         },
         {
-          "category_name": "  768",
+          "category_name": "  119",
           "x_position": 420,
-          "y_position": 690,
-          "width": 70,
-          "height": 110,
-          "hero_ids": [
-            6
-          ]
-        },
-        {
-          "category_name": "  57.6%",
-          "x_position": 490,
-          "y_position": 670,
-          "width": 0,
-          "height": 0,
-          "hero_ids": []
-        },
-        {
-          "category_name": "  118",
-          "x_position": 490,
           "y_position": 690,
           "width": 70,
           "height": 110,
@@ -893,39 +875,57 @@
           ]
         },
         {
-          "category_name": "  52.0%",
-          "x_position": 560,
+          "category_name": "  51.1%",
+          "x_position": 490,
           "y_position": 670,
           "width": 0,
           "height": 0,
           "hero_ids": []
         },
         {
-          "category_name": "  408",
-          "x_position": 560,
+          "category_name": "  783",
+          "x_position": 490,
           "y_position": 690,
           "width": 70,
           "height": 110,
           "hero_ids": [
-            114
+            6
           ]
         },
         {
-          "category_name": "  55.7%",
-          "x_position": 630,
+          "category_name": "  55.9%",
+          "x_position": 560,
           "y_position": 670,
           "width": 0,
           "height": 0,
           "hero_ids": []
         },
         {
-          "category_name": "  140",
-          "x_position": 630,
+          "category_name": "  143",
+          "x_position": 560,
           "y_position": 690,
           "width": 70,
           "height": 110,
           "hero_ids": [
             14
+          ]
+        },
+        {
+          "category_name": "  51.7%",
+          "x_position": 630,
+          "y_position": 670,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  704",
+          "x_position": 630,
+          "y_position": 690,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            41
           ]
         },
         {
@@ -937,7 +937,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  54.3%",
+          "category_name": "  54.4%",
           "x_position": 0,
           "y_position": 910,
           "width": 0,
@@ -945,7 +945,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  3448",
+          "category_name": "  3506",
           "x_position": 0,
           "y_position": 930,
           "width": 70,
@@ -955,7 +955,7 @@
           ]
         },
         {
-          "category_name": "  53.6%",
+          "category_name": "  53.8%",
           "x_position": 70,
           "y_position": 910,
           "width": 0,
@@ -963,7 +963,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  2249",
+          "category_name": "  2292",
           "x_position": 70,
           "y_position": 930,
           "width": 70,
@@ -973,7 +973,7 @@
           ]
         },
         {
-          "category_name": "  46.3%",
+          "category_name": "  45.9%",
           "x_position": 140,
           "y_position": 910,
           "width": 0,
@@ -981,7 +981,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  1604",
+          "category_name": "  1638",
           "x_position": 140,
           "y_position": 930,
           "width": 70,
@@ -991,7 +991,7 @@
           ]
         },
         {
-          "category_name": "  46.5%",
+          "category_name": "  46.4%",
           "x_position": 210,
           "y_position": 910,
           "width": 0,
@@ -999,7 +999,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  1577",
+          "category_name": "  1606",
           "x_position": 210,
           "y_position": 930,
           "width": 70,
@@ -1009,7 +1009,7 @@
           ]
         },
         {
-          "category_name": "  46.9%",
+          "category_name": "  47.1%",
           "x_position": 280,
           "y_position": 910,
           "width": 0,
@@ -1017,7 +1017,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  1419",
+          "category_name": "  1430",
           "x_position": 280,
           "y_position": 930,
           "width": 70,
@@ -1027,7 +1027,7 @@
           ]
         },
         {
-          "category_name": "  53.2%",
+          "category_name": "  53.5%",
           "x_position": 350,
           "y_position": 910,
           "width": 0,
@@ -1035,7 +1035,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  1348",
+          "category_name": "  1373",
           "x_position": 350,
           "y_position": 930,
           "width": 70,
@@ -1045,7 +1045,7 @@
           ]
         },
         {
-          "category_name": "  49.2%",
+          "category_name": "  49.5%",
           "x_position": 420,
           "y_position": 910,
           "width": 0,
@@ -1053,7 +1053,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  1121",
+          "category_name": "  1144",
           "x_position": 420,
           "y_position": 930,
           "width": 70,
@@ -1063,7 +1063,7 @@
           ]
         },
         {
-          "category_name": "  47.6%",
+          "category_name": "  47.9%",
           "x_position": 490,
           "y_position": 910,
           "width": 0,
@@ -1071,7 +1071,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  1086",
+          "category_name": "  1100",
           "x_position": 490,
           "y_position": 930,
           "width": 70,
@@ -1081,7 +1081,7 @@
           ]
         },
         {
-          "category_name": "  50.2%",
+          "category_name": "  50.5%",
           "x_position": 560,
           "y_position": 910,
           "width": 0,
@@ -1089,7 +1089,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  1012",
+          "category_name": "  1018",
           "x_position": 560,
           "y_position": 930,
           "width": 70,
@@ -1099,7 +1099,7 @@
           ]
         },
         {
-          "category_name": "  54.7%",
+          "category_name": "  54.6%",
           "x_position": 630,
           "y_position": 910,
           "width": 0,
@@ -1107,7 +1107,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  908",
+          "category_name": "  920",
           "x_position": 630,
           "y_position": 930,
           "width": 70,
@@ -1117,7 +1117,7 @@
           ]
         },
         {
-          "category_name": "  52.5%",
+          "category_name": "  52.3%",
           "x_position": 700,
           "y_position": 910,
           "width": 0,
@@ -1125,7 +1125,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  847",
+          "category_name": "  857",
           "x_position": 700,
           "y_position": 930,
           "width": 70,
@@ -1135,7 +1135,7 @@
           ]
         },
         {
-          "category_name": "  46.9%",
+          "category_name": "  47.0%",
           "x_position": 770,
           "y_position": 910,
           "width": 0,
@@ -1143,7 +1143,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  827",
+          "category_name": "  834",
           "x_position": 770,
           "y_position": 930,
           "width": 70,
@@ -1153,7 +1153,7 @@
           ]
         },
         {
-          "category_name": "  49.1%",
+          "category_name": "  48.7%",
           "x_position": 840,
           "y_position": 910,
           "width": 0,
@@ -1161,7 +1161,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  772",
+          "category_name": "  783",
           "x_position": 840,
           "y_position": 930,
           "width": 70,
@@ -1171,7 +1171,7 @@
           ]
         },
         {
-          "category_name": "  51.6%",
+          "category_name": "  51.1%",
           "x_position": 910,
           "y_position": 910,
           "width": 0,
@@ -1179,7 +1179,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  768",
+          "category_name": "  783",
           "x_position": 910,
           "y_position": 930,
           "width": 70,
@@ -1189,7 +1189,7 @@
           ]
         },
         {
-          "category_name": "  49.7%",
+          "category_name": "  50.1%",
           "x_position": 980,
           "y_position": 910,
           "width": 0,
@@ -1197,7 +1197,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  708",
+          "category_name": "  720",
           "x_position": 980,
           "y_position": 930,
           "width": 70,
@@ -1207,7 +1207,7 @@
           ]
         },
         {
-          "category_name": "  51.5%",
+          "category_name": "  51.7%",
           "x_position": 0,
           "y_position": 1070,
           "width": 0,
@@ -1215,7 +1215,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  689",
+          "category_name": "  704",
           "x_position": 0,
           "y_position": 1090,
           "width": 70,
@@ -1225,7 +1225,7 @@
           ]
         },
         {
-          "category_name": "  48.5%",
+          "category_name": "  48.7%",
           "x_position": 70,
           "y_position": 1070,
           "width": 0,
@@ -1233,7 +1233,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  648",
+          "category_name": "  661",
           "x_position": 70,
           "y_position": 1090,
           "width": 70,
@@ -1243,7 +1243,7 @@
           ]
         },
         {
-          "category_name": "  46.1%",
+          "category_name": "  46.3%",
           "x_position": 140,
           "y_position": 1070,
           "width": 0,
@@ -1251,7 +1251,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  551",
+          "category_name": "  557",
           "x_position": 140,
           "y_position": 1090,
           "width": 70,
@@ -1261,7 +1261,7 @@
           ]
         },
         {
-          "category_name": "  48.3%",
+          "category_name": "  42.6%",
           "x_position": 210,
           "y_position": 1070,
           "width": 0,
@@ -1269,31 +1269,31 @@
           "hero_ids": []
         },
         {
-          "category_name": "  518",
+          "category_name": "  526",
           "x_position": 210,
-          "y_position": 1090,
-          "width": 70,
-          "height": 110,
-          "hero_ids": [
-            93
-          ]
-        },
-        {
-          "category_name": "  42.2%",
-          "x_position": 280,
-          "y_position": 1070,
-          "width": 0,
-          "height": 0,
-          "hero_ids": []
-        },
-        {
-          "category_name": "  514",
-          "x_position": 280,
           "y_position": 1090,
           "width": 70,
           "height": 110,
           "hero_ids": [
             145
+          ]
+        },
+        {
+          "category_name": "  48.0%",
+          "x_position": 280,
+          "y_position": 1070,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  525",
+          "x_position": 280,
+          "y_position": 1090,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            93
           ]
         },
         {
@@ -1305,7 +1305,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  492",
+          "category_name": "  498",
           "x_position": 350,
           "y_position": 1090,
           "width": 70,
@@ -1315,7 +1315,7 @@
           ]
         },
         {
-          "category_name": "  46.0%",
+          "category_name": "  46.3%",
           "x_position": 420,
           "y_position": 1070,
           "width": 0,
@@ -1323,7 +1323,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  459",
+          "category_name": "  469",
           "x_position": 420,
           "y_position": 1090,
           "width": 70,
@@ -1333,7 +1333,7 @@
           ]
         },
         {
-          "category_name": "  52.0%",
+          "category_name": "  51.8%",
           "x_position": 490,
           "y_position": 1070,
           "width": 0,
@@ -1341,7 +1341,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  408",
+          "category_name": "  409",
           "x_position": 490,
           "y_position": 1090,
           "width": 70,
@@ -1351,7 +1351,7 @@
           ]
         },
         {
-          "category_name": "  50.4%",
+          "category_name": "  50.0%",
           "x_position": 560,
           "y_position": 1070,
           "width": 0,
@@ -1359,7 +1359,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  385",
+          "category_name": "  394",
           "x_position": 560,
           "y_position": 1090,
           "width": 70,
@@ -1369,7 +1369,7 @@
           ]
         },
         {
-          "category_name": "  42.9%",
+          "category_name": "  42.4%",
           "x_position": 630,
           "y_position": 1070,
           "width": 0,
@@ -1377,7 +1377,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  266",
+          "category_name": "  269",
           "x_position": 630,
           "y_position": 1090,
           "width": 70,
@@ -1387,7 +1387,7 @@
           ]
         },
         {
-          "category_name": "  52.7%",
+          "category_name": "  52.5%",
           "x_position": 700,
           "y_position": 1070,
           "width": 0,
@@ -1395,7 +1395,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  243",
+          "category_name": "  244",
           "x_position": 700,
           "y_position": 1090,
           "width": 70,
@@ -1405,7 +1405,7 @@
           ]
         },
         {
-          "category_name": "  52.9%",
+          "category_name": "  53.3%",
           "x_position": 770,
           "y_position": 1070,
           "width": 0,
@@ -1413,7 +1413,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  238",
+          "category_name": "  240",
           "x_position": 770,
           "y_position": 1090,
           "width": 70,
@@ -1423,7 +1423,7 @@
           ]
         },
         {
-          "category_name": "  49.5%",
+          "category_name": "  52.6%",
           "x_position": 840,
           "y_position": 1070,
           "width": 0,
@@ -1431,31 +1431,31 @@
           "hero_ids": []
         },
         {
-          "category_name": "  190",
+          "category_name": "  192",
           "x_position": 840,
-          "y_position": 1090,
-          "width": 70,
-          "height": 110,
-          "hero_ids": [
-            136
-          ]
-        },
-        {
-          "category_name": "  52.7%",
-          "x_position": 910,
-          "y_position": 1070,
-          "width": 0,
-          "height": 0,
-          "hero_ids": []
-        },
-        {
-          "category_name": "  186",
-          "x_position": 910,
           "y_position": 1090,
           "width": 70,
           "height": 110,
           "hero_ids": [
             42
+          ]
+        },
+        {
+          "category_name": "  48.7%",
+          "x_position": 910,
+          "y_position": 1070,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  191",
+          "x_position": 910,
+          "y_position": 1090,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            136
           ]
         },
         {
@@ -1485,7 +1485,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  55.6%",
+          "category_name": "  55.4%",
           "x_position": 0,
           "y_position": 1310,
           "width": 0,
@@ -1493,7 +1493,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  984",
+          "category_name": "  1003",
           "x_position": 0,
           "y_position": 1330,
           "width": 70,
@@ -1503,7 +1503,7 @@
           ]
         },
         {
-          "category_name": "  53.1%",
+          "category_name": "  53.3%",
           "x_position": 70,
           "y_position": 1310,
           "width": 0,
@@ -1511,7 +1511,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  1439",
+          "category_name": "  1453",
           "x_position": 70,
           "y_position": 1330,
           "width": 70,
@@ -1521,7 +1521,7 @@
           ]
         },
         {
-          "category_name": "  52.6%",
+          "category_name": "  52.8%",
           "x_position": 140,
           "y_position": 1310,
           "width": 0,
@@ -1529,7 +1529,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  1091",
+          "category_name": "  1111",
           "x_position": 140,
           "y_position": 1330,
           "width": 70,
@@ -1539,7 +1539,7 @@
           ]
         },
         {
-          "category_name": "  51.3%",
+          "category_name": "  51.4%",
           "x_position": 210,
           "y_position": 1310,
           "width": 0,
@@ -1547,7 +1547,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  2153",
+          "category_name": "  2173",
           "x_position": 210,
           "y_position": 1330,
           "width": 70,
@@ -1557,7 +1557,7 @@
           ]
         },
         {
-          "category_name": "  58.0%",
+          "category_name": "  59.1%",
           "x_position": 280,
           "y_position": 1310,
           "width": 0,
@@ -1565,7 +1565,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  231",
+          "category_name": "  237",
           "x_position": 280,
           "y_position": 1330,
           "width": 70,
@@ -1575,7 +1575,7 @@
           ]
         },
         {
-          "category_name": "  53.4%",
+          "category_name": "  53.3%",
           "x_position": 350,
           "y_position": 1310,
           "width": 0,
@@ -1583,7 +1583,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  335",
+          "category_name": "  345",
           "x_position": 350,
           "y_position": 1330,
           "width": 70,
@@ -1593,7 +1593,7 @@
           ]
         },
         {
-          "category_name": "  51.7%",
+          "category_name": "  54.2%",
           "x_position": 420,
           "y_position": 1310,
           "width": 0,
@@ -1601,8 +1601,44 @@
           "hero_ids": []
         },
         {
-          "category_name": "  778",
+          "category_name": "  264",
           "x_position": 420,
+          "y_position": 1330,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            55
+          ]
+        },
+        {
+          "category_name": "  56.2%",
+          "x_position": 490,
+          "y_position": 1310,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  144",
+          "x_position": 490,
+          "y_position": 1330,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            63
+          ]
+        },
+        {
+          "category_name": "  51.6%",
+          "x_position": 560,
+          "y_position": 1310,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  799",
+          "x_position": 560,
           "y_position": 1330,
           "width": 70,
           "height": 110,
@@ -1611,43 +1647,7 @@
           ]
         },
         {
-          "category_name": "  54.6%",
-          "x_position": 490,
-          "y_position": 1310,
-          "width": 0,
-          "height": 0,
-          "hero_ids": []
-        },
-        {
-          "category_name": "  216",
-          "x_position": 490,
-          "y_position": 1330,
-          "width": 70,
-          "height": 110,
-          "hero_ids": [
-            126
-          ]
-        },
-        {
-          "category_name": "  51.4%",
-          "x_position": 560,
-          "y_position": 1310,
-          "width": 0,
-          "height": 0,
-          "hero_ids": []
-        },
-        {
-          "category_name": "  619",
-          "x_position": 560,
-          "y_position": 1330,
-          "width": 70,
-          "height": 110,
-          "hero_ids": [
-            60
-          ]
-        },
-        {
-          "category_name": "  53.8%",
+          "category_name": "  52.8%",
           "x_position": 630,
           "y_position": 1310,
           "width": 0,
@@ -1655,13 +1655,13 @@
           "hero_ids": []
         },
         {
-          "category_name": "  262",
+          "category_name": "  309",
           "x_position": 630,
           "y_position": 1330,
           "width": 70,
           "height": 110,
           "hero_ids": [
-            55
+            20
           ]
         },
         {
@@ -1681,7 +1681,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  2250",
+          "category_name": "  2283",
           "x_position": 0,
           "y_position": 1570,
           "width": 70,
@@ -1691,7 +1691,7 @@
           ]
         },
         {
-          "category_name": "  51.3%",
+          "category_name": "  51.4%",
           "x_position": 70,
           "y_position": 1550,
           "width": 0,
@@ -1699,7 +1699,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  2153",
+          "category_name": "  2173",
           "x_position": 70,
           "y_position": 1570,
           "width": 70,
@@ -1709,7 +1709,7 @@
           ]
         },
         {
-          "category_name": "  49.5%",
+          "category_name": "  49.4%",
           "x_position": 140,
           "y_position": 1550,
           "width": 0,
@@ -1717,7 +1717,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  2029",
+          "category_name": "  2080",
           "x_position": 140,
           "y_position": 1570,
           "width": 70,
@@ -1727,7 +1727,7 @@
           ]
         },
         {
-          "category_name": "  53.1%",
+          "category_name": "  53.3%",
           "x_position": 210,
           "y_position": 1550,
           "width": 0,
@@ -1735,7 +1735,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  1439",
+          "category_name": "  1453",
           "x_position": 210,
           "y_position": 1570,
           "width": 70,
@@ -1745,7 +1745,7 @@
           ]
         },
         {
-          "category_name": "  47.8%",
+          "category_name": "  47.9%",
           "x_position": 280,
           "y_position": 1550,
           "width": 0,
@@ -1753,7 +1753,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  1367",
+          "category_name": "  1386",
           "x_position": 280,
           "y_position": 1570,
           "width": 70,
@@ -1763,7 +1763,7 @@
           ]
         },
         {
-          "category_name": "  49.9%",
+          "category_name": "  50.0%",
           "x_position": 350,
           "y_position": 1550,
           "width": 0,
@@ -1771,7 +1771,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  1335",
+          "category_name": "  1350",
           "x_position": 350,
           "y_position": 1570,
           "width": 70,
@@ -1781,7 +1781,7 @@
           ]
         },
         {
-          "category_name": "  52.6%",
+          "category_name": "  52.8%",
           "x_position": 420,
           "y_position": 1550,
           "width": 0,
@@ -1789,7 +1789,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  1091",
+          "category_name": "  1111",
           "x_position": 420,
           "y_position": 1570,
           "width": 70,
@@ -1799,7 +1799,7 @@
           ]
         },
         {
-          "category_name": "  55.6%",
+          "category_name": "  55.4%",
           "x_position": 490,
           "y_position": 1550,
           "width": 0,
@@ -1807,7 +1807,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  984",
+          "category_name": "  1003",
           "x_position": 490,
           "y_position": 1570,
           "width": 70,
@@ -1817,7 +1817,7 @@
           ]
         },
         {
-          "category_name": "  51.7%",
+          "category_name": "  51.6%",
           "x_position": 560,
           "y_position": 1550,
           "width": 0,
@@ -1825,7 +1825,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  778",
+          "category_name": "  799",
           "x_position": 560,
           "y_position": 1570,
           "width": 70,
@@ -1835,7 +1835,7 @@
           ]
         },
         {
-          "category_name": "  46.7%",
+          "category_name": "  46.4%",
           "x_position": 630,
           "y_position": 1550,
           "width": 0,
@@ -1843,7 +1843,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  750",
+          "category_name": "  763",
           "x_position": 630,
           "y_position": 1570,
           "width": 70,
@@ -1853,7 +1853,7 @@
           ]
         },
         {
-          "category_name": "  48.0%",
+          "category_name": "  48.4%",
           "x_position": 700,
           "y_position": 1550,
           "width": 0,
@@ -1861,7 +1861,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  733",
+          "category_name": "  739",
           "x_position": 700,
           "y_position": 1570,
           "width": 70,
@@ -1871,7 +1871,7 @@
           ]
         },
         {
-          "category_name": "  45.5%",
+          "category_name": "  45.1%",
           "x_position": 770,
           "y_position": 1550,
           "width": 0,
@@ -1879,7 +1879,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  661",
+          "category_name": "  668",
           "x_position": 770,
           "y_position": 1570,
           "width": 70,
@@ -1889,7 +1889,7 @@
           ]
         },
         {
-          "category_name": "  49.5%",
+          "category_name": "  49.8%",
           "x_position": 840,
           "y_position": 1550,
           "width": 0,
@@ -1897,7 +1897,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  640",
+          "category_name": "  651",
           "x_position": 840,
           "y_position": 1570,
           "width": 70,
@@ -1907,7 +1907,7 @@
           ]
         },
         {
-          "category_name": "  51.4%",
+          "category_name": "  51.1%",
           "x_position": 910,
           "y_position": 1550,
           "width": 0,
@@ -1915,7 +1915,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  619",
+          "category_name": "  634",
           "x_position": 910,
           "y_position": 1570,
           "width": 70,
@@ -1933,7 +1933,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  589",
+          "category_name": "  601",
           "x_position": 980,
           "y_position": 1570,
           "width": 70,
@@ -1951,7 +1951,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  510",
+          "category_name": "  514",
           "x_position": 0,
           "y_position": 1730,
           "width": 70,
@@ -1961,7 +1961,7 @@
           ]
         },
         {
-          "category_name": "  48.3%",
+          "category_name": "  48.0%",
           "x_position": 70,
           "y_position": 1710,
           "width": 0,
@@ -1969,7 +1969,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  480",
+          "category_name": "  485",
           "x_position": 70,
           "y_position": 1730,
           "width": 70,
@@ -1979,7 +1979,7 @@
           ]
         },
         {
-          "category_name": "  46.4%",
+          "category_name": "  46.0%",
           "x_position": 140,
           "y_position": 1710,
           "width": 0,
@@ -1987,7 +1987,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  427",
+          "category_name": "  433",
           "x_position": 140,
           "y_position": 1730,
           "width": 70,
@@ -1997,7 +1997,7 @@
           ]
         },
         {
-          "category_name": "  50.1%",
+          "category_name": "  50.2%",
           "x_position": 210,
           "y_position": 1710,
           "width": 0,
@@ -2005,7 +2005,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  425",
+          "category_name": "  432",
           "x_position": 210,
           "y_position": 1730,
           "width": 70,
@@ -2015,7 +2015,7 @@
           ]
         },
         {
-          "category_name": "  48.0%",
+          "category_name": "  47.9%",
           "x_position": 280,
           "y_position": 1710,
           "width": 0,
@@ -2023,7 +2023,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  421",
+          "category_name": "  426",
           "x_position": 280,
           "y_position": 1730,
           "width": 70,
@@ -2033,7 +2033,7 @@
           ]
         },
         {
-          "category_name": "  49.4%",
+          "category_name": "  49.3%",
           "x_position": 350,
           "y_position": 1710,
           "width": 0,
@@ -2041,7 +2041,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  399",
+          "category_name": "  406",
           "x_position": 350,
           "y_position": 1730,
           "width": 70,
@@ -2051,7 +2051,7 @@
           ]
         },
         {
-          "category_name": "  44.0%",
+          "category_name": "  44.1%",
           "x_position": 420,
           "y_position": 1710,
           "width": 0,
@@ -2059,7 +2059,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  357",
+          "category_name": "  358",
           "x_position": 420,
           "y_position": 1730,
           "width": 70,
@@ -2069,7 +2069,7 @@
           ]
         },
         {
-          "category_name": "  51.6%",
+          "category_name": "  53.3%",
           "x_position": 490,
           "y_position": 1710,
           "width": 0,
@@ -2077,31 +2077,31 @@
           "hero_ids": []
         },
         {
-          "category_name": "  339",
+          "category_name": "  345",
           "x_position": 490,
-          "y_position": 1730,
-          "width": 70,
-          "height": 110,
-          "hero_ids": [
-            53
-          ]
-        },
-        {
-          "category_name": "  53.4%",
-          "x_position": 560,
-          "y_position": 1710,
-          "width": 0,
-          "height": 0,
-          "hero_ids": []
-        },
-        {
-          "category_name": "  335",
-          "x_position": 560,
           "y_position": 1730,
           "width": 70,
           "height": 110,
           "hero_ids": [
             136
+          ]
+        },
+        {
+          "category_name": "  51.8%",
+          "x_position": 560,
+          "y_position": 1710,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  342",
+          "x_position": 560,
+          "y_position": 1730,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            53
           ]
         },
         {
@@ -2113,7 +2113,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  315",
+          "category_name": "  319",
           "x_position": 630,
           "y_position": 1730,
           "width": 70,
@@ -2123,7 +2123,7 @@
           ]
         },
         {
-          "category_name": "  50.5%",
+          "category_name": "  50.3%",
           "x_position": 700,
           "y_position": 1710,
           "width": 0,
@@ -2131,7 +2131,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  313",
+          "category_name": "  318",
           "x_position": 700,
           "y_position": 1730,
           "width": 70,
@@ -2149,7 +2149,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  305",
+          "category_name": "  309",
           "x_position": 770,
           "y_position": 1730,
           "width": 70,
@@ -2159,7 +2159,7 @@
           ]
         },
         {
-          "category_name": "  41.6%",
+          "category_name": "  42.0%",
           "x_position": 840,
           "y_position": 1710,
           "width": 0,
@@ -2177,7 +2177,7 @@
           ]
         },
         {
-          "category_name": "  49.3%",
+          "category_name": "  49.5%",
           "x_position": 910,
           "y_position": 1710,
           "width": 0,
@@ -2185,7 +2185,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  274",
+          "category_name": "  275",
           "x_position": 910,
           "y_position": 1730,
           "width": 70,
@@ -2195,7 +2195,7 @@
           ]
         },
         {
-          "category_name": "  53.8%",
+          "category_name": "  54.2%",
           "x_position": 980,
           "y_position": 1710,
           "width": 0,
@@ -2203,7 +2203,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  262",
+          "category_name": "  264",
           "x_position": 980,
           "y_position": 1730,
           "width": 70,
@@ -2221,7 +2221,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  57.8%",
+          "category_name": "  57.3%",
           "x_position": 0,
           "y_position": 1950,
           "width": 0,
@@ -2229,7 +2229,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  386",
+          "category_name": "  393",
           "x_position": 0,
           "y_position": 1970,
           "width": 70,
@@ -2239,7 +2239,7 @@
           ]
         },
         {
-          "category_name": "  53.5%",
+          "category_name": "  53.7%",
           "x_position": 70,
           "y_position": 1950,
           "width": 0,
@@ -2247,7 +2247,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  839",
+          "category_name": "  853",
           "x_position": 70,
           "y_position": 1970,
           "width": 70,
@@ -2257,7 +2257,7 @@
           ]
         },
         {
-          "category_name": "  55.6%",
+          "category_name": "  53.9%",
           "x_position": 140,
           "y_position": 1950,
           "width": 0,
@@ -2265,13 +2265,13 @@
           "hero_ids": []
         },
         {
-          "category_name": "  482",
+          "category_name": "  803",
           "x_position": 140,
           "y_position": 1970,
           "width": 70,
           "height": 110,
           "hero_ids": [
-            45
+            88
           ]
         },
         {
@@ -2283,8 +2283,26 @@
           "hero_ids": []
         },
         {
-          "category_name": "  368",
+          "category_name": "  488",
           "x_position": 210,
+          "y_position": 1970,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            45
+          ]
+        },
+        {
+          "category_name": "  55.9%",
+          "x_position": 280,
+          "y_position": 1950,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  374",
+          "x_position": 280,
           "y_position": 1970,
           "width": 70,
           "height": 110,
@@ -2293,25 +2311,7 @@
           ]
         },
         {
-          "category_name": "  53.5%",
-          "x_position": 280,
-          "y_position": 1950,
-          "width": 0,
-          "height": 0,
-          "hero_ids": []
-        },
-        {
-          "category_name": "  791",
-          "x_position": 280,
-          "y_position": 1970,
-          "width": 70,
-          "height": 110,
-          "hero_ids": [
-            88
-          ]
-        },
-        {
-          "category_name": "  55.2%",
+          "category_name": "  55.1%",
           "x_position": 350,
           "y_position": 1950,
           "width": 0,
@@ -2319,7 +2319,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  424",
+          "category_name": "  432",
           "x_position": 350,
           "y_position": 1970,
           "width": 70,
@@ -2329,7 +2329,7 @@
           ]
         },
         {
-          "category_name": "  51.5%",
+          "category_name": "  51.7%",
           "x_position": 420,
           "y_position": 1950,
           "width": 0,
@@ -2337,7 +2337,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  1339",
+          "category_name": "  1361",
           "x_position": 420,
           "y_position": 1970,
           "width": 70,
@@ -2347,7 +2347,7 @@
           ]
         },
         {
-          "category_name": "  52.5%",
+          "category_name": "  52.8%",
           "x_position": 490,
           "y_position": 1950,
           "width": 0,
@@ -2355,7 +2355,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  722",
+          "category_name": "  724",
           "x_position": 490,
           "y_position": 1970,
           "width": 70,
@@ -2365,7 +2365,7 @@
           ]
         },
         {
-          "category_name": "  50.9%",
+          "category_name": "  50.8%",
           "x_position": 560,
           "y_position": 1950,
           "width": 0,
@@ -2373,7 +2373,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  1111",
+          "category_name": "  1139",
           "x_position": 560,
           "y_position": 1970,
           "width": 70,
@@ -2383,7 +2383,7 @@
           ]
         },
         {
-          "category_name": "  54.1%",
+          "category_name": "  54.6%",
           "x_position": 630,
           "y_position": 1950,
           "width": 0,
@@ -2391,7 +2391,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  170",
+          "category_name": "  174",
           "x_position": 630,
           "y_position": 1970,
           "width": 70,
@@ -2409,7 +2409,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  51.2%",
+          "category_name": "  51.1%",
           "x_position": 0,
           "y_position": 2190,
           "width": 0,
@@ -2417,7 +2417,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  1519",
+          "category_name": "  1545",
           "x_position": 0,
           "y_position": 2210,
           "width": 70,
@@ -2427,7 +2427,7 @@
           ]
         },
         {
-          "category_name": "  47.0%",
+          "category_name": "  46.7%",
           "x_position": 70,
           "y_position": 2190,
           "width": 0,
@@ -2435,7 +2435,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  1462",
+          "category_name": "  1474",
           "x_position": 70,
           "y_position": 2210,
           "width": 70,
@@ -2445,7 +2445,7 @@
           ]
         },
         {
-          "category_name": "  50.7%",
+          "category_name": "  50.8%",
           "x_position": 140,
           "y_position": 2190,
           "width": 0,
@@ -2453,7 +2453,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  1443",
+          "category_name": "  1466",
           "x_position": 140,
           "y_position": 2210,
           "width": 70,
@@ -2463,7 +2463,7 @@
           ]
         },
         {
-          "category_name": "  51.5%",
+          "category_name": "  51.7%",
           "x_position": 210,
           "y_position": 2190,
           "width": 0,
@@ -2471,7 +2471,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  1339",
+          "category_name": "  1361",
           "x_position": 210,
           "y_position": 2210,
           "width": 70,
@@ -2481,7 +2481,7 @@
           ]
         },
         {
-          "category_name": "  50.9%",
+          "category_name": "  50.8%",
           "x_position": 280,
           "y_position": 2190,
           "width": 0,
@@ -2489,7 +2489,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  1111",
+          "category_name": "  1139",
           "x_position": 280,
           "y_position": 2210,
           "width": 70,
@@ -2499,7 +2499,7 @@
           ]
         },
         {
-          "category_name": "  49.3%",
+          "category_name": "  50.0%",
           "x_position": 350,
           "y_position": 2190,
           "width": 0,
@@ -2507,7 +2507,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  1020",
+          "category_name": "  1044",
           "x_position": 350,
           "y_position": 2210,
           "width": 70,
@@ -2517,7 +2517,7 @@
           ]
         },
         {
-          "category_name": "  49.9%",
+          "category_name": "  49.3%",
           "x_position": 420,
           "y_position": 2190,
           "width": 0,
@@ -2525,7 +2525,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  898",
+          "category_name": "  921",
           "x_position": 420,
           "y_position": 2210,
           "width": 70,
@@ -2535,7 +2535,7 @@
           ]
         },
         {
-          "category_name": "  49.7%",
+          "category_name": "  49.9%",
           "x_position": 490,
           "y_position": 2190,
           "width": 0,
@@ -2543,7 +2543,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  866",
+          "category_name": "  873",
           "x_position": 490,
           "y_position": 2210,
           "width": 70,
@@ -2553,7 +2553,7 @@
           ]
         },
         {
-          "category_name": "  49.9%",
+          "category_name": "  50.4%",
           "x_position": 560,
           "y_position": 2190,
           "width": 0,
@@ -2561,7 +2561,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  844",
+          "category_name": "  863",
           "x_position": 560,
           "y_position": 2210,
           "width": 70,
@@ -2571,7 +2571,7 @@
           ]
         },
         {
-          "category_name": "  53.5%",
+          "category_name": "  53.7%",
           "x_position": 630,
           "y_position": 2190,
           "width": 0,
@@ -2579,7 +2579,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  839",
+          "category_name": "  853",
           "x_position": 630,
           "y_position": 2210,
           "width": 70,
@@ -2589,7 +2589,7 @@
           ]
         },
         {
-          "category_name": "  49.2%",
+          "category_name": "  48.4%",
           "x_position": 700,
           "y_position": 2190,
           "width": 0,
@@ -2597,7 +2597,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  803",
+          "category_name": "  816",
           "x_position": 700,
           "y_position": 2210,
           "width": 70,
@@ -2607,7 +2607,7 @@
           ]
         },
         {
-          "category_name": "  53.5%",
+          "category_name": "  53.9%",
           "x_position": 770,
           "y_position": 2190,
           "width": 0,
@@ -2615,7 +2615,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  791",
+          "category_name": "  803",
           "x_position": 770,
           "y_position": 2210,
           "width": 70,
@@ -2625,7 +2625,7 @@
           ]
         },
         {
-          "category_name": "  50.4%",
+          "category_name": "  50.5%",
           "x_position": 840,
           "y_position": 2190,
           "width": 0,
@@ -2633,7 +2633,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  726",
+          "category_name": "  734",
           "x_position": 840,
           "y_position": 2210,
           "width": 70,
@@ -2643,7 +2643,7 @@
           ]
         },
         {
-          "category_name": "  52.5%",
+          "category_name": "  52.8%",
           "x_position": 910,
           "y_position": 2190,
           "width": 0,
@@ -2651,7 +2651,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  722",
+          "category_name": "  724",
           "x_position": 910,
           "y_position": 2210,
           "width": 70,
@@ -2661,7 +2661,7 @@
           ]
         },
         {
-          "category_name": "  48.7%",
+          "category_name": "  48.9%",
           "x_position": 980,
           "y_position": 2190,
           "width": 0,
@@ -2669,7 +2669,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  707",
+          "category_name": "  724",
           "x_position": 980,
           "y_position": 2210,
           "width": 70,
@@ -2679,7 +2679,7 @@
           ]
         },
         {
-          "category_name": "  49.1%",
+          "category_name": "  49.2%",
           "x_position": 0,
           "y_position": 2350,
           "width": 0,
@@ -2687,7 +2687,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  613",
+          "category_name": "  618",
           "x_position": 0,
           "y_position": 2370,
           "width": 70,
@@ -2697,7 +2697,7 @@
           ]
         },
         {
-          "category_name": "  48.8%",
+          "category_name": "  48.5%",
           "x_position": 70,
           "y_position": 2350,
           "width": 0,
@@ -2705,7 +2705,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  565",
+          "category_name": "  573",
           "x_position": 70,
           "y_position": 2370,
           "width": 70,
@@ -2715,7 +2715,7 @@
           ]
         },
         {
-          "category_name": "  48.4%",
+          "category_name": "  48.3%",
           "x_position": 140,
           "y_position": 2350,
           "width": 0,
@@ -2723,7 +2723,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  545",
+          "category_name": "  555",
           "x_position": 140,
           "y_position": 2370,
           "width": 70,
@@ -2733,7 +2733,7 @@
           ]
         },
         {
-          "category_name": "  46.8%",
+          "category_name": "  47.1%",
           "x_position": 210,
           "y_position": 2350,
           "width": 0,
@@ -2741,7 +2741,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  532",
+          "category_name": "  539",
           "x_position": 210,
           "y_position": 2370,
           "width": 70,
@@ -2751,7 +2751,7 @@
           ]
         },
         {
-          "category_name": "  55.6%",
+          "category_name": "  55.7%",
           "x_position": 280,
           "y_position": 2350,
           "width": 0,
@@ -2759,7 +2759,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  482",
+          "category_name": "  488",
           "x_position": 280,
           "y_position": 2370,
           "width": 70,
@@ -2769,7 +2769,7 @@
           ]
         },
         {
-          "category_name": "  48.6%",
+          "category_name": "  48.4%",
           "x_position": 350,
           "y_position": 2350,
           "width": 0,
@@ -2777,7 +2777,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  475",
+          "category_name": "  479",
           "x_position": 350,
           "y_position": 2370,
           "width": 70,
@@ -2787,7 +2787,7 @@
           ]
         },
         {
-          "category_name": "  49.9%",
+          "category_name": "  50.1%",
           "x_position": 420,
           "y_position": 2350,
           "width": 0,
@@ -2795,7 +2795,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  453",
+          "category_name": "  461",
           "x_position": 420,
           "y_position": 2370,
           "width": 70,
@@ -2805,7 +2805,7 @@
           ]
         },
         {
-          "category_name": "  55.2%",
+          "category_name": "  55.1%",
           "x_position": 490,
           "y_position": 2350,
           "width": 0,
@@ -2813,7 +2813,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  424",
+          "category_name": "  432",
           "x_position": 490,
           "y_position": 2370,
           "width": 70,
@@ -2823,7 +2823,7 @@
           ]
         },
         {
-          "category_name": "  57.8%",
+          "category_name": "  57.3%",
           "x_position": 560,
           "y_position": 2350,
           "width": 0,
@@ -2831,7 +2831,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  386",
+          "category_name": "  393",
           "x_position": 560,
           "y_position": 2370,
           "width": 70,
@@ -2841,7 +2841,7 @@
           ]
         },
         {
-          "category_name": "  47.2%",
+          "category_name": "  47.5%",
           "x_position": 630,
           "y_position": 2350,
           "width": 0,
@@ -2849,7 +2849,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  379",
+          "category_name": "  387",
           "x_position": 630,
           "y_position": 2370,
           "width": 70,
@@ -2859,7 +2859,7 @@
           ]
         },
         {
-          "category_name": "  55.7%",
+          "category_name": "  55.9%",
           "x_position": 700,
           "y_position": 2350,
           "width": 0,
@@ -2867,7 +2867,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  368",
+          "category_name": "  374",
           "x_position": 700,
           "y_position": 2370,
           "width": 70,
@@ -2877,7 +2877,7 @@
           ]
         },
         {
-          "category_name": "  48.5%",
+          "category_name": "  48.8%",
           "x_position": 770,
           "y_position": 2350,
           "width": 0,
@@ -2885,7 +2885,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  363",
+          "category_name": "  361",
           "x_position": 770,
           "y_position": 2370,
           "width": 70,
@@ -2895,7 +2895,7 @@
           ]
         },
         {
-          "category_name": "  50.6%",
+          "category_name": "  50.1%",
           "x_position": 840,
           "y_position": 2350,
           "width": 0,
@@ -2903,7 +2903,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  344",
+          "category_name": "  349",
           "x_position": 840,
           "y_position": 2370,
           "width": 70,
@@ -2913,7 +2913,7 @@
           ]
         },
         {
-          "category_name": "  50.9%",
+          "category_name": "  51.2%",
           "x_position": 910,
           "y_position": 2350,
           "width": 0,
@@ -2921,7 +2921,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  320",
+          "category_name": "  326",
           "x_position": 910,
           "y_position": 2370,
           "width": 70,
@@ -2931,7 +2931,7 @@
           ]
         },
         {
-          "category_name": "  51.0%",
+          "category_name": "  50.3%",
           "x_position": 980,
           "y_position": 2350,
           "width": 0,
@@ -2939,7 +2939,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  308",
+          "category_name": "  310",
           "x_position": 980,
           "y_position": 2370,
           "width": 70,
@@ -2957,7 +2957,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  54.4%",
+          "category_name": "  54.5%",
           "x_position": 0,
           "y_position": 2590,
           "width": 0,
@@ -2965,7 +2965,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  1097",
+          "category_name": "  1117",
           "x_position": 0,
           "y_position": 2610,
           "width": 70,
@@ -2975,7 +2975,7 @@
           ]
         },
         {
-          "category_name": "  57.9%",
+          "category_name": "  57.7%",
           "x_position": 70,
           "y_position": 2590,
           "width": 0,
@@ -2983,7 +2983,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  537",
+          "category_name": "  546",
           "x_position": 70,
           "y_position": 2610,
           "width": 70,
@@ -2993,7 +2993,7 @@
           ]
         },
         {
-          "category_name": "  53.9%",
+          "category_name": "  54.4%",
           "x_position": 140,
           "y_position": 2590,
           "width": 0,
@@ -3001,7 +3001,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  1057",
+          "category_name": "  1065",
           "x_position": 140,
           "y_position": 2610,
           "width": 70,
@@ -3019,7 +3019,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  381",
+          "category_name": "  388",
           "x_position": 210,
           "y_position": 2610,
           "width": 70,
@@ -3037,7 +3037,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  318",
+          "category_name": "  320",
           "x_position": 280,
           "y_position": 2610,
           "width": 70,
@@ -3047,7 +3047,7 @@
           ]
         },
         {
-          "category_name": "  51.4%",
+          "category_name": "  52.7%",
           "x_position": 350,
           "y_position": 2590,
           "width": 0,
@@ -3055,26 +3055,8 @@
           "hero_ids": []
         },
         {
-          "category_name": "  1568",
+          "category_name": "  1100",
           "x_position": 350,
-          "y_position": 2610,
-          "width": 70,
-          "height": 110,
-          "hero_ids": [
-            87
-          ]
-        },
-        {
-          "category_name": "  52.4%",
-          "x_position": 420,
-          "y_position": 2590,
-          "width": 0,
-          "height": 0,
-          "hero_ids": []
-        },
-        {
-          "category_name": "  1081",
-          "x_position": 420,
           "y_position": 2610,
           "width": 70,
           "height": 110,
@@ -3084,15 +3066,15 @@
         },
         {
           "category_name": "  51.7%",
-          "x_position": 490,
+          "x_position": 420,
           "y_position": 2590,
           "width": 0,
           "height": 0,
           "hero_ids": []
         },
         {
-          "category_name": "  1119",
-          "x_position": 490,
+          "category_name": "  1141",
+          "x_position": 420,
           "y_position": 2610,
           "width": 70,
           "height": 110,
@@ -3101,7 +3083,25 @@
           ]
         },
         {
-          "category_name": "  55.9%",
+          "category_name": "  51.2%",
+          "x_position": 490,
+          "y_position": 2590,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  1591",
+          "x_position": 490,
+          "y_position": 2610,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            87
+          ]
+        },
+        {
+          "category_name": "  56.5%",
           "x_position": 560,
           "y_position": 2590,
           "width": 0,
@@ -3109,7 +3109,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  227",
+          "category_name": "  230",
           "x_position": 560,
           "y_position": 2610,
           "width": 70,
@@ -3119,7 +3119,7 @@
           ]
         },
         {
-          "category_name": "  52.3%",
+          "category_name": "  57.1%",
           "x_position": 630,
           "y_position": 2590,
           "width": 0,
@@ -3127,13 +3127,13 @@
           "hero_ids": []
         },
         {
-          "category_name": "  709",
+          "category_name": "  147",
           "x_position": 630,
           "y_position": 2610,
           "width": 70,
           "height": 110,
           "hero_ids": [
-            45
+            88
           ]
         },
         {
@@ -3145,7 +3145,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  47.7%",
+          "category_name": "  47.5%",
           "x_position": 0,
           "y_position": 2830,
           "width": 0,
@@ -3153,7 +3153,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  2076",
+          "category_name": "  2106",
           "x_position": 0,
           "y_position": 2850,
           "width": 70,
@@ -3163,7 +3163,7 @@
           ]
         },
         {
-          "category_name": "  51.4%",
+          "category_name": "  51.2%",
           "x_position": 70,
           "y_position": 2830,
           "width": 0,
@@ -3171,7 +3171,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  1568",
+          "category_name": "  1591",
           "x_position": 70,
           "y_position": 2850,
           "width": 70,
@@ -3189,7 +3189,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  1428",
+          "category_name": "  1440",
           "x_position": 140,
           "y_position": 2850,
           "width": 70,
@@ -3207,7 +3207,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  1215",
+          "category_name": "  1240",
           "x_position": 210,
           "y_position": 2850,
           "width": 70,
@@ -3225,7 +3225,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  1119",
+          "category_name": "  1141",
           "x_position": 280,
           "y_position": 2850,
           "width": 70,
@@ -3235,7 +3235,7 @@
           ]
         },
         {
-          "category_name": "  54.4%",
+          "category_name": "  54.5%",
           "x_position": 350,
           "y_position": 2830,
           "width": 0,
@@ -3243,7 +3243,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  1097",
+          "category_name": "  1117",
           "x_position": 350,
           "y_position": 2850,
           "width": 70,
@@ -3253,7 +3253,7 @@
           ]
         },
         {
-          "category_name": "  52.4%",
+          "category_name": "  52.7%",
           "x_position": 420,
           "y_position": 2830,
           "width": 0,
@@ -3261,7 +3261,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  1081",
+          "category_name": "  1100",
           "x_position": 420,
           "y_position": 2850,
           "width": 70,
@@ -3271,7 +3271,7 @@
           ]
         },
         {
-          "category_name": "  53.9%",
+          "category_name": "  54.4%",
           "x_position": 490,
           "y_position": 2830,
           "width": 0,
@@ -3279,7 +3279,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  1057",
+          "category_name": "  1065",
           "x_position": 490,
           "y_position": 2850,
           "width": 70,
@@ -3297,7 +3297,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  838",
+          "category_name": "  851",
           "x_position": 560,
           "y_position": 2850,
           "width": 70,
@@ -3307,7 +3307,7 @@
           ]
         },
         {
-          "category_name": "  51.6%",
+          "category_name": "  51.3%",
           "x_position": 630,
           "y_position": 2830,
           "width": 0,
@@ -3315,7 +3315,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  802",
+          "category_name": "  822",
           "x_position": 630,
           "y_position": 2850,
           "width": 70,
@@ -3325,7 +3325,7 @@
           ]
         },
         {
-          "category_name": "  49.4%",
+          "category_name": "  49.6%",
           "x_position": 700,
           "y_position": 2830,
           "width": 0,
@@ -3333,7 +3333,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  792",
+          "category_name": "  805",
           "x_position": 700,
           "y_position": 2850,
           "width": 70,
@@ -3343,7 +3343,7 @@
           ]
         },
         {
-          "category_name": "  48.0%",
+          "category_name": "  48.1%",
           "x_position": 770,
           "y_position": 2830,
           "width": 0,
@@ -3351,7 +3351,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  727",
+          "category_name": "  749",
           "x_position": 770,
           "y_position": 2850,
           "width": 70,
@@ -3361,7 +3361,7 @@
           ]
         },
         {
-          "category_name": "  52.3%",
+          "category_name": "  51.7%",
           "x_position": 840,
           "y_position": 2830,
           "width": 0,
@@ -3369,7 +3369,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  709",
+          "category_name": "  714",
           "x_position": 840,
           "y_position": 2850,
           "width": 70,
@@ -3379,7 +3379,7 @@
           ]
         },
         {
-          "category_name": "  48.4%",
+          "category_name": "  48.9%",
           "x_position": 910,
           "y_position": 2830,
           "width": 0,
@@ -3387,7 +3387,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  702",
+          "category_name": "  708",
           "x_position": 910,
           "y_position": 2850,
           "width": 70,
@@ -3397,7 +3397,7 @@
           ]
         },
         {
-          "category_name": "  46.4%",
+          "category_name": "  46.6%",
           "x_position": 980,
           "y_position": 2830,
           "width": 0,
@@ -3405,7 +3405,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  614",
+          "category_name": "  622",
           "x_position": 980,
           "y_position": 2850,
           "width": 70,
@@ -3415,7 +3415,7 @@
           ]
         },
         {
-          "category_name": "  47.9%",
+          "category_name": "  48.1%",
           "x_position": 0,
           "y_position": 2990,
           "width": 0,
@@ -3423,7 +3423,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  608",
+          "category_name": "  621",
           "x_position": 0,
           "y_position": 3010,
           "width": 70,
@@ -3433,7 +3433,7 @@
           ]
         },
         {
-          "category_name": "  51.2%",
+          "category_name": "  51.0%",
           "x_position": 70,
           "y_position": 2990,
           "width": 0,
@@ -3441,7 +3441,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  601",
+          "category_name": "  608",
           "x_position": 70,
           "y_position": 3010,
           "width": 70,
@@ -3451,7 +3451,7 @@
           ]
         },
         {
-          "category_name": "  48.0%",
+          "category_name": "  47.8%",
           "x_position": 140,
           "y_position": 2990,
           "width": 0,
@@ -3459,7 +3459,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  586",
+          "category_name": "  596",
           "x_position": 140,
           "y_position": 3010,
           "width": 70,
@@ -3469,7 +3469,7 @@
           ]
         },
         {
-          "category_name": "  57.9%",
+          "category_name": "  57.7%",
           "x_position": 210,
           "y_position": 2990,
           "width": 0,
@@ -3477,7 +3477,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  537",
+          "category_name": "  546",
           "x_position": 210,
           "y_position": 3010,
           "width": 70,
@@ -3487,7 +3487,7 @@
           ]
         },
         {
-          "category_name": "  51.2%",
+          "category_name": "  51.9%",
           "x_position": 280,
           "y_position": 2990,
           "width": 0,
@@ -3495,7 +3495,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  525",
+          "category_name": "  534",
           "x_position": 280,
           "y_position": 3010,
           "width": 70,
@@ -3505,7 +3505,7 @@
           ]
         },
         {
-          "category_name": "  51.2%",
+          "category_name": "  51.5%",
           "x_position": 350,
           "y_position": 2990,
           "width": 0,
@@ -3513,7 +3513,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  494",
+          "category_name": "  499",
           "x_position": 350,
           "y_position": 3010,
           "width": 70,
@@ -3531,7 +3531,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  452",
+          "category_name": "  458",
           "x_position": 420,
           "y_position": 3010,
           "width": 70,
@@ -3549,7 +3549,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  381",
+          "category_name": "  388",
           "x_position": 490,
           "y_position": 3010,
           "width": 70,
@@ -3559,7 +3559,7 @@
           ]
         },
         {
-          "category_name": "  50.1%",
+          "category_name": "  50.0%",
           "x_position": 560,
           "y_position": 2990,
           "width": 0,
@@ -3567,7 +3567,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  371",
+          "category_name": "  378",
           "x_position": 560,
           "y_position": 3010,
           "width": 70,
@@ -3585,7 +3585,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  366",
+          "category_name": "  370",
           "x_position": 630,
           "y_position": 3010,
           "width": 70,
@@ -3595,7 +3595,7 @@
           ]
         },
         {
-          "category_name": "  49.2%",
+          "category_name": "  49.3%",
           "x_position": 700,
           "y_position": 2990,
           "width": 0,
@@ -3603,7 +3603,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  360",
+          "category_name": "  367",
           "x_position": 700,
           "y_position": 3010,
           "width": 70,
@@ -3613,7 +3613,7 @@
           ]
         },
         {
-          "category_name": "  51.9%",
+          "category_name": "  51.7%",
           "x_position": 770,
           "y_position": 2990,
           "width": 0,
@@ -3621,7 +3621,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  339",
+          "category_name": "  344",
           "x_position": 770,
           "y_position": 3010,
           "width": 70,
@@ -3631,7 +3631,7 @@
           ]
         },
         {
-          "category_name": "  48.2%",
+          "category_name": "  47.8%",
           "x_position": 840,
           "y_position": 2990,
           "width": 0,
@@ -3639,7 +3639,7 @@
           "hero_ids": []
         },
         {
-          "category_name": "  338",
+          "category_name": "  343",
           "x_position": 840,
           "y_position": 3010,
           "width": 70,
@@ -3649,7 +3649,7 @@
           ]
         },
         {
-          "category_name": "  57.2%",
+          "category_name": "  48.8%",
           "x_position": 910,
           "y_position": 2990,
           "width": 0,
@@ -3657,31 +3657,31 @@
           "hero_ids": []
         },
         {
-          "category_name": "  318",
+          "category_name": "  322",
           "x_position": 910,
-          "y_position": 3010,
-          "width": 70,
-          "height": 110,
-          "hero_ids": [
-            112
-          ]
-        },
-        {
-          "category_name": "  48.4%",
-          "x_position": 980,
-          "y_position": 2990,
-          "width": 0,
-          "height": 0,
-          "hero_ids": []
-        },
-        {
-          "category_name": "  318",
-          "x_position": 980,
           "y_position": 3010,
           "width": 70,
           "height": 110,
           "hero_ids": [
             85
+          ]
+        },
+        {
+          "category_name": "  57.2%",
+          "x_position": 980,
+          "y_position": 2990,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  320",
+          "x_position": 980,
+          "y_position": 3010,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            112
           ]
         }
       ]

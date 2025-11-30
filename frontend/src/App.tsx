@@ -1,45 +1,31 @@
 import { useState } from 'react'
-import HomeTab from './components/HomeTab'
-import GridConfigsTab from './components/GridConfigsTab'
-import PositionsOrderTab from './components/PositionsOrderTab'
-import StartupTab from './components/StartupTab'
-import AppUpdateTab from './components/AppUpdateTab'
-
-type TabId = 'home' | 'gridConfigs' | 'positionsOrder' | 'startup' | 'appUpdate'
-
-interface Tab {
-  id: TabId
-  label: string
-  component: React.ReactNode
-}
+import Sidebar, { PageId } from './components/Sidebar'
+import HeroesLayoutPage from './pages/HeroesLayoutPage'
+import StartupPage from './pages/StartupPage'
+import UpdatesPage from './pages/UpdatesPage'
 
 function App() {
-  const [activeTab, setActiveTab] = useState<TabId>('home')
+  const [activePage, setActivePage] = useState<PageId>('heroesLayout')
 
-  const tabs: Tab[] = [
-    { id: 'home', label: 'Home', component: <HomeTab /> },
-    { id: 'gridConfigs', label: 'Grid configs', component: <GridConfigsTab /> },
-    { id: 'positionsOrder', label: 'Positions order', component: <PositionsOrderTab /> },
-    { id: 'startup', label: 'Startup', component: <StartupTab /> },
-    { id: 'appUpdate', label: 'App update', component: <AppUpdateTab /> },
-  ]
+  const renderPage = () => {
+    switch (activePage) {
+      case 'heroesLayout':
+        return <HeroesLayoutPage />
+      case 'startup':
+        return <StartupPage />
+      case 'updates':
+        return <UpdatesPage />
+      default:
+        return <HeroesLayoutPage />
+    }
+  }
 
   return (
-    <div className="app-container">
-      <div className="tabs-header">
-        {tabs.map((tab) => (
-          <button
-            key={tab.id}
-            className={`tab-button ${activeTab === tab.id ? 'active' : ''}`}
-            onClick={() => setActiveTab(tab.id)}
-          >
-            {tab.label}
-          </button>
-        ))}
-      </div>
-      <div className="tab-content">
-        {tabs.find((tab) => tab.id === activeTab)?.component}
-      </div>
+    <div className="app-layout">
+      <Sidebar activePage={activePage} onPageChange={setActivePage} />
+      <main className="main-content">
+        {renderPage()}
+      </main>
     </div>
   )
 }

@@ -10,6 +10,8 @@ export function DownloadAppUpdate():Promise<void>;
 
 export function GetAppUpdateState():Promise<main.AppUpdateState>;
 
+export function GetAutoUpdateEnabled():Promise<boolean>;
+
 export function GetGridConfigPaths():Promise<Array<string>>;
 
 export function GetHomeState():Promise<main.HomeState>;
@@ -27,6 +29,8 @@ export function MovePositionUp(arg1:number):Promise<Array<string>>;
 export function OpenFileDialog():Promise<string>;
 
 export function RemoveGridConfigPath(arg1:number):Promise<void>;
+
+export function SetAutoUpdateEnabled(arg1:boolean):Promise<void>;
 
 export function SetPositionsOrder(arg1:Array<string>):Promise<void>;
 

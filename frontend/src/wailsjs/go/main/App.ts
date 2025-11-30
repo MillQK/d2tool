@@ -14,6 +14,7 @@ export interface AppUpdateState {
   updateAvailable: boolean;
   isCheckingForUpdate: boolean;
   isDownloadingUpdate: boolean;
+  autoUpdateEnabled: boolean;
 }
 
 // Declare the window.go object
@@ -38,6 +39,8 @@ declare global {
           GetAppUpdateState(): Promise<AppUpdateState>;
           CheckForAppUpdate(): Promise<void>;
           DownloadAppUpdate(): Promise<void>;
+          GetAutoUpdateEnabled(): Promise<boolean>;
+          SetAutoUpdateEnabled(enabled: boolean): Promise<void>;
         };
       };
     };
@@ -107,4 +110,12 @@ export function CheckForAppUpdate(): Promise<void> {
 
 export function DownloadAppUpdate(): Promise<void> {
   return window.go.main.App.DownloadAppUpdate();
+}
+
+export function GetAutoUpdateEnabled(): Promise<boolean> {
+  return window.go.main.App.GetAutoUpdateEnabled();
+}
+
+export function SetAutoUpdateEnabled(enabled: boolean): Promise<void> {
+  return window.go.main.App.SetAutoUpdateEnabled(enabled);
 }

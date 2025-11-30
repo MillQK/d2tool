@@ -7,6 +7,7 @@ export namespace main {
 	    updateAvailable: boolean;
 	    isCheckingForUpdate: boolean;
 	    isDownloadingUpdate: boolean;
+	    autoUpdateEnabled: boolean;
 	
 	    static createFrom(source: any = {}) {
 	        return new AppUpdateState(source);
@@ -20,6 +21,7 @@ export namespace main {
 	        this.updateAvailable = source["updateAvailable"];
 	        this.isCheckingForUpdate = source["isCheckingForUpdate"];
 	        this.isDownloadingUpdate = source["isDownloadingUpdate"];
+	        this.autoUpdateEnabled = source["autoUpdateEnabled"];
 	    }
 	}
 	export class HomeState {

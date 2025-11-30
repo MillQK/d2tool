@@ -21,6 +21,7 @@ type Config struct {
 	LastUpdateTimestampMillis         int64  `json:"lastUpdateTimestampMillis"`
 	LastUpdateErrorMessage            string `json:"lastUpdateErrorMessage"`
 	AppLastUpdateCheckTimestampMillis int64  `json:"appLastUpdateCheckTimestampMillis"`
+	AutoUpdateEnabled                 *bool  `json:"autoUpdateEnabled"`
 }
 
 func getConfigPath() string {
@@ -156,5 +157,22 @@ func (c *Config) SetAppLastUpdateCheckTimestampMillis(millis int64) {
 	c.mu.Lock()
 	defer c.mu.Unlock()
 	c.AppLastUpdateCheckTimestampMillis = millis
+	go c.Save()
+}
+
+func (c *Config) GetAutoUpdateEnabled() bool {
+	c.mu.RLock()
+	defer c.mu.RUnlock()
+	// Default to true if not set
+	if c.AutoUpdateEnabled == nil {
+		return true
+	}
+	return *c.AutoUpdateEnabled
+}
+
+func (c *Config) SetAutoUpdateEnabled(enabled bool) {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+	c.AutoUpdateEnabled = &enabled
 	go c.Save()
 }
