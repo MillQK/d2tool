@@ -8,10 +8,18 @@ import {
   RemoveGridConfigPath,
   OpenFileDialog,
   GetPositionsOrder,
-  MovePositionUp,
-  MovePositionDown,
+  SetPositionsOrder,
   HomeState,
 } from '../wailsjs/go/main/App'
+
+// Position name mapping
+const positionNames: Record<string, string> = {
+  '1': 'Carry',
+  '2': 'Mid',
+  '3': 'Offlane',
+  '4': 'Support',
+  '5': 'Hard Support',
+}
 
 // Icons
 const RefreshIcon = () => (
@@ -36,15 +44,14 @@ const TrashIcon = () => (
   </svg>
 )
 
-const ChevronUpIcon = () => (
-  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <polyline points="18 15 12 9 6 15" />
-  </svg>
-)
-
-const ChevronDownIcon = () => (
-  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <polyline points="6 9 12 15 18 9" />
+const GripIcon = () => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="9" cy="5" r="1" fill="currentColor" />
+    <circle cx="9" cy="12" r="1" fill="currentColor" />
+    <circle cx="9" cy="19" r="1" fill="currentColor" />
+    <circle cx="15" cy="5" r="1" fill="currentColor" />
+    <circle cx="15" cy="12" r="1" fill="currentColor" />
+    <circle cx="15" cy="19" r="1" fill="currentColor" />
   </svg>
 )
 
@@ -54,6 +61,11 @@ const ClockIcon = () => (
     <polyline points="12 6 12 12 16 14" />
   </svg>
 )
+
+interface DragState {
+  draggedItem: string
+  originalPositions: string[]
+}
 
 function HeroesLayoutPage() {
   // Home state
@@ -68,6 +80,9 @@ function HeroesLayoutPage() {
 
   // Positions state
   const [positions, setPositions] = useState<string[]>([])
+
+  // Drag and drop state - simplified to just track dragged item and original order
+  const [dragState, setDragState] = useState<DragState | null>(null)
 
   useEffect(() => {
     // Load initial states
@@ -117,22 +132,60 @@ function HeroesLayoutPage() {
     }
   }
 
-  const handleMoveUp = async (index: number) => {
-    try {
-      const newPositions = await MovePositionUp(index)
-      setPositions(newPositions)
-    } catch (error) {
-      console.error('Error moving position up:', error)
+  // Drag and drop handlers
+  const handleDragStart = (e: React.DragEvent, position: string) => {
+    setDragState({
+      draggedItem: position,
+      originalPositions: [...positions],
+    })
+    e.dataTransfer.effectAllowed = 'move'
+    e.dataTransfer.setData('text/plain', position)
+  }
+
+  const handleDragEnd = async () => {
+    if (!dragState) return
+
+    const { originalPositions } = dragState
+
+    // Clear drag state first
+    setDragState(null)
+
+    // Check if order actually changed
+    const orderChanged = positions.some((p, i) => p !== originalPositions[i])
+
+    if (orderChanged) {
+      try {
+        await SetPositionsOrder(positions)
+      } catch (error) {
+        console.error('Error saving positions order:', error)
+        // Revert on error
+        setPositions(originalPositions)
+      }
     }
   }
 
-  const handleMoveDown = async (index: number) => {
-    try {
-      const newPositions = await MovePositionDown(index)
-      setPositions(newPositions)
-    } catch (error) {
-      console.error('Error moving position down:', error)
-    }
+  const handleDragOver = (e: React.DragEvent, targetIndex: number) => {
+    e.preventDefault()
+    e.dataTransfer.dropEffect = 'move'
+
+    if (!dragState) return
+
+    const currentIndex = positions.indexOf(dragState.draggedItem)
+    if (currentIndex === -1 || currentIndex === targetIndex) return
+
+    // Update positions directly during drag
+    const newPositions = [...positions]
+    newPositions.splice(currentIndex, 1)
+    newPositions.splice(targetIndex, 0, dragState.draggedItem)
+    setPositions(newPositions)
+  }
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault()
+  }
+
+  const getPositionName = (position: string) => {
+    return positionNames[position] || `Position ${position}`
   }
 
   return (
@@ -201,7 +254,6 @@ function HeroesLayoutPage() {
                 {configPaths.map((path, index) => (
                   <div key={index} className="list-item">
                     <div className="list-item-content">
-                      <span className="list-item-index">{index + 1}</span>
                       <span className="list-item-text" title={path}>{path}</span>
                     </div>
                     <button
@@ -224,35 +276,28 @@ function HeroesLayoutPage() {
             <h2 className="card-title">Positions Order</h2>
           </div>
           <div className="card-body">
+            <p className="card-hint">Drag and drop to reorder positions</p>
             {positions.length === 0 ? (
               <div className="empty-state">
                 <p>No positions configured</p>
               </div>
             ) : (
-              <div className="list">
+              <div className="list sortable-list">
                 {positions.map((position, index) => (
-                  <div key={index} className="list-item">
+                  <div
+                    key={position}
+                    className={`list-item draggable ${dragState?.draggedItem === position ? 'dragging' : ''}`}
+                    draggable
+                    onDragStart={(e) => handleDragStart(e, position)}
+                    onDragEnd={handleDragEnd}
+                    onDragOver={(e) => handleDragOver(e, index)}
+                    onDrop={handleDrop}
+                  >
                     <div className="list-item-content">
-                      <span className="list-item-index">{index + 1}</span>
-                      <span className="list-item-text">Position {position}</span>
-                    </div>
-                    <div className="list-item-actions">
-                      <button
-                        className="btn btn-icon"
-                        onClick={() => handleMoveUp(index)}
-                        disabled={index === 0}
-                        title="Move up"
-                      >
-                        <ChevronUpIcon />
-                      </button>
-                      <button
-                        className="btn btn-icon"
-                        onClick={() => handleMoveDown(index)}
-                        disabled={index === positions.length - 1}
-                        title="Move down"
-                      >
-                        <ChevronDownIcon />
-                      </button>
+                      <span className="drag-handle">
+                        <GripIcon />
+                      </span>
+                      <span className="list-item-text">{getPositionName(position)}</span>
                     </div>
                   </div>
                 ))}
