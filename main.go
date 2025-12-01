@@ -5,12 +5,14 @@ import (
 	"d2tool/config"
 	"embed"
 	"flag"
+	"fmt"
 	"io"
 	"log/slog"
 	"os"
-	"path"
+	"path/filepath"
 
 	"github.com/wailsapp/wails/v2"
+	"github.com/wailsapp/wails/v2/pkg/logger"
 	"github.com/wailsapp/wails/v2/pkg/options"
 	"github.com/wailsapp/wails/v2/pkg/options/assetserver"
 	"github.com/wailsapp/wails/v2/pkg/options/windows"
@@ -24,6 +26,9 @@ var assets embed.FS
 var appIcon []byte
 
 func main() {
+	// Early debug output (before logger is set up)
+	fmt.Println("D2Tool starting...")
+
 	// Parse command line flags
 	minimized := flag.Bool("minimized", false, "start the application minimized")
 	flag.Parse()
@@ -55,14 +60,22 @@ func main() {
 			WindowIsTranslucent:  false,
 		},
 		SingleInstanceLock: &options.SingleInstanceLock{
-			UniqueId:               "d2tool-019ad9f4-1416-7b10-b8ce-2ab89c12279e",
-			OnSecondInstanceLaunch: nil,
+			UniqueId: "d2tool-019ad9f4-1416-7b10-b8ce-2ab89c12279e",
+			OnSecondInstanceLaunch: func(secondInstanceData options.SecondInstanceData) {
+				slog.Info("Second instance attempted to launch", "args", secondInstanceData.Args)
+				fmt.Println("Another instance is already running!")
+			},
 		},
+		LogLevel:           logger.DEBUG,
+		LogLevelProduction: logger.INFO,
 	})
 
 	if err != nil {
 		slog.Error("Error starting application", "error", err)
+		fmt.Printf("FATAL: Error starting application: %v\n", err)
+		os.Exit(1)
 	}
+	fmt.Println("D2Tool exited normally")
 }
 
 // setupLogger configures file-based logging
@@ -73,7 +86,7 @@ func setupLogger() {
 		return
 	}
 
-	logFilePath := path.Join(path.Dir(executablePath), "d2tool.log")
+	logFilePath := filepath.Join(filepath.Dir(executablePath), "d2tool.log")
 
 	fileLogger := &lumberjack.Logger{
 		Filename:   logFilePath,
