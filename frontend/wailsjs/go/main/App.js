@@ -70,6 +70,6 @@ export function SetStartupEnabled(arg1) {
   return window['go']['main']['App']['SetStartupEnabled'](arg1);
 }
 
-export function UpdateHeroesGrid() {
-  return window['go']['main']['App']['UpdateHeroesGrid']();
+export function UpdateHeroesLayout() {
+  return window['go']['main']['App']['UpdateHeroesLayout']();
 }

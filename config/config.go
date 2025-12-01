@@ -1,7 +1,7 @@
 package config
 
 import (
-	"d2tool/heroesGrid"
+	"d2tool/heroesLayout"
 	"d2tool/steam"
 	"encoding/json"
 	"log/slog"
@@ -15,8 +15,8 @@ const configFileName = "d2tool_config.json"
 type Config struct {
 	mu sync.RWMutex
 
-	HeroesGridFilePaths []string `json:"heroesGridFilePaths"`
-	PositionsOrder      []string `json:"positionsOrder"`
+	HeroesLayoutFilePaths []string `json:"heroesLayoutFilePaths"`
+	PositionsOrder        []string `json:"positionsOrder"`
 
 	LastUpdateTimestampMillis         int64  `json:"lastUpdateTimestampMillis"`
 	LastUpdateErrorMessage            string `json:"lastUpdateErrorMessage"`
@@ -54,7 +54,7 @@ func LoadConfig() *Config {
 	}
 
 	// If no paths configured, try to discover them
-	if len(config.HeroesGridFilePaths) == 0 {
+	if len(config.HeroesLayoutFilePaths) == 0 {
 		config.discoverDefaultPaths()
 	}
 
@@ -68,13 +68,13 @@ func (c *Config) discoverDefaultPaths() {
 		return
 	}
 
-	paths, err := heroesGrid.FindHeroGridConfigFiles(steamPath)
+	paths, err := heroesLayout.FindHeroesLayoutConfigFiles(steamPath)
 	if err != nil {
 		slog.Warn("Error finding hero grid config files", "error", err)
 		return
 	}
 
-	c.HeroesGridFilePaths = paths
+	c.HeroesLayoutFilePaths = paths
 }
 
 func (c *Config) Save() error {
@@ -91,18 +91,18 @@ func (c *Config) Save() error {
 
 // Getters and setters with mutex protection
 
-func (c *Config) GetHeroesGridFilePaths() []string {
+func (c *Config) GetHeroesLayoutFilePaths() []string {
 	c.mu.RLock()
 	defer c.mu.RUnlock()
-	result := make([]string, len(c.HeroesGridFilePaths))
-	copy(result, c.HeroesGridFilePaths)
+	result := make([]string, len(c.HeroesLayoutFilePaths))
+	copy(result, c.HeroesLayoutFilePaths)
 	return result
 }
 
-func (c *Config) SetHeroesGridFilePaths(paths []string) {
+func (c *Config) SetHeroesLayoutFilePaths(paths []string) {
 	c.mu.Lock()
 	defer c.mu.Unlock()
-	c.HeroesGridFilePaths = paths
+	c.HeroesLayoutFilePaths = paths
 	go c.Save()
 }
 

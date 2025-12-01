@@ -24,7 +24,7 @@ declare global {
       main: {
         App: {
           GetHomeState(): Promise<HomeState>;
-          UpdateHeroesGrid(): Promise<void>;
+          UpdateHeroesLayout(): Promise<void>;
           GetGridConfigPaths(): Promise<string[]>;
           AddGridConfigPath(path: string): Promise<void>;
           RemoveGridConfigPath(index: number): Promise<void>;
@@ -52,8 +52,8 @@ export function GetHomeState(): Promise<HomeState> {
   return window.go.main.App.GetHomeState();
 }
 
-export function UpdateHeroesGrid(): Promise<void> {
-  return window.go.main.App.UpdateHeroesGrid();
+export function UpdateHeroesLayout(): Promise<void> {
+  return window.go.main.App.UpdateHeroesLayout();
 }
 
 export function GetGridConfigPaths(): Promise<string[]> {

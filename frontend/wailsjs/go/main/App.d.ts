@@ -36,4 +36,4 @@ export function SetPositionsOrder(arg1:Array<string>):Promise<void>;
 
 export function SetStartupEnabled(arg1:boolean):Promise<void>;
 
-export function UpdateHeroesGrid():Promise<void>;
+export function UpdateHeroesLayout():Promise<void>;

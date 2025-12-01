@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { EventsOn } from '../wailsjs/runtime'
 import {
   GetHomeState,
-  UpdateHeroesGrid,
+  UpdateHeroesLayout,
   GetGridConfigPaths,
   AddGridConfigPath,
   RemoveGridConfigPath,
@@ -91,11 +91,11 @@ function HeroesLayoutPage() {
     GetPositionsOrder().then(setPositions).catch(console.error)
 
     // Listen for update events
-    const offStarted = EventsOn('heroesGridUpdateStarted', () => {
+    const offStarted = EventsOn('heroesLayoutUpdateStarted', () => {
       setHomeState((prev) => ({ ...prev, isUpdating: true }))
     })
 
-    const offFinished = EventsOn('heroesGridUpdateFinished', (newState: HomeState) => {
+    const offFinished = EventsOn('heroesLayoutUpdateFinished', (newState: HomeState) => {
       setHomeState(newState)
     })
 
@@ -106,7 +106,7 @@ function HeroesLayoutPage() {
   }, [])
 
   const handleUpdate = () => {
-    UpdateHeroesGrid().catch(console.error)
+    UpdateHeroesLayout().catch(console.error)
   }
 
   const handleAddConfig = async () => {

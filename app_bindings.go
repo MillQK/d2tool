@@ -2,7 +2,7 @@ package main
 
 import (
 	"d2tool/github"
-	"d2tool/heroesGrid"
+	"d2tool/heroesLayout"
 	"d2tool/startup"
 	"d2tool/update"
 	"log/slog"
@@ -63,8 +63,8 @@ func (a *App) GetHomeState() HomeState {
 	}
 }
 
-// UpdateHeroesGrid triggers the hero grid update
-func (a *App) UpdateHeroesGrid() {
+// UpdateHeroesLayout triggers the hero grid update
+func (a *App) UpdateHeroesLayout() {
 	go func() {
 		isUpdatingGridLock.Lock()
 		if isUpdatingGrid {
@@ -75,10 +75,10 @@ func (a *App) UpdateHeroesGrid() {
 		isUpdatingGridLock.Unlock()
 
 		// Notify frontend that update started
-		runtime.EventsEmit(a.ctx, "heroesGridUpdateStarted")
+		runtime.EventsEmit(a.ctx, "heroesLayoutUpdateStarted")
 
-		err := heroesGrid.UpdateHeroesGrid(heroesGrid.UpdateHeroGridConfig{
-			ConfigFilePaths: a.config.GetHeroesGridFilePaths(),
+		err := heroesLayout.UpdateHeroesLayout(heroesLayout.UpdateHeroesLayoutConfig{
+			ConfigFilePaths: a.config.GetHeroesLayoutFilePaths(),
 			Positions:       a.config.GetPositionsOrder(),
 		})
 
@@ -97,7 +97,7 @@ func (a *App) UpdateHeroesGrid() {
 		isUpdatingGridLock.Unlock()
 
 		// Notify frontend that update finished
-		runtime.EventsEmit(a.ctx, "heroesGridUpdateFinished", HomeState{
+		runtime.EventsEmit(a.ctx, "heroesLayoutUpdateFinished", HomeState{
 			LastUpdateTime:  now.Format("2006-01-02 15:04:05"),
 			LastUpdateError: errorMsg,
 			IsUpdating:      false,
@@ -109,12 +109,12 @@ func (a *App) UpdateHeroesGrid() {
 
 // GetGridConfigPaths returns the list of hero grid config file paths
 func (a *App) GetGridConfigPaths() []string {
-	return a.config.GetHeroesGridFilePaths()
+	return a.config.GetHeroesLayoutFilePaths()
 }
 
 // AddGridConfigPath adds a new config path
 func (a *App) AddGridConfigPath(path string) {
-	paths := a.config.GetHeroesGridFilePaths()
+	paths := a.config.GetHeroesLayoutFilePaths()
 	// Check for duplicates
 	for _, p := range paths {
 		if p == path {
@@ -122,17 +122,17 @@ func (a *App) AddGridConfigPath(path string) {
 		}
 	}
 	paths = append(paths, path)
-	a.config.SetHeroesGridFilePaths(paths)
+	a.config.SetHeroesLayoutFilePaths(paths)
 }
 
 // RemoveGridConfigPath removes a config path by index
 func (a *App) RemoveGridConfigPath(index int) {
-	paths := a.config.GetHeroesGridFilePaths()
+	paths := a.config.GetHeroesLayoutFilePaths()
 	if index < 0 || index >= len(paths) {
 		return
 	}
 	paths = append(paths[:index], paths[index+1:]...)
-	a.config.SetHeroesGridFilePaths(paths)
+	a.config.SetHeroesLayoutFilePaths(paths)
 }
 
 // OpenFileDialog opens a file dialog and returns the selected path
@@ -328,7 +328,7 @@ func (a *App) startBackgroundTasks() {
 			<-time.After(waitDuration)
 
 			// Trigger update
-			a.UpdateHeroesGrid()
+			a.UpdateHeroesLayout()
 			lastUpdateTime = time.Now()
 		}
 	}()
