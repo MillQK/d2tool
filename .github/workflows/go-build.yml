@@ -32,4 +32,4 @@ jobs:
           wails-build-webview2: embed
           go-version: 1.24.1
           node-version: 18.19.1
-          wails-version: 2.11.0
+          wails-version: v2.11.0
