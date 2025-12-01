@@ -42,6 +42,8 @@ func FindSteamHeroesLayoutConfigFiles(steamPath string) ([]SteamHeroesLayoutConf
 		loginUsersContent, err = parser.Parse()
 		if err != nil {
 			slog.Warn("Error parsing loginusers.vdf file", "error", err)
+		} else {
+			slog.Debug("Parsed loginusers.vdf content", "loginUsersContent", loginUsersContent)
 		}
 	}
 
@@ -75,11 +77,19 @@ func FindSteamHeroesLayoutConfigFiles(steamPath string) ([]SteamHeroesLayoutConf
 				configFileInfo.SteamID64 = strconv.FormatUint(steamId3Num+steamId64Indent, 10)
 				if usersMapInterface, ok := loginUsersContent["users"]; ok {
 					if usersMap, ok := usersMapInterface.(map[string]interface{}); ok {
-						if accountName, ok := usersMap[configFileInfo.SteamID64]; ok {
-							configFileInfo.AccountName = accountName.(string)
-						}
-						if personaName, ok := usersMap[configFileInfo.SteamID64]; ok {
-							configFileInfo.PersonaName = personaName.(string)
+						if userMapInterface, ok := usersMap[configFileInfo.SteamID64]; ok {
+							if userMap, ok := userMapInterface.(map[string]interface{}); ok {
+								if accountNameInterface, ok := userMap["AccountName"]; ok {
+									if accountName, ok := accountNameInterface.(string); ok {
+										configFileInfo.AccountName = accountName
+									}
+								}
+								if personaNameInterface, ok := userMap["PersonaName"]; ok {
+									if personaName, ok := personaNameInterface.(string); ok {
+										configFileInfo.PersonaName = personaName
+									}
+								}
+							}
 						}
 					}
 				}
