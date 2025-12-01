@@ -1,6 +1,7 @@
 package main
 
 import (
+	"d2tool/config"
 	"d2tool/github"
 	"d2tool/heroesLayout"
 	"d2tool/startup"
@@ -18,16 +19,9 @@ var (
 	forceAppUpdateChan   chan struct{}
 	forceAppUpdateChanMu sync.Mutex
 
-	isUpdatingGrid     bool
-	isUpdatingGridLock sync.Mutex
+	isUpdatingLayout     bool
+	isUpdatingLayoutLock sync.Mutex
 )
-
-// HomeState represents the state for the home tab
-type HomeState struct {
-	LastUpdateTime  string `json:"lastUpdateTime"`
-	LastUpdateError string `json:"lastUpdateError"`
-	IsUpdating      bool   `json:"isUpdating"`
-}
 
 // AppUpdateState represents the state for the app update tab
 type AppUpdateState struct {
@@ -40,99 +34,79 @@ type AppUpdateState struct {
 	AutoUpdateEnabled   bool   `json:"autoUpdateEnabled"`
 }
 
-// --- Home Tab Bindings ---
+// --- Heroes Layout Update ---
 
-// GetHomeState returns the current state for the home tab
-func (a *App) GetHomeState() HomeState {
-	lastUpdateMillis := a.config.GetLastUpdateTimestampMillis()
-	var lastUpdateTimeStr string
-	if lastUpdateMillis == 0 {
-		lastUpdateTimeStr = "Never"
-	} else {
-		lastUpdateTimeStr = time.UnixMilli(lastUpdateMillis).Format("2006-01-02 15:04:05")
-	}
-
-	isUpdatingGridLock.Lock()
-	updating := isUpdatingGrid
-	isUpdatingGridLock.Unlock()
-
-	return HomeState{
-		LastUpdateTime:  lastUpdateTimeStr,
-		LastUpdateError: a.config.GetLastUpdateErrorMessage(),
-		IsUpdating:      updating,
-	}
+// GetIsUpdatingLayout returns whether an update is in progress
+func (a *App) GetIsUpdatingLayout() bool {
+	isUpdatingLayoutLock.Lock()
+	defer isUpdatingLayoutLock.Unlock()
+	return isUpdatingLayout
 }
 
-// UpdateHeroesLayout triggers the hero grid update
+// UpdateHeroesLayout triggers the hero layout update
 func (a *App) UpdateHeroesLayout() {
 	go func() {
-		isUpdatingGridLock.Lock()
-		if isUpdatingGrid {
-			isUpdatingGridLock.Unlock()
+		isUpdatingLayoutLock.Lock()
+		if isUpdatingLayout {
+			isUpdatingLayoutLock.Unlock()
 			return
 		}
-		isUpdatingGrid = true
-		isUpdatingGridLock.Unlock()
+		isUpdatingLayout = true
+		isUpdatingLayoutLock.Unlock()
 
 		// Notify frontend that update started
 		runtime.EventsEmit(a.ctx, "heroesLayoutUpdateStarted")
 
-		err := heroesLayout.UpdateHeroesLayout(heroesLayout.UpdateHeroesLayoutConfig{
-			ConfigFilePaths: a.config.GetHeroesLayoutFilePaths(),
-			Positions:       a.config.GetPositionsOrder(),
-		})
+		// Get enabled files and positions
+		enabledFilePaths := a.config.GetEnabledFilePaths()
+		enabledPositions := a.config.GetEnabledPositionIDs()
 
+		// Update each file
 		now := time.Now()
-		a.config.SetLastUpdateTimestampMillis(now.UnixMilli())
+		for _, filePath := range enabledFilePaths {
+			err := heroesLayout.UpdateHeroesLayout(heroesLayout.UpdateHeroesLayoutConfig{
+				ConfigFilePaths: []string{filePath},
+				Positions:       enabledPositions,
+			})
 
-		errorMsg := ""
-		if err != nil {
-			errorMsg = err.Error()
-			slog.Error("Error updating heroes grid", "error", err)
+			errorMsg := ""
+			if err != nil {
+				errorMsg = err.Error()
+				slog.Error("Error updating heroes layout", "file", filePath, "error", err)
+			}
+
+			a.config.UpdateHeroesLayoutFileStatus(filePath, now.UnixMilli(), errorMsg)
 		}
-		a.config.SetLastUpdateErrorMessage(errorMsg)
 
-		isUpdatingGridLock.Lock()
-		isUpdatingGrid = false
-		isUpdatingGridLock.Unlock()
+		isUpdatingLayoutLock.Lock()
+		isUpdatingLayout = false
+		isUpdatingLayoutLock.Unlock()
 
-		// Notify frontend that update finished
-		runtime.EventsEmit(a.ctx, "heroesLayoutUpdateFinished", HomeState{
-			LastUpdateTime:  now.Format("2006-01-02 15:04:05"),
-			LastUpdateError: errorMsg,
-			IsUpdating:      false,
-		})
+		// Notify frontend that update finished with updated files
+		runtime.EventsEmit(a.ctx, "heroesLayoutUpdateFinished", a.config.GetHeroesLayoutFiles())
 	}()
 }
 
-// --- Grid Configs Tab Bindings ---
+// --- Heroes Layout Files Bindings ---
 
-// GetGridConfigPaths returns the list of hero grid config file paths
-func (a *App) GetGridConfigPaths() []string {
-	return a.config.GetHeroesLayoutFilePaths()
+// GetHeroesLayoutFiles returns the list of hero layout config files
+func (a *App) GetHeroesLayoutFiles() []config.FileConfig {
+	return a.config.GetHeroesLayoutFiles()
 }
 
-// AddGridConfigPath adds a new config path
-func (a *App) AddGridConfigPath(path string) {
-	paths := a.config.GetHeroesLayoutFilePaths()
-	// Check for duplicates
-	for _, p := range paths {
-		if p == path {
-			return
-		}
-	}
-	paths = append(paths, path)
-	a.config.SetHeroesLayoutFilePaths(paths)
+// AddHeroesLayoutFile adds a new config file
+func (a *App) AddHeroesLayoutFile(path string) {
+	a.config.AddHeroesLayoutFile(path)
 }
 
-// RemoveGridConfigPath removes a config path by index
-func (a *App) RemoveGridConfigPath(index int) {
-	paths := a.config.GetHeroesLayoutFilePaths()
-	if index < 0 || index >= len(paths) {
-		return
-	}
-	paths = append(paths[:index], paths[index+1:]...)
-	a.config.SetHeroesLayoutFilePaths(paths)
+// RemoveHeroesLayoutFile removes a config file by index
+func (a *App) RemoveHeroesLayoutFile(index int) {
+	a.config.RemoveHeroesLayoutFile(index)
+}
+
+// SetHeroesLayoutFileEnabled enables or disables a file by index
+func (a *App) SetHeroesLayoutFileEnabled(index int, enabled bool) {
+	a.config.SetHeroesLayoutFileEnabled(index, enabled)
 }
 
 // OpenFileDialog opens a file dialog and returns the selected path
@@ -153,38 +127,21 @@ func (a *App) OpenFileDialog() string {
 	return selection
 }
 
-// --- Positions Order Tab Bindings ---
+// --- Positions Bindings ---
 
-// GetPositionsOrder returns the current positions order
-func (a *App) GetPositionsOrder() []string {
-	return a.config.GetPositionsOrder()
+// GetPositions returns the current positions
+func (a *App) GetPositions() []config.PositionConfig {
+	return a.config.GetPositions()
 }
 
-// SetPositionsOrder updates the positions order
-func (a *App) SetPositionsOrder(positions []string) {
-	a.config.SetPositionsOrder(positions)
+// SetPositions updates the positions (order and enabled state)
+func (a *App) SetPositions(positions []config.PositionConfig) {
+	a.config.SetPositions(positions)
 }
 
-// MovePositionUp moves a position up in the list
-func (a *App) MovePositionUp(index int) []string {
-	positions := a.config.GetPositionsOrder()
-	if index <= 0 || index >= len(positions) {
-		return positions
-	}
-	positions[index], positions[index-1] = positions[index-1], positions[index]
-	a.config.SetPositionsOrder(positions)
-	return positions
-}
-
-// MovePositionDown moves a position down in the list
-func (a *App) MovePositionDown(index int) []string {
-	positions := a.config.GetPositionsOrder()
-	if index < 0 || index >= len(positions)-1 {
-		return positions
-	}
-	positions[index], positions[index+1] = positions[index+1], positions[index]
-	a.config.SetPositionsOrder(positions)
-	return positions
+// SetPositionEnabled enables or disables a position by ID
+func (a *App) SetPositionEnabled(id string, enabled bool) {
+	a.config.SetPositionEnabled(id, enabled)
 }
 
 // --- Startup Tab Bindings ---
@@ -238,7 +195,7 @@ func (a *App) getUpdateService() *update.UpdateService {
 func (a *App) GetAppUpdateState() AppUpdateState {
 	svc := a.getUpdateService()
 
-	lastCheckMillis := a.config.GetAppLastUpdateCheckTimestampMillis()
+	lastCheckMillis := a.config.GetAppLastCheckTimestampMillis()
 	var lastCheckTimeStr string
 	if lastCheckMillis == 0 {
 		lastCheckTimeStr = "Never"
@@ -290,9 +247,6 @@ func (a *App) DownloadAppUpdate() {
 	go func() {
 		svc := a.getUpdateService()
 
-		// Note: appUpdateDownloadStarted is emitted by the background listener
-		// when it receives OnUpdateStarted from the service
-
 		err := svc.UpdateApp()
 
 		if err != nil {
@@ -313,23 +267,39 @@ func (a *App) DownloadAppUpdate() {
 // --- Background Tasks ---
 
 func (a *App) startBackgroundTasks() {
-	// Start periodic hero grid update
+	// Start periodic hero layout update
 	go func() {
 		delay := time.Hour
-		lastUpdateTime := time.UnixMilli(a.config.GetLastUpdateTimestampMillis())
 
 		for {
-			nextUpdate := lastUpdateTime.Add(delay)
-			waitDuration := time.Until(nextUpdate)
-			if waitDuration < 0 {
-				waitDuration = 0
+			// Find the most recent update time across all files
+			files := a.config.GetHeroesLayoutFiles()
+			var lastUpdateTime time.Time
+			for _, f := range files {
+				if f.LastUpdateTimestampMillis > 0 {
+					t := time.UnixMilli(f.LastUpdateTimestampMillis)
+					if t.After(lastUpdateTime) {
+						lastUpdateTime = t
+					}
+				}
+			}
+
+			var waitDuration time.Duration
+			if lastUpdateTime.IsZero() {
+				// No files have been updated yet, wait for the full delay
+				waitDuration = delay
+			} else {
+				nextUpdate := lastUpdateTime.Add(delay)
+				waitDuration = time.Until(nextUpdate)
+				if waitDuration < 0 {
+					waitDuration = 0
+				}
 			}
 
 			<-time.After(waitDuration)
 
 			// Trigger update
 			a.UpdateHeroesLayout()
-			lastUpdateTime = time.Now()
 		}
 	}()
 
@@ -339,7 +309,7 @@ func (a *App) startBackgroundTasks() {
 
 		// Create and store the force update channel
 		forceAppUpdateChanMu.Lock()
-		forceAppUpdateChan = make(chan struct{}, 1) // Buffered to prevent blocking
+		forceAppUpdateChan = make(chan struct{}, 1)
 		ch := forceAppUpdateChan
 		forceAppUpdateChanMu.Unlock()
 
@@ -351,7 +321,7 @@ func (a *App) startBackgroundTasks() {
 					runtime.EventsEmit(a.ctx, "appUpdateCheckStarted")
 				case <-svc.OnCheckFinished:
 					now := time.Now()
-					a.config.SetAppLastUpdateCheckTimestampMillis(now.UnixMilli())
+					a.config.SetAppLastCheckTimestampMillis(now.UnixMilli())
 					runtime.EventsEmit(a.ctx, "appUpdateCheckFinished", AppUpdateState{
 						CurrentVersion:    AppVersion,
 						LatestVersion:     svc.LatestAvailableVersion(),
@@ -379,7 +349,7 @@ func (a *App) startBackgroundTasks() {
 			}
 		}()
 
-		// Run the periodic update check loop (respects auto-update setting internally)
+		// Run the periodic update check loop
 		svc.RunPeriodicUpdateCheck(ch)
 	}()
 }

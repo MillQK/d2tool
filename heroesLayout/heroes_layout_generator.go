@@ -7,7 +7,6 @@ import (
 	"fmt"
 	"log/slog"
 	"os"
-	"path/filepath"
 	"strings"
 	"time"
 )
@@ -183,44 +182,6 @@ func generateHeroesLayoutConfigs(positions []string, positionToHero map[string][
 
 	configs = append(configs, mergedConfig)
 	return configs
-}
-
-// FindHeroesLayoutConfigFiles finds all hero_grid_config.json files for all Steam users
-func FindHeroesLayoutConfigFiles(steamPath string) ([]string, error) {
-	userdataPath := filepath.Join(steamPath, "userdata")
-
-	// Check if userdata directory exists
-	if _, err := os.Stat(userdataPath); os.IsNotExist(err) {
-		return nil, fmt.Errorf("userdata directory not found at %s", userdataPath)
-	}
-
-	var configFiles []string
-
-	// List all directories in userdata (each is a Steam user ID)
-	userDirs, err := os.ReadDir(userdataPath)
-	if err != nil {
-		return nil, fmt.Errorf("error reading userdata directory: %w", err)
-	}
-
-	for _, userDir := range userDirs {
-		if !userDir.IsDir() {
-			continue
-		}
-
-		// Construct path to hero_grid_config.json
-		configPath := filepath.Join(userdataPath, userDir.Name(), "570", "remote", "cfg", "hero_grid_config.json")
-
-		// Check if file exists
-		if _, err := os.Stat(configPath); err == nil {
-			configFiles = append(configFiles, configPath)
-		}
-	}
-
-	if len(configFiles) == 0 {
-		return nil, fmt.Errorf("no hero_grid_config.json files found")
-	}
-
-	return configFiles, nil
 }
 
 // processHeroesLayoutConfig processes a hero_grid_config.json file

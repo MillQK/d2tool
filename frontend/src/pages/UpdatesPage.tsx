@@ -4,7 +4,6 @@ import {
   GetAppUpdateState,
   CheckForAppUpdate,
   DownloadAppUpdate,
-  GetAutoUpdateEnabled,
   SetAutoUpdateEnabled,
   AppUpdateState,
 } from '../wailsjs/go/main/App'
@@ -47,27 +46,16 @@ const ClockIcon = () => (
 )
 
 function UpdatesPage() {
-  const [state, setState] = useState<AppUpdateState>({
-    currentVersion: '',
-    latestVersion: '',
-    lastCheckTime: 'Loading...',
-    updateAvailable: false,
-    isCheckingForUpdate: false,
-    isDownloadingUpdate: false,
-    autoUpdateEnabled: true,
-  })
+  const [state, setState] = useState<AppUpdateState | null>(null)
   const [isChecking, setIsChecking] = useState(false)
   const [isDownloading, setIsDownloading] = useState(false)
-  const [autoUpdateEnabled, setAutoUpdateEnabledState] = useState(true)
+  const [autoUpdateEnabled, setAutoUpdateEnabledState] = useState<boolean | null>(null)
 
   useEffect(() => {
     GetAppUpdateState().then((s) => {
       setState(s)
       setAutoUpdateEnabledState(s.autoUpdateEnabled)
     }).catch(console.error)
-
-    // Also get the current auto-update setting
-    GetAutoUpdateEnabled().then(setAutoUpdateEnabledState).catch(console.error)
 
     const offCheckStarted = EventsOn('appUpdateCheckStarted', () => {
       setIsChecking(true)
@@ -143,14 +131,16 @@ function UpdatesPage() {
                   Automatically check for updates when D2Tool starts
                 </div>
               </div>
-              <label className="toggle">
-                <input
-                  type="checkbox"
-                  checked={autoUpdateEnabled}
-                  onChange={handleAutoUpdateToggle}
-                />
-                <span className="toggle-slider"></span>
-              </label>
+              {autoUpdateEnabled !== null && (
+                <label className="toggle">
+                  <input
+                    type="checkbox"
+                    checked={autoUpdateEnabled}
+                    onChange={handleAutoUpdateToggle}
+                  />
+                  <span className="toggle-slider"></span>
+                </label>
+              )}
             </div>
           </div>
         </div>
@@ -164,9 +154,9 @@ function UpdatesPage() {
             <div className="version-grid">
               <div className="version-item">
                 <div className="version-label">Current Version</div>
-                <div className="version-value">{state.currentVersion || 'Unknown'}</div>
+                <div className="version-value">{state?.currentVersion || 'Unknown'}</div>
               </div>
-              {state.latestVersion && (
+              {state?.latestVersion && (
                 <div className="version-item">
                   <div className="version-label">Latest Version</div>
                   <div className="version-value">{state.latestVersion}</div>
@@ -180,7 +170,7 @@ function UpdatesPage() {
                   <ClockIcon />
                   <span>Last Checked</span>
                 </div>
-                <div className="status-value">{state.lastCheckTime}</div>
+                <div className="status-value">{state?.lastCheckTime || 'Loading...'}</div>
               </div>
             </div>
           </div>
@@ -192,7 +182,7 @@ function UpdatesPage() {
             <h2 className="card-title">Update Status</h2>
           </div>
           <div className="card-body">
-            {state.updateAvailable ? (
+            {state?.updateAvailable ? (
               <div className="update-available">
                 <div className="update-badge update-badge-warning">
                   <AlertCircleIcon />
@@ -224,7 +214,7 @@ function UpdatesPage() {
                 <span>{isChecking ? 'Checking...' : 'Check for Updates'}</span>
               </button>
 
-              {state.updateAvailable && (
+              {state?.updateAvailable && (
                 <button
                   className="btn btn-primary"
                   onClick={handleDownloadUpdate}

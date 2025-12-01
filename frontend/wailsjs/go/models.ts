@@ -1,3 +1,42 @@
+export namespace config {
+	
+	export class FileConfig {
+	    filePath: string;
+	    enabled: boolean;
+	    attributes: Record<string, string>;
+	    lastUpdateTimestampMillis: number;
+	    lastUpdateErrorMessage: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new FileConfig(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.filePath = source["filePath"];
+	        this.enabled = source["enabled"];
+	        this.attributes = source["attributes"];
+	        this.lastUpdateTimestampMillis = source["lastUpdateTimestampMillis"];
+	        this.lastUpdateErrorMessage = source["lastUpdateErrorMessage"];
+	    }
+	}
+	export class PositionConfig {
+	    id: string;
+	    enabled: boolean;
+	
+	    static createFrom(source: any = {}) {
+	        return new PositionConfig(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.id = source["id"];
+	        this.enabled = source["enabled"];
+	    }
+	}
+
+}
+
 export namespace main {
 	
 	export class AppUpdateState {
@@ -22,22 +61,6 @@ export namespace main {
 	        this.isCheckingForUpdate = source["isCheckingForUpdate"];
 	        this.isDownloadingUpdate = source["isDownloadingUpdate"];
 	        this.autoUpdateEnabled = source["autoUpdateEnabled"];
-	    }
-	}
-	export class HomeState {
-	    lastUpdateTime: string;
-	    lastUpdateError: string;
-	    isUpdating: boolean;
-	
-	    static createFrom(source: any = {}) {
-	        return new HomeState(source);
-	    }
-	
-	    constructor(source: any = {}) {
-	        if ('string' === typeof source) source = JSON.parse(source);
-	        this.lastUpdateTime = source["lastUpdateTime"];
-	        this.lastUpdateError = source["lastUpdateError"];
-	        this.isUpdating = source["isUpdating"];
 	    }
 	}
 

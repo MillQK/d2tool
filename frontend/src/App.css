@@ -466,6 +466,117 @@ body {
   white-space: nowrap;
 }
 
+.list-item-details {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+  flex: 1;
+  min-width: 0;
+}
+
+.list-item-meta {
+  font-size: 12px;
+  color: var(--color-text-muted);
+}
+
+.list-item-error {
+  color: var(--color-danger);
+}
+
+.list-item.disabled {
+  opacity: 0.6;
+}
+
+.list-item.disabled .list-item-text {
+  color: var(--color-text-muted);
+}
+
+/* File List */
+.file-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.file-card {
+  background-color: var(--color-bg-tertiary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.file-card.disabled {
+  opacity: 0.6;
+}
+
+.file-card.has-error {
+  border-color: var(--color-danger);
+}
+
+.file-card-header {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-md);
+  padding: var(--spacing-md) var(--spacing-lg);
+}
+
+.file-card-title {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.file-path {
+  font-size: 13px;
+  color: var(--color-text-primary);
+  word-break: break-all;
+  line-height: 1.4;
+}
+
+.file-card.disabled .file-path {
+  color: var(--color-text-muted);
+}
+
+.file-attributes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-xs);
+}
+
+.file-attribute {
+  display: inline-block;
+  padding: 2px var(--spacing-sm);
+  background-color: var(--color-bg-elevated);
+  border-radius: var(--radius-sm);
+  font-size: 11px;
+  color: var(--color-text-secondary);
+}
+
+.file-attribute-key {
+  color: var(--color-text-muted);
+}
+
+.file-card-footer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+  padding: var(--spacing-sm) var(--spacing-lg);
+  background-color: var(--color-bg-secondary);
+  border-top: 1px solid var(--color-border);
+}
+
+.file-status {
+  font-size: 12px;
+  color: var(--color-text-muted);
+}
+
+.file-error {
+  font-size: 12px;
+  color: var(--color-danger);
+}
+
 .list-item-actions {
   display: flex;
   gap: var(--spacing-xs);
@@ -629,6 +740,23 @@ body {
 
 .toggle.disabled .toggle-slider {
   cursor: not-allowed;
+}
+
+/* Small Toggle */
+.toggle.toggle-sm {
+  width: 36px;
+  height: 20px;
+}
+
+.toggle.toggle-sm .toggle-slider:before {
+  height: 14px;
+  width: 14px;
+  left: 2px;
+  bottom: 2px;
+}
+
+.toggle.toggle-sm input:checked + .toggle-slider:before {
+  transform: translateX(16px);
 }
 
 /* Version Grid */

@@ -1,15 +1,18 @@
 import { useEffect, useState } from 'react'
 import { EventsOn } from '../wailsjs/runtime'
 import {
-  GetHomeState,
+  GetIsUpdatingLayout,
   UpdateHeroesLayout,
-  GetGridConfigPaths,
-  AddGridConfigPath,
-  RemoveGridConfigPath,
+  GetHeroesLayoutFiles,
+  AddHeroesLayoutFile,
+  RemoveHeroesLayoutFile,
+  SetHeroesLayoutFileEnabled,
   OpenFileDialog,
-  GetPositionsOrder,
-  SetPositionsOrder,
-  HomeState,
+  GetPositions,
+  SetPositions,
+  SetPositionEnabled,
+  FileConfig,
+  PositionConfig,
 } from '../wailsjs/go/main/App'
 
 // Position name mapping
@@ -55,48 +58,38 @@ const GripIcon = () => (
   </svg>
 )
 
-const ClockIcon = () => (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <circle cx="12" cy="12" r="10" />
-    <polyline points="12 6 12 12 16 14" />
-  </svg>
-)
-
 interface DragState {
-  draggedItem: string
-  originalPositions: string[]
+  draggedItem: PositionConfig
+  originalPositions: PositionConfig[]
 }
 
 function HeroesLayoutPage() {
-  // Home state
-  const [homeState, setHomeState] = useState<HomeState>({
-    lastUpdateTime: 'Loading...',
-    lastUpdateError: '',
-    isUpdating: false,
-  })
+  // Update state
+  const [isUpdating, setIsUpdating] = useState(false)
 
-  // Grid configs state
-  const [configPaths, setConfigPaths] = useState<string[]>([])
+  // Config files state
+  const [files, setFiles] = useState<FileConfig[]>([])
 
   // Positions state
-  const [positions, setPositions] = useState<string[]>([])
+  const [positions, setPositions] = useState<PositionConfig[]>([])
 
-  // Drag and drop state - simplified to just track dragged item and original order
+  // Drag and drop state
   const [dragState, setDragState] = useState<DragState | null>(null)
 
   useEffect(() => {
     // Load initial states
-    GetHomeState().then(setHomeState).catch(console.error)
-    GetGridConfigPaths().then(setConfigPaths).catch(console.error)
-    GetPositionsOrder().then(setPositions).catch(console.error)
+    GetIsUpdatingLayout().then(setIsUpdating).catch(console.error)
+    GetHeroesLayoutFiles().then(setFiles).catch(console.error)
+    GetPositions().then(setPositions).catch(console.error)
 
     // Listen for update events
     const offStarted = EventsOn('heroesLayoutUpdateStarted', () => {
-      setHomeState((prev) => ({ ...prev, isUpdating: true }))
+      setIsUpdating(true)
     })
 
-    const offFinished = EventsOn('heroesLayoutUpdateFinished', (newState: HomeState) => {
-      setHomeState(newState)
+    const offFinished = EventsOn('heroesLayoutUpdateFinished', (updatedFiles: FileConfig[]) => {
+      setIsUpdating(false)
+      setFiles(updatedFiles)
     })
 
     return () => {
@@ -109,37 +102,57 @@ function HeroesLayoutPage() {
     UpdateHeroesLayout().catch(console.error)
   }
 
-  const handleAddConfig = async () => {
+  const handleAddFile = async () => {
     try {
       const path = await OpenFileDialog()
       if (path) {
-        await AddGridConfigPath(path)
-        const paths = await GetGridConfigPaths()
-        setConfigPaths(paths)
+        await AddHeroesLayoutFile(path)
+        const updatedFiles = await GetHeroesLayoutFiles()
+        setFiles(updatedFiles)
       }
     } catch (error) {
-      console.error('Error adding config:', error)
+      console.error('Error adding file:', error)
     }
   }
 
-  const handleRemoveConfig = async (index: number) => {
+  const handleRemoveFile = async (index: number) => {
     try {
-      await RemoveGridConfigPath(index)
-      const paths = await GetGridConfigPaths()
-      setConfigPaths(paths)
+      await RemoveHeroesLayoutFile(index)
+      const updatedFiles = await GetHeroesLayoutFiles()
+      setFiles(updatedFiles)
     } catch (error) {
-      console.error('Error removing config:', error)
+      console.error('Error removing file:', error)
+    }
+  }
+
+  const handleToggleFileEnabled = async (index: number, enabled: boolean) => {
+    try {
+      await SetHeroesLayoutFileEnabled(index, enabled)
+      const updatedFiles = await GetHeroesLayoutFiles()
+      setFiles(updatedFiles)
+    } catch (error) {
+      console.error('Error toggling file:', error)
+    }
+  }
+
+  const handleTogglePositionEnabled = async (id: string, enabled: boolean) => {
+    try {
+      await SetPositionEnabled(id, enabled)
+      const updatedPositions = await GetPositions()
+      setPositions(updatedPositions)
+    } catch (error) {
+      console.error('Error toggling position:', error)
     }
   }
 
   // Drag and drop handlers
-  const handleDragStart = (e: React.DragEvent, position: string) => {
+  const handleDragStart = (e: React.DragEvent, position: PositionConfig) => {
     setDragState({
       draggedItem: position,
       originalPositions: [...positions],
     })
     e.dataTransfer.effectAllowed = 'move'
-    e.dataTransfer.setData('text/plain', position)
+    e.dataTransfer.setData('text/plain', position.id)
   }
 
   const handleDragEnd = async () => {
@@ -151,11 +164,11 @@ function HeroesLayoutPage() {
     setDragState(null)
 
     // Check if order actually changed
-    const orderChanged = positions.some((p, i) => p !== originalPositions[i])
+    const orderChanged = positions.some((p, i) => p.id !== originalPositions[i].id)
 
     if (orderChanged) {
       try {
-        await SetPositionsOrder(positions)
+        await SetPositions(positions)
       } catch (error) {
         console.error('Error saving positions order:', error)
         // Revert on error
@@ -170,7 +183,7 @@ function HeroesLayoutPage() {
 
     if (!dragState) return
 
-    const currentIndex = positions.indexOf(dragState.draggedItem)
+    const currentIndex = positions.findIndex(p => p.id === dragState.draggedItem.id)
     if (currentIndex === -1 || currentIndex === targetIndex) return
 
     // Update positions directly during drag
@@ -184,9 +197,17 @@ function HeroesLayoutPage() {
     e.preventDefault()
   }
 
-  const getPositionName = (position: string) => {
-    return positionNames[position] || `Position ${position}`
+  const getPositionName = (id: string) => {
+    return positionNames[id] || `Position ${id}`
   }
+
+  const formatLastUpdate = (timestampMillis: number) => {
+    if (timestampMillis === 0) return 'Never'
+    return new Date(timestampMillis).toLocaleString()
+  }
+
+  // Check if any file has errors
+  const hasErrors = files.some(f => f.lastUpdateErrorMessage)
 
   return (
     <div className="page">
@@ -199,36 +220,32 @@ function HeroesLayoutPage() {
         {/* Update Status Card */}
         <div className="card">
           <div className="card-header">
-            <h2 className="card-title">Update Status</h2>
+            <h2 className="card-title">Update</h2>
+            <button
+              className="btn btn-primary btn-sm"
+              onClick={handleUpdate}
+              disabled={isUpdating}
+            >
+              <RefreshIcon />
+              <span>{isUpdating ? 'Updating...' : 'Update Now'}</span>
+            </button>
           </div>
           <div className="card-body">
-            <div className="status-row">
-              <div className="status-info">
-                <div className="status-label">
-                  <ClockIcon />
-                  <span>Last Updated</span>
-                </div>
-                <div className="status-value">{homeState.lastUpdateTime}</div>
-              </div>
-              <button
-                className="btn btn-primary"
-                onClick={handleUpdate}
-                disabled={homeState.isUpdating}
-              >
-                <RefreshIcon />
-                <span>{homeState.isUpdating ? 'Updating...' : 'Update Now'}</span>
-              </button>
-            </div>
-
-            {homeState.isUpdating && (
+            {isUpdating && (
               <div className="progress-bar">
                 <div className="progress-bar-inner"></div>
               </div>
             )}
 
-            {homeState.lastUpdateError && (
+            {!isUpdating && hasErrors && (
               <div className="alert alert-error">
-                <span>Error: {homeState.lastUpdateError}</span>
+                <span>Some files failed to update. Check the file list below for details.</span>
+              </div>
+            )}
+
+            {!isUpdating && !hasErrors && files.length > 0 && (
+              <div className="alert alert-info">
+                <span>All files are up to date.</span>
               </div>
             )}
           </div>
@@ -238,31 +255,60 @@ function HeroesLayoutPage() {
         <div className="card">
           <div className="card-header">
             <h2 className="card-title">Config Files</h2>
-            <button className="btn btn-secondary btn-sm" onClick={handleAddConfig}>
+            <button className="btn btn-secondary btn-sm" onClick={handleAddFile}>
               <PlusIcon />
-              <span>Add Config</span>
+              <span>Add File</span>
             </button>
           </div>
           <div className="card-body">
-            {configPaths.length === 0 ? (
+            {files.length === 0 ? (
               <div className="empty-state">
                 <p>No config files added yet</p>
-                <p className="empty-state-hint">Click "Add Config" to select a heroes grid config file</p>
+                <p className="empty-state-hint">Click "Add File" to select a heroes grid config file</p>
               </div>
             ) : (
-              <div className="list">
-                {configPaths.map((path, index) => (
-                  <div key={index} className="list-item">
-                    <div className="list-item-content">
-                      <span className="list-item-text" title={path}>{path}</span>
+              <div className="file-list">
+                {files.map((file, index) => (
+                  <div key={file.filePath} className={`file-card ${!file.enabled ? 'disabled' : ''} ${file.lastUpdateErrorMessage ? 'has-error' : ''}`}>
+                    <div className="file-card-header">
+                      <label className="toggle toggle-sm">
+                        <input
+                          type="checkbox"
+                          checked={file.enabled}
+                          onChange={(e) => handleToggleFileEnabled(index, e.target.checked)}
+                        />
+                        <span className="toggle-slider"></span>
+                      </label>
+                      <div className="file-card-title">
+                        <span className="file-path" title={file.filePath}>{file.filePath}</span>
+                        {file.attributes && Object.keys(file.attributes).length > 0 && (
+                          <div className="file-attributes">
+                            {Object.entries(file.attributes).map(([key, value]) => (
+                              <span key={key} className="file-attribute">
+                                <span className="file-attribute-key">{key}:</span> {value}
+                              </span>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                      <button
+                        className="btn btn-icon btn-danger"
+                        onClick={() => handleRemoveFile(index)}
+                        title="Remove file"
+                      >
+                        <TrashIcon />
+                      </button>
                     </div>
-                    <button
-                      className="btn btn-icon btn-danger"
-                      onClick={() => handleRemoveConfig(index)}
-                      title="Remove config"
-                    >
-                      <TrashIcon />
-                    </button>
+                    <div className="file-card-footer">
+                      <span className="file-status">
+                        {file.lastUpdateTimestampMillis > 0
+                          ? `Updated: ${formatLastUpdate(file.lastUpdateTimestampMillis)}`
+                          : 'Never updated'}
+                      </span>
+                      {file.lastUpdateErrorMessage && (
+                        <span className="file-error">{file.lastUpdateErrorMessage}</span>
+                      )}
+                    </div>
                   </div>
                 ))}
               </div>
@@ -276,7 +322,7 @@ function HeroesLayoutPage() {
             <h2 className="card-title">Positions Order</h2>
           </div>
           <div className="card-body">
-            <p className="card-hint">Drag and drop to reorder positions</p>
+            <p className="card-hint">Drag to reorder, toggle to enable/disable positions</p>
             {positions.length === 0 ? (
               <div className="empty-state">
                 <p>No positions configured</p>
@@ -285,8 +331,8 @@ function HeroesLayoutPage() {
               <div className="list sortable-list">
                 {positions.map((position, index) => (
                   <div
-                    key={position}
-                    className={`list-item draggable ${dragState?.draggedItem === position ? 'dragging' : ''}`}
+                    key={position.id}
+                    className={`list-item draggable ${dragState?.draggedItem.id === position.id ? 'dragging' : ''} ${!position.enabled ? 'disabled' : ''}`}
                     draggable
                     onDragStart={(e) => handleDragStart(e, position)}
                     onDragEnd={handleDragEnd}
@@ -297,7 +343,18 @@ function HeroesLayoutPage() {
                       <span className="drag-handle">
                         <GripIcon />
                       </span>
-                      <span className="list-item-text">{getPositionName(position)}</span>
+                      <label className="toggle toggle-sm">
+                        <input
+                          type="checkbox"
+                          checked={position.enabled}
+                          onChange={(e) => {
+                            e.stopPropagation()
+                            handleTogglePositionEnabled(position.id, e.target.checked)
+                          }}
+                        />
+                        <span className="toggle-slider"></span>
+                      </label>
+                      <span className="list-item-text">{getPositionName(position.id)}</span>
                     </div>
                   </div>
                 ))}
