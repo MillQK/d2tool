@@ -23,7 +23,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: dAppServer/wails-build-action@v3
+      - uses: dAppServer/wails-build-action@v2.2
+        id: build
         with:
           build-name: ${{ matrix.build.name }}
           build-platform: ${{ matrix.build.platform }}
