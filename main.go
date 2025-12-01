@@ -5,6 +5,7 @@ import (
 	"d2tool/config"
 	"embed"
 	"flag"
+	"io"
 	"log/slog"
 	"os"
 	"path"
@@ -13,6 +14,7 @@ import (
 	"github.com/wailsapp/wails/v2/pkg/options"
 	"github.com/wailsapp/wails/v2/pkg/options/assetserver"
 	"github.com/wailsapp/wails/v2/pkg/options/windows"
+	"gopkg.in/natefinch/lumberjack.v2"
 )
 
 //go:embed all:frontend/dist
@@ -34,10 +36,11 @@ func main() {
 
 	// Create application with options
 	err := wails.Run(&options.App{
-		Title:       "D2Tool",
-		Width:       1000,
-		Height:      800,
-		StartHidden: *minimized,
+		Title:             "D2Tool",
+		Width:             1000,
+		Height:            800,
+		StartHidden:       *minimized,
+		HideWindowOnClose: true,
 		AssetServer: &assetserver.Options{
 			Assets: assets,
 		},
@@ -50,6 +53,10 @@ func main() {
 		Windows: &windows.Options{
 			WebviewIsTransparent: false,
 			WindowIsTranslucent:  false,
+		},
+		SingleInstanceLock: &options.SingleInstanceLock{
+			UniqueId:               "d2tool-019ad9f4-1416-7b10-b8ce-2ab89c12279e",
+			OnSecondInstanceLaunch: nil,
 		},
 	})
 
@@ -67,13 +74,17 @@ func setupLogger() {
 	}
 
 	logFilePath := path.Join(path.Dir(executablePath), "d2tool.log")
-	file, err := os.OpenFile(logFilePath, os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0666)
-	if err != nil {
-		slog.Error("unable to open log file", "error", err, "path", logFilePath)
-		return
+
+	fileLogger := &lumberjack.Logger{
+		Filename:   logFilePath,
+		MaxSize:    20, // megabytes
+		MaxBackups: 3,
+		MaxAge:     7,     //days
+		Compress:   false, // disabled by default
 	}
 
-	textHandler := slog.NewTextHandler(file, nil)
+	multiWriter := io.MultiWriter(os.Stdout, fileLogger)
+	textHandler := slog.NewTextHandler(multiWriter, nil)
 	slog.SetDefault(slog.New(textHandler))
 	slog.Info("Logger initialized", "path", logFilePath)
 }

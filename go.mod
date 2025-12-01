@@ -8,6 +8,7 @@ require (
 	github.com/andygrunwald/vdf v1.1.0
 	github.com/wailsapp/wails/v2 v2.11.0
 	golang.org/x/sys v0.32.0
+	gopkg.in/natefinch/lumberjack.v2 v2.2.1
 )
 
 require (

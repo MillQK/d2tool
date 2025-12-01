@@ -9,5 +9,8 @@
   "author": {
     "name": "MillQK",
     "email": ""
+  },
+  "info": {
+    "productVersion": "0.0.6"
   }
 }
