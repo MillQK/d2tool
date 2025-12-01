@@ -12,7 +12,7 @@ d2tool_config.json
 .DS_Store
 Thumbs.db
 
-.local/
+.local/*
 
 # IDE
 .vscode/

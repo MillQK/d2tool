@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"d2tool/config"
+	"d2tool/utils"
 	"embed"
 	"flag"
 	"fmt"
@@ -66,6 +67,7 @@ func main() {
 				fmt.Println("Another instance is already running!")
 			},
 		},
+		Logger:             utils.NewSlogAdapter(),
 		LogLevel:           logger.DEBUG,
 		LogLevelProduction: logger.INFO,
 	})
