@@ -37,6 +37,10 @@ func StopSystray() {
 	}
 }
 
+func IsSupported() bool {
+	return true
+}
+
 func onSystrayReady(ctx context.Context) {
 	systray.SetIcon(main.appIcon)
 	systray.SetTooltip("D2Tool")

@@ -50,7 +50,7 @@ func main() {
 		Width:             1000,
 		Height:            800,
 		StartHidden:       *minimized,
-		HideWindowOnClose: true,
+		HideWindowOnClose: systray.IsSupported(), // Hide window when systray is supported
 		AssetServer: &assetserver.Options{
 			Assets: assets,
 		},
