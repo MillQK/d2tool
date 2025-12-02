@@ -15,13 +15,13 @@ var (
 	systrayCtx chan context.Context
 )
 
-func InitSystray() {
+func InitSystray(iconBytes []byte) {
 	systrayCtx = make(chan context.Context, 1)
 
 	var trayStart func()
 	trayStart, trayStop = systray.RunWithExternalLoop(func() {
 		ctx := <-systrayCtx
-		onSystrayReady(ctx)
+		onSystrayReady(ctx, iconBytes)
 	}, nil)
 
 	go trayStart()
@@ -41,8 +41,8 @@ func IsSupported() bool {
 	return true
 }
 
-func onSystrayReady(ctx context.Context) {
-	systray.SetIcon(main.appIcon)
+func onSystrayReady(ctx context.Context, iconBytes []byte) {
+	systray.SetIcon(iconBytes)
 	systray.SetTooltip("D2Tool")
 
 	mShow := systray.AddMenuItem("Show", "Show the app")

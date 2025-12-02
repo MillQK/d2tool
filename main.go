@@ -42,7 +42,7 @@ func main() {
 	app := NewApp()
 
 	// Initialize systray (Windows only, no-op on other platforms)
-	systray.InitSystray()
+	systray.InitSystray(appIcon)
 
 	// Create application with options
 	err := wails.Run(&options.App{
