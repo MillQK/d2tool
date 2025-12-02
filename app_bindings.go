@@ -2,10 +2,8 @@ package main
 
 import (
 	"d2tool/config"
-	"d2tool/github"
 	"d2tool/heroesLayout"
 	"d2tool/startup"
-	"d2tool/update"
 	"log/slog"
 	"sync"
 	"time"
@@ -14,8 +12,6 @@ import (
 )
 
 var (
-	updateService        *update.UpdateService
-	updateServiceOnce    sync.Once
 	forceAppUpdateChan   chan struct{}
 	forceAppUpdateChanMu sync.Mutex
 
@@ -177,24 +173,8 @@ func (a *App) IsStartupSupported() bool {
 
 // --- App Update Tab Bindings ---
 
-func (a *App) getUpdateService() *update.UpdateService {
-	updateServiceOnce.Do(func() {
-		updateService = update.NewUpdateService(
-			github.NewHttpClient(),
-			AppVersion,
-		)
-		// Cleanup old files on startup
-		if err := updateService.CleanupOldFiles(); err != nil {
-			slog.Warn("Unable to cleanup old files", "error", err)
-		}
-	})
-	return updateService
-}
-
 // GetAppUpdateState returns the current state for the app update tab
 func (a *App) GetAppUpdateState() AppUpdateState {
-	svc := a.getUpdateService()
-
 	lastCheckMillis := a.config.GetAppLastCheckTimestampMillis()
 	var lastCheckTimeStr string
 	if lastCheckMillis == 0 {
@@ -205,9 +185,9 @@ func (a *App) GetAppUpdateState() AppUpdateState {
 
 	return AppUpdateState{
 		CurrentVersion:    AppVersion,
-		LatestVersion:     svc.LatestAvailableVersion(),
+		LatestVersion:     a.updateService.LatestAvailableVersion(),
 		LastCheckTime:     lastCheckTimeStr,
-		UpdateAvailable:   svc.UpdateAvailable(),
+		UpdateAvailable:   a.updateService.UpdateAvailable(),
 		AutoUpdateEnabled: a.config.GetAutoUpdateEnabled(),
 	}
 }
@@ -245,9 +225,7 @@ func (a *App) CheckForAppUpdate() {
 // DownloadAppUpdate downloads and installs the update
 func (a *App) DownloadAppUpdate() {
 	go func() {
-		svc := a.getUpdateService()
-
-		err := svc.UpdateApp()
+		err := a.updateService.UpdateApp()
 
 		if err != nil {
 			slog.Error("Error downloading update", "error", err)
@@ -305,7 +283,7 @@ func (a *App) startBackgroundTasks() {
 
 	// Start periodic app update check
 	go func() {
-		svc := a.getUpdateService()
+		updateSvc := a.updateService
 
 		// Create and store the force update channel
 		forceAppUpdateChanMu.Lock()
@@ -317,21 +295,21 @@ func (a *App) startBackgroundTasks() {
 		go func() {
 			for {
 				select {
-				case <-svc.OnCheckStarted:
+				case <-updateSvc.OnCheckStartedChan():
 					runtime.EventsEmit(a.ctx, "appUpdateCheckStarted")
-				case <-svc.OnCheckFinished:
+				case <-updateSvc.OnCheckFinishedChan():
 					now := time.Now()
 					a.config.SetAppLastCheckTimestampMillis(now.UnixMilli())
 					runtime.EventsEmit(a.ctx, "appUpdateCheckFinished", AppUpdateState{
 						CurrentVersion:    AppVersion,
-						LatestVersion:     svc.LatestAvailableVersion(),
+						LatestVersion:     updateSvc.LatestAvailableVersion(),
 						LastCheckTime:     now.Format("2006-01-02 15:04:05"),
-						UpdateAvailable:   svc.UpdateAvailable(),
+						UpdateAvailable:   updateSvc.UpdateAvailable(),
 						AutoUpdateEnabled: a.config.GetAutoUpdateEnabled(),
 					})
-				case <-svc.OnUpdateStarted:
+				case <-updateSvc.OnUpdateStartedChan():
 					runtime.EventsEmit(a.ctx, "appUpdateDownloadStarted")
-				case <-svc.OnUpdateFinished:
+				case <-updateSvc.OnUpdateFinishedChan():
 					// This is handled in DownloadAppUpdate
 				}
 			}
@@ -350,6 +328,6 @@ func (a *App) startBackgroundTasks() {
 		}()
 
 		// Run the periodic update check loop
-		svc.RunPeriodicUpdateCheck(ch)
+		updateSvc.RunPeriodicUpdateCheck(ch)
 	}()
 }

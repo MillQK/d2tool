@@ -20,7 +20,19 @@ const (
 	oldFilesPrefix = ".old."
 )
 
-type UpdateService struct {
+type UpdateService interface {
+	UpdateAvailable() bool
+	UpdateApp() error
+	RunPeriodicUpdateCheck(forceUpdateChan chan struct{})
+	LatestAvailableVersion() string
+
+	OnCheckStartedChan() <-chan struct{}
+	OnCheckFinishedChan() <-chan struct{}
+	OnUpdateStartedChan() <-chan struct{}
+	OnUpdateFinishedChan() <-chan struct{}
+}
+
+type UpdateServiceImpl struct {
 	lock sync.Mutex
 
 	githubClient  github.Client
@@ -37,8 +49,8 @@ type UpdateService struct {
 func NewUpdateService(
 	githubClient github.Client,
 	appVersion string,
-) *UpdateService {
-	return &UpdateService{
+) *UpdateServiceImpl {
+	return &UpdateServiceImpl{
 		githubClient:     githubClient,
 		appVersion:       appVersion,
 		OnCheckStarted:   make(chan struct{}),
@@ -48,12 +60,12 @@ func NewUpdateService(
 	}
 }
 
-func (s *UpdateService) UpdateAvailable() bool {
+func (s *UpdateServiceImpl) UpdateAvailable() bool {
 	latestVersion := s.LatestAvailableVersion()
 	return latestVersion != "" && s.appVersion != latestVersion
 }
 
-func (s *UpdateService) UpdateApp() error {
+func (s *UpdateServiceImpl) UpdateApp() error {
 	s.OnUpdateStarted <- struct{}{}
 	defer func() {
 		s.OnUpdateFinished <- struct{}{}
@@ -67,7 +79,7 @@ func (s *UpdateService) UpdateApp() error {
 	return nil
 }
 
-func (s *UpdateService) RunPeriodicUpdateCheck(
+func (s *UpdateServiceImpl) RunPeriodicUpdateCheck(
 	forceUpdateChan chan struct{},
 ) {
 	for {
@@ -85,7 +97,7 @@ func (s *UpdateService) RunPeriodicUpdateCheck(
 	}
 }
 
-func (s *UpdateService) LatestAvailableVersion() string {
+func (s *UpdateServiceImpl) LatestAvailableVersion() string {
 	latestRelease := s.latestRelease
 	if latestRelease == nil {
 		return ""
@@ -94,11 +106,23 @@ func (s *UpdateService) LatestAvailableVersion() string {
 	return latestRelease.TagName
 }
 
-func (s *UpdateService) CleanupOldFiles() error {
-	return cleanupOldFiles()
+func (s *UpdateServiceImpl) OnCheckStartedChan() <-chan struct{} {
+	return s.OnCheckStarted
 }
 
-func (s *UpdateService) checkForUpdate() error {
+func (s *UpdateServiceImpl) OnCheckFinishedChan() <-chan struct{} {
+	return s.OnCheckFinished
+}
+
+func (s *UpdateServiceImpl) OnUpdateStartedChan() <-chan struct{} {
+	return s.OnUpdateStarted
+}
+
+func (s *UpdateServiceImpl) OnUpdateFinishedChan() <-chan struct{} {
+	return s.OnUpdateFinished
+}
+
+func (s *UpdateServiceImpl) checkForUpdate() error {
 	s.lock.Lock()
 	defer s.lock.Unlock()
 
@@ -115,7 +139,7 @@ func (s *UpdateService) checkForUpdate() error {
 	return nil
 }
 
-func (s *UpdateService) checkRelease() error {
+func (s *UpdateServiceImpl) checkRelease() error {
 	release, err := s.githubClient.GetLatestRelease()
 	if err != nil {
 		return err
@@ -149,6 +173,10 @@ func cleanupOldFiles() error {
 func downloadAndUnarchiveLatestReleaseVersion(
 	release *github.Release,
 ) error {
+	if err := cleanupOldFiles(); err != nil {
+		return fmt.Errorf("error cleaning up old files: %w", err)
+	}
+
 	executablePath, err := os.Executable()
 	if err != nil {
 		return fmt.Errorf("error getting executable path: %w", err)

@@ -127,7 +127,10 @@ func generateHeroesLayoutConfigs(positions []string, positionToHero map[string][
 			yPos := currentY + row*(heroHeight+heroWinrateSpacing+heroRowSpacing)
 
 			// Calculate winrate
-			winrate := float64(hero.Wins) / float64(hero.Matches) * 100
+			winrate := 0.0
+			if hero.Matches > 0 {
+				winrate = float64(hero.Wins) / float64(hero.Matches) * 100
+			}
 
 			heroWinrateCategory := heroGridPosition{
 				CategoryName: fmt.Sprintf("  %.1f%%", winrate),

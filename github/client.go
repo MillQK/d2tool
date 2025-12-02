@@ -8,9 +8,9 @@ import (
 )
 
 const (
-	url       = "https://api.github.com"
-	repoOwner = "MillQK"
-	repoName  = "d2tool"
+	aptGithubUrl = "https://api.github.com"
+	repoOwner    = "MillQK"
+	repoName     = "d2tool"
 )
 
 type Client interface {
@@ -29,7 +29,7 @@ func NewHttpClient() *HttpClient {
 }
 
 func (c *HttpClient) GetLatestRelease() (*Release, error) {
-	url := fmt.Sprintf("%s/repos/%s/%s/releases/latest", url, repoOwner, repoName)
+	url := fmt.Sprintf("%s/repos/%s/%s/releases/latest", aptGithubUrl, repoOwner, repoName)
 
 	request, err := http.NewRequest(http.MethodGet, url, nil)
 	if err != nil {

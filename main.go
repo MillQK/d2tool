@@ -3,7 +3,9 @@ package main
 import (
 	"context"
 	"d2tool/config"
+	"d2tool/github"
 	"d2tool/systray"
+	"d2tool/update"
 	"d2tool/utils"
 	"embed"
 	"flag"
@@ -39,7 +41,12 @@ func main() {
 	setupLogger()
 
 	// Create an instance of the app structure
-	app := NewApp()
+	app := NewApp(
+		update.NewUpdateService(
+			github.NewHttpClient(),
+			AppVersion,
+		),
+	)
 
 	// Initialize systray (Windows only, no-op on other platforms)
 	systray.InitSystray(appIcon)
@@ -116,13 +123,18 @@ func setupLogger() {
 
 // App struct
 type App struct {
-	ctx    context.Context
-	config *config.Config
+	ctx           context.Context
+	config        *config.Config
+	updateService update.UpdateService
 }
 
 // NewApp creates a new App application struct
-func NewApp() *App {
-	return &App{}
+func NewApp(
+	updateService update.UpdateService,
+) *App {
+	return &App{
+		updateService: updateService,
+	}
 }
 
 // startup is called when the app starts
