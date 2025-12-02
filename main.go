@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"d2tool/config"
+	"d2tool/systray"
 	"d2tool/utils"
 	"embed"
 	"flag"
@@ -40,6 +41,9 @@ func main() {
 	// Create an instance of the app structure
 	app := NewApp()
 
+	// Initialize systray (Windows only, no-op on other platforms)
+	systray.InitSystray()
+
 	// Create application with options
 	err := wails.Run(&options.App{
 		Title:             "D2Tool",
@@ -51,8 +55,14 @@ func main() {
 			Assets: assets,
 		},
 		BackgroundColour: &options.RGBA{R: 15, G: 20, B: 25, A: 1},
-		OnStartup:        app.startup,
-		OnShutdown:       app.shutdown,
+		OnStartup: func(ctx context.Context) {
+			app.startup(ctx)
+			systray.StartSystray(ctx)
+		},
+		OnShutdown: func(ctx context.Context) {
+			app.shutdown(ctx)
+			systray.StopSystray()
+		},
 		Bind: []interface{}{
 			app,
 		},

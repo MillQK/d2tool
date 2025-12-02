@@ -165,7 +165,7 @@ func (a *App) SetStartupEnabled(enabled bool) error {
 		return nil
 	}
 	if enabled {
-		return startup.StartupRegister([]string{})
+		return startup.StartupRegister([]string{"-minimized"})
 	}
 	return startup.StartupRemove()
 }
