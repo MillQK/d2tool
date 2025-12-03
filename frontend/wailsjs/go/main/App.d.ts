@@ -7,15 +7,11 @@ export function AddHeroesLayoutFile(arg1:string):Promise<void>;
 
 export function CheckForAppUpdate():Promise<void>;
 
-export function DownloadAppUpdate():Promise<void>;
+export function DownloadAppUpdate():Promise<main.DownloadResult>;
 
 export function GetAppUpdateState():Promise<main.AppUpdateState>;
 
-export function GetAutoUpdateEnabled():Promise<boolean>;
-
 export function GetHeroesLayoutFiles():Promise<Array<config.FileConfig>>;
-
-export function GetIsUpdatingLayout():Promise<boolean>;
 
 export function GetPositions():Promise<Array<config.PositionConfig>>;
 
@@ -27,8 +23,6 @@ export function OpenFileDialog():Promise<string>;
 
 export function RemoveHeroesLayoutFile(arg1:number):Promise<void>;
 
-export function SetAutoUpdateEnabled(arg1:boolean):Promise<void>;
-
 export function SetHeroesLayoutFileEnabled(arg1:number,arg2:boolean):Promise<void>;
 
 export function SetPositionEnabled(arg1:string,arg2:boolean):Promise<void>;
@@ -37,4 +31,4 @@ export function SetPositions(arg1:Array<config.PositionConfig>):Promise<void>;
 
 export function SetStartupEnabled(arg1:boolean):Promise<void>;
 
-export function UpdateHeroesLayout():Promise<void>;
+export function UpdateHeroesLayout():Promise<Array<config.FileConfig>>;

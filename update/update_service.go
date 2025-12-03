@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"io"
 	"io/fs"
-	"log/slog"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -20,133 +19,92 @@ const (
 	oldFilesPrefix = ".old."
 )
 
-type UpdateService interface {
-	UpdateAvailable() bool
-	UpdateApp() error
-	RunPeriodicUpdateCheck(forceUpdateChan chan struct{})
-	LatestAvailableVersion() string
+type UpdateState struct {
+	UpdateAvailable   bool
+	CurrentAppVersion string
+	LatestAppVersion  string
+	LastCheckTime     time.Time
+}
 
-	OnCheckStartedChan() <-chan struct{}
-	OnCheckFinishedChan() <-chan struct{}
-	OnUpdateStartedChan() <-chan struct{}
-	OnUpdateFinishedChan() <-chan struct{}
+type UpdateService interface {
+	GetState() UpdateState
+	CheckForUpdate() error
+	UpdateApp() error
 }
 
 type UpdateServiceImpl struct {
 	lock sync.Mutex
 
-	githubClient  github.Client
-	latestRelease *github.Release
-	appVersion    string
-
-	OnCheckStarted  chan struct{}
-	OnCheckFinished chan struct{}
-
-	OnUpdateStarted  chan struct{}
-	OnUpdateFinished chan struct{}
+	currentAppVersion string
+	githubClient      github.Client
+	latestRelease     *github.Release
+	lastCheckTime     time.Time
 }
 
 func NewUpdateService(
+	currentAppVersion string,
 	githubClient github.Client,
-	appVersion string,
 ) *UpdateServiceImpl {
 	return &UpdateServiceImpl{
-		githubClient:     githubClient,
-		appVersion:       appVersion,
-		OnCheckStarted:   make(chan struct{}),
-		OnCheckFinished:  make(chan struct{}),
-		OnUpdateStarted:  make(chan struct{}),
-		OnUpdateFinished: make(chan struct{}),
+		currentAppVersion: currentAppVersion,
+		githubClient:      githubClient,
+		lastCheckTime:     time.UnixMilli(0),
 	}
 }
 
-func (s *UpdateServiceImpl) UpdateAvailable() bool {
-	latestVersion := s.LatestAvailableVersion()
-	return latestVersion != "" && s.appVersion != latestVersion
-}
-
-func (s *UpdateServiceImpl) UpdateApp() error {
-	s.OnUpdateStarted <- struct{}{}
-	defer func() {
-		s.OnUpdateFinished <- struct{}{}
-	}()
-
-	err := downloadAndUnarchiveLatestReleaseVersion(s.latestRelease)
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (s *UpdateServiceImpl) RunPeriodicUpdateCheck(
-	forceUpdateChan chan struct{},
-) {
-	for {
-		select {
-		case <-time.After(1 * time.Hour):
-			slog.Debug("Checking for updates after timeout")
-		case <-forceUpdateChan:
-			slog.Debug("Forcing update check")
-		}
-
-		err := s.checkForUpdate()
-		if err != nil {
-			slog.Error("Unable to check for updates", "error", err)
-		}
-	}
-}
-
-func (s *UpdateServiceImpl) LatestAvailableVersion() string {
-	latestRelease := s.latestRelease
-	if latestRelease == nil {
-		return ""
-	}
-
-	return latestRelease.TagName
-}
-
-func (s *UpdateServiceImpl) OnCheckStartedChan() <-chan struct{} {
-	return s.OnCheckStarted
-}
-
-func (s *UpdateServiceImpl) OnCheckFinishedChan() <-chan struct{} {
-	return s.OnCheckFinished
-}
-
-func (s *UpdateServiceImpl) OnUpdateStartedChan() <-chan struct{} {
-	return s.OnUpdateStarted
-}
-
-func (s *UpdateServiceImpl) OnUpdateFinishedChan() <-chan struct{} {
-	return s.OnUpdateFinished
-}
-
-func (s *UpdateServiceImpl) checkForUpdate() error {
+func (s *UpdateServiceImpl) GetState() UpdateState {
 	s.lock.Lock()
 	defer s.lock.Unlock()
 
-	s.OnCheckStarted <- struct{}{}
-	defer func() {
-		s.OnCheckFinished <- struct{}{}
-	}()
+	latestVersion := s.latestAvailableVersionLocked()
 
-	err := s.checkRelease()
-	if err != nil {
-		return err
+	return UpdateState{
+		UpdateAvailable:   isUpdateAvailable(latestVersion, s.currentAppVersion),
+		CurrentAppVersion: s.currentAppVersion,
+		LatestAppVersion:  latestVersion,
+		LastCheckTime:     s.lastCheckTime,
 	}
-
-	return nil
 }
 
-func (s *UpdateServiceImpl) checkRelease() error {
+func (s *UpdateServiceImpl) CheckForUpdate() error {
+	s.lock.Lock()
+	defer s.lock.Unlock()
+
 	release, err := s.githubClient.GetLatestRelease()
 	if err != nil {
 		return err
 	}
 
 	s.latestRelease = release
+	s.lastCheckTime = time.Now()
 	return nil
+}
+
+func (s *UpdateServiceImpl) UpdateApp() error {
+	s.lock.Lock()
+	defer s.lock.Unlock()
+
+	if s.latestRelease == nil {
+		return fmt.Errorf("no release available to update to")
+	}
+
+	latestVersion := s.latestAvailableVersionLocked()
+	if !isUpdateAvailable(latestVersion, s.currentAppVersion) {
+		return fmt.Errorf("no update available for current version %s and latest version %s", s.currentAppVersion, latestVersion)
+	}
+
+	return downloadAndUnarchiveLatestReleaseVersion(s.latestRelease)
+}
+
+func (s *UpdateServiceImpl) latestAvailableVersionLocked() string {
+	if s.latestRelease == nil {
+		return ""
+	}
+	return s.latestRelease.TagName
+}
+
+func isUpdateAvailable(latestVersion string, currentVersion string) bool {
+	return latestVersion != "" && currentVersion != latestVersion
 }
 
 func cleanupOldFiles() error {

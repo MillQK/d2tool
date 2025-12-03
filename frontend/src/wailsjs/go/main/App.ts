@@ -18,9 +18,11 @@ export interface AppUpdateState {
   latestVersion: string;
   lastCheckTime: string;
   updateAvailable: boolean;
-  isCheckingForUpdate: boolean;
-  isDownloadingUpdate: boolean;
-  autoUpdateEnabled: boolean;
+}
+
+export interface DownloadResult {
+  success: boolean;
+  error: string;
 }
 
 // Declare the window.go object
@@ -30,8 +32,7 @@ declare global {
       main: {
         App: {
           // Heroes Layout Update
-          GetIsUpdatingLayout(): Promise<boolean>;
-          UpdateHeroesLayout(): Promise<void>;
+          UpdateHeroesLayout(): Promise<FileConfig[]>;
 
           // Heroes Layout Files
           GetHeroesLayoutFiles(): Promise<FileConfig[]>;
@@ -53,9 +54,7 @@ declare global {
           // App Update
           GetAppUpdateState(): Promise<AppUpdateState>;
           CheckForAppUpdate(): Promise<void>;
-          DownloadAppUpdate(): Promise<void>;
-          GetAutoUpdateEnabled(): Promise<boolean>;
-          SetAutoUpdateEnabled(enabled: boolean): Promise<void>;
+          DownloadAppUpdate(): Promise<DownloadResult>;
         };
       };
     };
@@ -64,11 +63,7 @@ declare global {
 
 // --- Heroes Layout Update ---
 
-export function GetIsUpdatingLayout(): Promise<boolean> {
-  return window.go.main.App.GetIsUpdatingLayout();
-}
-
-export function UpdateHeroesLayout(): Promise<void> {
+export function UpdateHeroesLayout(): Promise<FileConfig[]> {
   return window.go.main.App.UpdateHeroesLayout();
 }
 
@@ -132,14 +127,6 @@ export function CheckForAppUpdate(): Promise<void> {
   return window.go.main.App.CheckForAppUpdate();
 }
 
-export function DownloadAppUpdate(): Promise<void> {
+export function DownloadAppUpdate(): Promise<DownloadResult> {
   return window.go.main.App.DownloadAppUpdate();
-}
-
-export function GetAutoUpdateEnabled(): Promise<boolean> {
-  return window.go.main.App.GetAutoUpdateEnabled();
-}
-
-export function SetAutoUpdateEnabled(enabled: boolean): Promise<void> {
-  return window.go.main.App.SetAutoUpdateEnabled(enabled);
 }

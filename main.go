@@ -29,6 +29,9 @@ var assets embed.FS
 //go:embed build/appicon.ico
 var appIcon []byte
 
+//go:embed wails.json
+var wailsJSON []byte
+
 func main() {
 	// Early debug output (before logger is set up)
 	fmt.Println("D2Tool starting...")
@@ -40,11 +43,17 @@ func main() {
 	// Setup file logging
 	setupLogger()
 
+	wailsProjectConfig, err := config.ParseWailsProjectConfig(wailsJSON)
+	if err != nil {
+		slog.Error("Error parsing wails.json", "error", err)
+		os.Exit(1)
+	}
+
 	// Create an instance of the app structure
 	app := NewApp(
 		update.NewUpdateService(
+			wailsProjectConfig.Info.ProductVersion,
 			github.NewHttpClient(),
-			AppVersion,
 		),
 	)
 
@@ -52,7 +61,7 @@ func main() {
 	systray.InitSystray(appIcon)
 
 	// Create application with options
-	err := wails.Run(&options.App{
+	err = wails.Run(&options.App{
 		Title:             "D2Tool",
 		Width:             1000,
 		Height:            800,

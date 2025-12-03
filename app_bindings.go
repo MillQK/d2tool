@@ -12,75 +12,52 @@ import (
 )
 
 var (
-	forceAppUpdateChan   chan struct{}
-	forceAppUpdateChanMu sync.Mutex
-
-	isUpdatingLayout     bool
-	isUpdatingLayoutLock sync.Mutex
+	heroesLayoutUpdateLock sync.Mutex
 )
 
 // AppUpdateState represents the state for the app update tab
 type AppUpdateState struct {
-	CurrentVersion      string `json:"currentVersion"`
-	LatestVersion       string `json:"latestVersion"`
-	LastCheckTime       string `json:"lastCheckTime"`
-	UpdateAvailable     bool   `json:"updateAvailable"`
-	IsCheckingForUpdate bool   `json:"isCheckingForUpdate"`
-	IsDownloadingUpdate bool   `json:"isDownloadingUpdate"`
-	AutoUpdateEnabled   bool   `json:"autoUpdateEnabled"`
+	CurrentVersion  string `json:"currentVersion"`
+	LatestVersion   string `json:"latestVersion"`
+	LastCheckTime   string `json:"lastCheckTime"`
+	UpdateAvailable bool   `json:"updateAvailable"`
+}
+
+// DownloadResult represents the result of a download operation
+type DownloadResult struct {
+	Success bool   `json:"success"`
+	Error   string `json:"error"`
 }
 
 // --- Heroes Layout Update ---
 
-// GetIsUpdatingLayout returns whether an update is in progress
-func (a *App) GetIsUpdatingLayout() bool {
-	isUpdatingLayoutLock.Lock()
-	defer isUpdatingLayoutLock.Unlock()
-	return isUpdatingLayout
-}
+// UpdateHeroesLayout performs the hero layout update synchronously
+func (a *App) UpdateHeroesLayout() []config.FileConfig {
+	heroesLayoutUpdateLock.Lock()
+	defer heroesLayoutUpdateLock.Unlock()
 
-// UpdateHeroesLayout triggers the hero layout update
-func (a *App) UpdateHeroesLayout() {
-	go func() {
-		isUpdatingLayoutLock.Lock()
-		if isUpdatingLayout {
-			isUpdatingLayoutLock.Unlock()
-			return
-		}
-		isUpdatingLayout = true
-		isUpdatingLayoutLock.Unlock()
+	// Get enabled files and positions
+	enabledFilePaths := a.config.GetEnabledFilePaths()
+	enabledPositions := a.config.GetEnabledPositionIDs()
 
-		// Notify frontend that update started
-		runtime.EventsEmit(a.ctx, "heroesLayoutUpdateStarted")
+	// Update each file
+	now := time.Now()
+	for _, filePath := range enabledFilePaths {
+		err := heroesLayout.UpdateHeroesLayout(heroesLayout.UpdateHeroesLayoutConfig{
+			ConfigFilePaths: []string{filePath},
+			Positions:       enabledPositions,
+		})
 
-		// Get enabled files and positions
-		enabledFilePaths := a.config.GetEnabledFilePaths()
-		enabledPositions := a.config.GetEnabledPositionIDs()
-
-		// Update each file
-		now := time.Now()
-		for _, filePath := range enabledFilePaths {
-			err := heroesLayout.UpdateHeroesLayout(heroesLayout.UpdateHeroesLayoutConfig{
-				ConfigFilePaths: []string{filePath},
-				Positions:       enabledPositions,
-			})
-
-			errorMsg := ""
-			if err != nil {
-				errorMsg = err.Error()
-				slog.Error("Error updating heroes layout", "file", filePath, "error", err)
-			}
-
-			a.config.UpdateHeroesLayoutFileStatus(filePath, now.UnixMilli(), errorMsg)
+		errorMsg := ""
+		if err != nil {
+			errorMsg = err.Error()
+			slog.Error("Error updating heroes layout", "file", filePath, "error", err)
 		}
 
-		isUpdatingLayoutLock.Lock()
-		isUpdatingLayout = false
-		isUpdatingLayoutLock.Unlock()
+		a.config.UpdateHeroesLayoutFileStatus(filePath, now.UnixMilli(), errorMsg)
+	}
 
-		// Notify frontend that update finished with updated files
-		runtime.EventsEmit(a.ctx, "heroesLayoutUpdateFinished", a.config.GetHeroesLayoutFiles())
-	}()
+	return a.config.GetHeroesLayoutFiles()
 }
 
 // --- Heroes Layout Files Bindings ---
@@ -175,71 +152,46 @@ func (a *App) IsStartupSupported() bool {
 
 // GetAppUpdateState returns the current state for the app update tab
 func (a *App) GetAppUpdateState() AppUpdateState {
-	lastCheckMillis := a.config.GetAppLastCheckTimestampMillis()
+	updateState := a.updateService.GetState()
+
 	var lastCheckTimeStr string
-	if lastCheckMillis == 0 {
+	if updateState.LastCheckTime.IsZero() {
 		lastCheckTimeStr = "Never"
 	} else {
-		lastCheckTimeStr = time.UnixMilli(lastCheckMillis).Format("2006-01-02 15:04:05")
+		lastCheckTimeStr = updateState.LastCheckTime.Format("2006-01-02 15:04:05")
 	}
 
 	return AppUpdateState{
-		CurrentVersion:    AppVersion,
-		LatestVersion:     a.updateService.LatestAvailableVersion(),
-		LastCheckTime:     lastCheckTimeStr,
-		UpdateAvailable:   a.updateService.UpdateAvailable(),
-		AutoUpdateEnabled: a.config.GetAutoUpdateEnabled(),
+		CurrentVersion:  updateState.CurrentAppVersion,
+		LatestVersion:   updateState.LatestAppVersion,
+		LastCheckTime:   lastCheckTimeStr,
+		UpdateAvailable: updateState.UpdateAvailable,
 	}
 }
 
-// GetAutoUpdateEnabled returns whether auto-update is enabled
-func (a *App) GetAutoUpdateEnabled() bool {
-	return a.config.GetAutoUpdateEnabled()
-}
-
-// SetAutoUpdateEnabled enables or disables auto-updates
-func (a *App) SetAutoUpdateEnabled(enabled bool) {
-	a.config.SetAutoUpdateEnabled(enabled)
-}
-
-// CheckForAppUpdate checks for application updates
+// CheckForAppUpdate checks for application updates synchronously
 func (a *App) CheckForAppUpdate() {
-	forceAppUpdateChanMu.Lock()
-	ch := forceAppUpdateChan
-	forceAppUpdateChanMu.Unlock()
-
-	if ch == nil {
-		slog.Warn("Update service not initialized yet")
-		return
-	}
-
-	// Trigger the check via the force channel (non-blocking)
-	select {
-	case ch <- struct{}{}:
-		slog.Debug("Triggered app update check")
-	default:
-		slog.Debug("App update check already in progress")
+	err := a.updateService.CheckForUpdate()
+	if err != nil {
+		slog.Error("Error checking for updates", "error", err)
 	}
 }
 
-// DownloadAppUpdate downloads and installs the update
-func (a *App) DownloadAppUpdate() {
-	go func() {
-		err := a.updateService.UpdateApp()
-
-		if err != nil {
-			slog.Error("Error downloading update", "error", err)
-			runtime.EventsEmit(a.ctx, "appUpdateDownloadFinished", map[string]interface{}{
-				"success": false,
-				"error":   err.Error(),
-			})
-		} else {
-			runtime.EventsEmit(a.ctx, "appUpdateDownloadFinished", map[string]interface{}{
-				"success": true,
-				"error":   "",
-			})
+// DownloadAppUpdate downloads and installs the update synchronously
+func (a *App) DownloadAppUpdate() DownloadResult {
+	err := a.updateService.UpdateApp()
+	if err != nil {
+		slog.Error("Error downloading update", "error", err)
+		return DownloadResult{
+			Success: false,
+			Error:   err.Error(),
 		}
-	}()
+	}
+
+	return DownloadResult{
+		Success: true,
+		Error:   "",
+	}
 }
 
 // --- Background Tasks ---
@@ -276,58 +228,27 @@ func (a *App) startBackgroundTasks() {
 
 			<-time.After(waitDuration)
 
-			// Trigger update
+			// Perform background update
 			a.UpdateHeroesLayout()
+
+			// Notify frontend that data was updated
+			runtime.EventsEmit(a.ctx, "heroesLayoutDataChanged")
 		}
 	}()
 
 	// Start periodic app update check
 	go func() {
-		updateSvc := a.updateService
-
-		// Create and store the force update channel
-		forceAppUpdateChanMu.Lock()
-		forceAppUpdateChan = make(chan struct{}, 1)
-		ch := forceAppUpdateChan
-		forceAppUpdateChanMu.Unlock()
-
-		// Start goroutine to listen for service events and emit Wails events
-		go func() {
-			for {
-				select {
-				case <-updateSvc.OnCheckStartedChan():
-					runtime.EventsEmit(a.ctx, "appUpdateCheckStarted")
-				case <-updateSvc.OnCheckFinishedChan():
-					now := time.Now()
-					a.config.SetAppLastCheckTimestampMillis(now.UnixMilli())
-					runtime.EventsEmit(a.ctx, "appUpdateCheckFinished", AppUpdateState{
-						CurrentVersion:    AppVersion,
-						LatestVersion:     updateSvc.LatestAvailableVersion(),
-						LastCheckTime:     now.Format("2006-01-02 15:04:05"),
-						UpdateAvailable:   updateSvc.UpdateAvailable(),
-						AutoUpdateEnabled: a.config.GetAutoUpdateEnabled(),
-					})
-				case <-updateSvc.OnUpdateStartedChan():
-					runtime.EventsEmit(a.ctx, "appUpdateDownloadStarted")
-				case <-updateSvc.OnUpdateFinishedChan():
-					// This is handled in DownloadAppUpdate
-				}
-			}
-		}()
-
-		// Always check for updates on startup to show latest version
+		// Check for updates on startup after a short delay
 		slog.Info("Checking for updates on startup")
-		go func() {
-			time.Sleep(2 * time.Second)
-			select {
-			case ch <- struct{}{}:
-				slog.Debug("Triggered startup app update check")
-			default:
-				slog.Debug("Startup app update check already in progress")
-			}
-		}()
+		a.CheckForAppUpdate()
+		runtime.EventsEmit(a.ctx, "appUpdateDataChanged")
 
-		// Run the periodic update check loop
-		updateSvc.RunPeriodicUpdateCheck(ch)
+		// Periodic check loop
+		for {
+			<-time.After(1 * time.Hour)
+			slog.Debug("Checking for updates after timeout")
+			a.CheckForAppUpdate()
+			runtime.EventsEmit(a.ctx, "appUpdateDataChanged")
+		}
 	}()
 }

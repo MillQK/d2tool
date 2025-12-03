@@ -44,9 +44,6 @@ export namespace main {
 	    latestVersion: string;
 	    lastCheckTime: string;
 	    updateAvailable: boolean;
-	    isCheckingForUpdate: boolean;
-	    isDownloadingUpdate: boolean;
-	    autoUpdateEnabled: boolean;
 	
 	    static createFrom(source: any = {}) {
 	        return new AppUpdateState(source);
@@ -58,9 +55,20 @@ export namespace main {
 	        this.latestVersion = source["latestVersion"];
 	        this.lastCheckTime = source["lastCheckTime"];
 	        this.updateAvailable = source["updateAvailable"];
-	        this.isCheckingForUpdate = source["isCheckingForUpdate"];
-	        this.isDownloadingUpdate = source["isDownloadingUpdate"];
-	        this.autoUpdateEnabled = source["autoUpdateEnabled"];
+	    }
+	}
+	export class DownloadResult {
+	    success: boolean;
+	    error: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new DownloadResult(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.success = source["success"];
+	        this.error = source["error"];
 	    }
 	}
 

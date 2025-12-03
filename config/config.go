@@ -32,18 +32,11 @@ type HeroesLayoutConfig struct {
 	Positions []PositionConfig `json:"positions"`
 }
 
-// AppUpdateConfig contains app update related settings
-type AppUpdateConfig struct {
-	LastCheckTimestampMillis int64 `json:"lastCheckTimestampMillis"`
-	AutoUpdateEnabled        bool  `json:"autoUpdateEnabled"`
-}
-
 // Config is the main configuration structure
 type Config struct {
 	mu sync.RWMutex
 
 	HeroesLayout HeroesLayoutConfig `json:"heroesLayout"`
-	AppUpdate    AppUpdateConfig    `json:"appUpdate"`
 }
 
 func getConfigPath() string {
@@ -70,9 +63,6 @@ func LoadConfig() *Config {
 		HeroesLayout: HeroesLayoutConfig{
 			Files:     []FileConfig{},
 			Positions: defaultPositions(),
-		},
-		AppUpdate: AppUpdateConfig{
-			AutoUpdateEnabled: false,
 		},
 	}
 
@@ -265,34 +255,6 @@ func (c *Config) SetPositionEnabled(id string, enabled bool) {
 			break
 		}
 	}
-	go c.Save()
-}
-
-// --- App Update Methods ---
-
-func (c *Config) GetAppLastCheckTimestampMillis() int64 {
-	c.mu.RLock()
-	defer c.mu.RUnlock()
-	return c.AppUpdate.LastCheckTimestampMillis
-}
-
-func (c *Config) SetAppLastCheckTimestampMillis(millis int64) {
-	c.mu.Lock()
-	defer c.mu.Unlock()
-	c.AppUpdate.LastCheckTimestampMillis = millis
-	go c.Save()
-}
-
-func (c *Config) GetAutoUpdateEnabled() bool {
-	c.mu.RLock()
-	defer c.mu.RUnlock()
-	return c.AppUpdate.AutoUpdateEnabled
-}
-
-func (c *Config) SetAutoUpdateEnabled(enabled bool) {
-	c.mu.Lock()
-	defer c.mu.Unlock()
-	c.AppUpdate.AutoUpdateEnabled = enabled
 	go c.Save()
 }
 

@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import { EventsOn } from '../wailsjs/runtime'
 import {
-  GetIsUpdatingLayout,
   UpdateHeroesLayout,
   GetHeroesLayoutFiles,
   AddHeroesLayoutFile,
@@ -78,28 +77,29 @@ function HeroesLayoutPage() {
 
   useEffect(() => {
     // Load initial states
-    GetIsUpdatingLayout().then(setIsUpdating).catch(console.error)
     GetHeroesLayoutFiles().then(setFiles).catch(console.error)
     GetPositions().then(setPositions).catch(console.error)
 
-    // Listen for update events
-    const offStarted = EventsOn('heroesLayoutUpdateStarted', () => {
-      setIsUpdating(true)
-    })
-
-    const offFinished = EventsOn('heroesLayoutUpdateFinished', (updatedFiles: FileConfig[]) => {
-      setIsUpdating(false)
-      setFiles(updatedFiles)
+    // Listen for background update notifications
+    const offDataChanged = EventsOn('heroesLayoutDataChanged', () => {
+      GetHeroesLayoutFiles().then(setFiles).catch(console.error)
     })
 
     return () => {
-      offStarted()
-      offFinished()
+      offDataChanged()
     }
   }, [])
 
-  const handleUpdate = () => {
-    UpdateHeroesLayout().catch(console.error)
+  const handleUpdate = async () => {
+    setIsUpdating(true)
+    try {
+      const updatedFiles = await UpdateHeroesLayout()
+      setFiles(updatedFiles)
+    } catch (error) {
+      console.error('Error updating heroes layout:', error)
+    } finally {
+      setIsUpdating(false)
+    }
   }
 
   const handleAddFile = async () => {
