@@ -1,11 +1,14 @@
-import {useEffect, useState} from 'react'
-import {EventsOn} from '../wailsjs/runtime'
+import {useState} from 'react'
 import {
-    GetAppUpdateState,
     CheckForAppUpdate,
     DownloadAppUpdate,
     AppUpdateState,
 } from '../wailsjs/go/main/App'
+
+interface UpdatesPageProps {
+    state: AppUpdateState | null
+    onStateChange: () => void
+}
 
 const SearchIcon = () => (
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
@@ -49,30 +52,15 @@ const ClockIcon = () => (
     </svg>
 )
 
-function UpdatesPage() {
-    const [state, setState] = useState<AppUpdateState | null>(null)
+function UpdatesPage({ state, onStateChange }: UpdatesPageProps) {
     const [isChecking, setIsChecking] = useState(false)
     const [isDownloading, setIsDownloading] = useState(false)
-
-    useEffect(() => {
-        GetAppUpdateState().then(setState).catch(console.error)
-
-        // Listen for background update notifications
-        const offDataChanged = EventsOn('appUpdateDataChanged', () => {
-            GetAppUpdateState().then(setState).catch(console.error)
-        })
-
-        return () => {
-            offDataChanged()
-        }
-    }, [])
 
     const handleCheckForUpdates = async () => {
         setIsChecking(true)
         try {
             await CheckForAppUpdate()
-            const newState = await GetAppUpdateState()
-            setState(newState)
+            onStateChange()
         } catch (error) {
             console.error('Error checking for updates:', error)
         } finally {

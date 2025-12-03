@@ -17,6 +17,7 @@ interface SidebarItem {
 interface SidebarProps {
   activePage: PageId
   onPageChange: (page: PageId) => void
+  updateAvailable?: boolean
 }
 
 // SVG Icons
@@ -62,7 +63,7 @@ const ChevronIcon = ({ expanded }: { expanded: boolean }) => (
   </svg>
 )
 
-function Sidebar({ activePage, onPageChange }: SidebarProps) {
+function Sidebar({ activePage, onPageChange, updateAvailable }: SidebarProps) {
   const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({
     features: true,
     settings: true,
@@ -120,6 +121,9 @@ function Sidebar({ activePage, onPageChange }: SidebarProps) {
                   >
                     <span className="sidebar-item-icon">{item.icon}</span>
                     <span className="sidebar-item-label">{item.label}</span>
+                    {item.id === 'updates' && updateAvailable && (
+                      <span className="sidebar-item-badge" />
+                    )}
                   </button>
                 ))}
               </div>

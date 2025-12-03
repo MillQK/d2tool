@@ -184,6 +184,14 @@ body {
   flex: 1;
 }
 
+.sidebar-item-badge {
+  width: 8px;
+  height: 8px;
+  background-color: var(--color-accent-primary);
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
 /* Main Content */
 .main-content {
   flex: 1;
