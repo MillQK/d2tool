@@ -4,6 +4,7 @@ import (
 	"context"
 	"d2tool/config"
 	"d2tool/github"
+	"d2tool/heroesLayout"
 	"d2tool/systray"
 	"d2tool/update"
 	"d2tool/utils"
@@ -49,12 +50,16 @@ func main() {
 		os.Exit(1)
 	}
 
+	appConfig := config.LoadConfig()
+
 	// Create an instance of the app structure
 	app := NewApp(
+		appConfig,
 		update.NewUpdateService(
 			wailsProjectConfig.Info.ProductVersion,
 			github.NewHttpClient(),
 		),
+		heroesLayout.NewHeroesLayoutService(appConfig),
 	)
 
 	// Initialize systray (Windows only, no-op on other platforms)
@@ -132,24 +137,28 @@ func setupLogger() {
 
 // App struct
 type App struct {
-	ctx           context.Context
-	config        *config.Config
-	updateService update.UpdateService
+	ctx                 context.Context
+	config              *config.Config
+	updateService       update.UpdateService
+	heroesLayoutService heroesLayout.HeroesLayoutService
 }
 
 // NewApp creates a new App application struct
 func NewApp(
+	config *config.Config,
 	updateService update.UpdateService,
+	heroesLayoutService heroesLayout.HeroesLayoutService,
 ) *App {
 	return &App{
-		updateService: updateService,
+		config:              config,
+		updateService:       updateService,
+		heroesLayoutService: heroesLayoutService,
 	}
 }
 
 // startup is called when the app starts
 func (a *App) startup(ctx context.Context) {
 	a.ctx = ctx
-	a.config = config.LoadConfig()
 	a.startBackgroundTasks()
 }
 

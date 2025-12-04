@@ -2,10 +2,8 @@ package heroesLayout
 
 import (
 	"d2tool/providers"
-	"d2tool/utils"
 	"encoding/json"
 	"fmt"
-	"log/slog"
 	"os"
 	"strings"
 	"time"
@@ -41,45 +39,6 @@ type heroGridPosition struct {
 	Width        float64 `json:"width"`
 	Height       float64 `json:"height"`
 	HeroIDs      []int   `json:"hero_ids"`
-}
-
-// UpdateHeroesLayout updates all hero grid config files with new hero data
-func UpdateHeroesLayout(config UpdateHeroesLayoutConfig) error {
-	if len(config.ConfigFilePaths) == 0 {
-		slog.Info("No config files provided, skipping update")
-		return nil
-	}
-
-	// Fetch heroes data for all positions
-	positions := utils.Map(
-		config.Positions,
-		func(position string) string {
-			return fmt.Sprintf("%s%s", positionPrefix, position)
-		},
-	)
-
-	positionToHeroes := make(map[string][]providers.Hero)
-
-	for _, position := range positions {
-		heroes, err := providers.FetchHeroes(position)
-		if err != nil {
-			slog.Error(fmt.Sprintf("Error fetching heroes for position %s", position), "error", err)
-			continue
-		}
-		positionToHeroes[position] = heroes
-	}
-
-	// Process each config file
-	for _, configFile := range config.ConfigFilePaths {
-		slog.Info(fmt.Sprintf("Processing config file %s", configFile))
-		if err := processHeroesLayoutConfig(configFile, positions, positionToHeroes); err != nil {
-			slog.Error(fmt.Sprintf("Error processing config file %s", configFile), "error", err)
-			continue
-		}
-		slog.Info(fmt.Sprintf("Successfully updated config file %s", configFile))
-	}
-
-	return nil
 }
 
 // generateHeroesLayoutConfigs generates new hero grid configs for each role

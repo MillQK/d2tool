@@ -6,6 +6,7 @@ import (
 	"log/slog"
 	"os"
 	"path/filepath"
+	"slices"
 	"sync"
 )
 
@@ -214,12 +215,12 @@ func (c *Config) SetHeroesLayoutFileEnabled(index int, enabled bool) {
 	go c.Save()
 }
 
-func (c *Config) UpdateHeroesLayoutFileStatus(filePath string, timestampMillis int64, errorMessage string) {
+func (c *Config) UpdateHeroesLayoutFileStatus(filePaths []string, timestampMillis int64, errorMessage string) {
 	c.mu.Lock()
 	defer c.mu.Unlock()
 
 	for i := range c.HeroesLayout.Files {
-		if c.HeroesLayout.Files[i].FilePath == filePath {
+		if slices.Contains(filePaths, c.HeroesLayout.Files[i].FilePath) {
 			c.HeroesLayout.Files[i].LastUpdateTimestampMillis = timestampMillis
 			c.HeroesLayout.Files[i].LastUpdateErrorMessage = errorMessage
 			break

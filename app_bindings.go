@@ -2,17 +2,11 @@ package main
 
 import (
 	"d2tool/config"
-	"d2tool/heroesLayout"
 	"d2tool/startup"
 	"log/slog"
-	"sync"
 	"time"
 
 	"github.com/wailsapp/wails/v2/pkg/runtime"
-)
-
-var (
-	heroesLayoutUpdateLock sync.Mutex
 )
 
 // AppUpdateState represents the state for the app update tab
@@ -32,32 +26,11 @@ type DownloadResult struct {
 // --- Heroes Layout Update ---
 
 // UpdateHeroesLayout performs the hero layout update synchronously
-func (a *App) UpdateHeroesLayout() []config.FileConfig {
-	heroesLayoutUpdateLock.Lock()
-	defer heroesLayoutUpdateLock.Unlock()
-
-	// Get enabled files and positions
-	enabledFilePaths := a.config.GetEnabledFilePaths()
-	enabledPositions := a.config.GetEnabledPositionIDs()
-
-	// Update each file
-	now := time.Now()
-	for _, filePath := range enabledFilePaths {
-		err := heroesLayout.UpdateHeroesLayout(heroesLayout.UpdateHeroesLayoutConfig{
-			ConfigFilePaths: []string{filePath},
-			Positions:       enabledPositions,
-		})
-
-		errorMsg := ""
-		if err != nil {
-			errorMsg = err.Error()
-			slog.Error("Error updating heroes layout", "file", filePath, "error", err)
-		}
-
-		a.config.UpdateHeroesLayoutFileStatus(filePath, now.UnixMilli(), errorMsg)
+func (a *App) UpdateHeroesLayout() {
+	err := a.heroesLayoutService.UpdateHeroesLayout()
+	if err != nil {
+		slog.Error("Error updating hero layout", "error", err)
 	}
-
-	return a.config.GetHeroesLayoutFiles()
 }
 
 // --- Heroes Layout Files Bindings ---

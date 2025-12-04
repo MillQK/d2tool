@@ -31,4 +31,4 @@ export function SetPositions(arg1:Array<config.PositionConfig>):Promise<void>;
 
 export function SetStartupEnabled(arg1:boolean):Promise<void>;
 
-export function UpdateHeroesLayout():Promise<Array<config.FileConfig>>;
+export function UpdateHeroesLayout():Promise<void>;

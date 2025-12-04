@@ -93,7 +93,8 @@ function HeroesLayoutPage() {
   const handleUpdate = async () => {
     setIsUpdating(true)
     try {
-      const updatedFiles = await UpdateHeroesLayout()
+      await UpdateHeroesLayout()
+      const updatedFiles = await GetHeroesLayoutFiles()
       setFiles(updatedFiles)
     } catch (error) {
       console.error('Error updating heroes layout:', error)

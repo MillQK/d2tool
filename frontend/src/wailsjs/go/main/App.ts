@@ -32,7 +32,7 @@ declare global {
       main: {
         App: {
           // Heroes Layout Update
-          UpdateHeroesLayout(): Promise<FileConfig[]>;
+          UpdateHeroesLayout(): Promise<void>;
 
           // Heroes Layout Files
           GetHeroesLayoutFiles(): Promise<FileConfig[]>;
@@ -63,7 +63,7 @@ declare global {
 
 // --- Heroes Layout Update ---
 
-export function UpdateHeroesLayout(): Promise<FileConfig[]> {
+export function UpdateHeroesLayout(): Promise<void> {
   return window.go.main.App.UpdateHeroesLayout();
 }
 
