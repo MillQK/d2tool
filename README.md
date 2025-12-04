@@ -11,8 +11,9 @@ D2Tool is a desktop application that helps you manage your Dota 2 hero grid conf
 - **Position Toggle**: Enable or disable specific positions to customize which roles appear in your grid
 - **Drag & Drop Reordering**: Easily reorder positions by dragging them in the interface
 - **Background Operation**: Runs in the background and updates grids periodically (every hour)
-- **Auto-Updates**: Automatically checks for application updates on startup
-- **Startup Integration**: Option to run automatically when your computer starts (Windows and macOS supported)
+- **Auto-Updates**: Automatically checks for application updates on startup and periodically
+- **Startup Integration**: Option to run automatically when your computer starts (Windows only)
+- **System Tray**: Minimizes to system tray when closed (Windows only)
 - **Modern Interface**: Clean, dark-themed UI with sidebar navigation
 
 ## How It Works
@@ -29,7 +30,7 @@ D2Tool fetches hero statistics from Dota 2 Pro Tracker, then:
 
 - Go 1.23 or later
 - Node.js 18 or later
-- Wails CLI v2
+- Wails CLI v2.11.0 or later
 - Steam and Dota 2 installed
 
 ### Installing Wails
@@ -66,7 +67,7 @@ wails dev
 
 ### Pre-built Binaries
 
-Pre-built binaries for Windows and macOS are available in the [releases](https://github.com/MillQK/d2tool/releases) section.
+Pre-built binaries for Windows are available in the [releases](https://github.com/MillQK/d2tool/releases) section.
 
 ## Usage
 
@@ -93,13 +94,13 @@ The main page for managing your hero grid configurations:
 
 ### Startup Page
 
-Configure whether D2Tool runs automatically when your computer starts.
+Configure whether D2Tool runs automatically when your computer starts (Windows only).
 
 ### Updates Page
 
+- View current and latest version information
 - Check for application updates
 - Download and install new versions
-- Enable/disable automatic update checks
 
 ## Troubleshooting
 
@@ -109,7 +110,6 @@ If D2Tool cannot find your Steam installation:
 1. Click "Add File" and manually navigate to your hero grid config file
 2. The file is typically located at:
    - Windows: `C:\Program Files (x86)\Steam\userdata\<your-steam-id>\570\remote\cfg\hero_grid_config.json`
-   - macOS: `~/Library/Application Support/Steam/userdata/<your-steam-id>/570/remote/cfg/hero_grid_config.json`
 
 ### Changes Not Appearing in Dota 2
 
@@ -121,7 +121,3 @@ If your updated grid layouts don't appear in Dota 2:
 ### Logs
 
 D2Tool creates a `d2tool.log` file in the same directory as the executable for debugging purposes.
-
-## License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
