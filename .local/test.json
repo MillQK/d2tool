@@ -1,0 +1,3690 @@
+{
+  "version": 0,
+  "configs": [
+    {
+      "config_name": "[D2T] Heroes Meta 2025-11-30",
+      "categories": [
+        {
+          "category_name": "pos 2 - Top Rating Heroes",
+          "x_position": 0,
+          "y_position": 0,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  54.8%",
+          "x_position": 0,
+          "y_position": 30,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  1532",
+          "x_position": 0,
+          "y_position": 50,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            52
+          ]
+        },
+        {
+          "category_name": "  59.3%",
+          "x_position": 70,
+          "y_position": 30,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  337",
+          "x_position": 70,
+          "y_position": 50,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            82
+          ]
+        },
+        {
+          "category_name": "  53.3%",
+          "x_position": 140,
+          "y_position": 30,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  882",
+          "x_position": 140,
+          "y_position": 50,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            59
+          ]
+        },
+        {
+          "category_name": "  52.5%",
+          "x_position": 210,
+          "y_position": 30,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  1463",
+          "x_position": 210,
+          "y_position": 50,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            74
+          ]
+        },
+        {
+          "category_name": "  52.5%",
+          "x_position": 280,
+          "y_position": 30,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  1127",
+          "x_position": 280,
+          "y_position": 50,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            53
+          ]
+        },
+        {
+          "category_name": "  52.8%",
+          "x_position": 350,
+          "y_position": 30,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  848",
+          "x_position": 350,
+          "y_position": 50,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            36
+          ]
+        },
+        {
+          "category_name": "  65.9%",
+          "x_position": 420,
+          "y_position": 30,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  85",
+          "x_position": 420,
+          "y_position": 50,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            50
+          ]
+        },
+        {
+          "category_name": "  51.2%",
+          "x_position": 490,
+          "y_position": 30,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  1518",
+          "x_position": 490,
+          "y_position": 50,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            13
+          ]
+        },
+        {
+          "category_name": "  53.8%",
+          "x_position": 560,
+          "y_position": 30,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  405",
+          "x_position": 560,
+          "y_position": 50,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            14
+          ]
+        },
+        {
+          "category_name": "  57.9%",
+          "x_position": 630,
+          "y_position": 30,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  145",
+          "x_position": 630,
+          "y_position": 50,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            65
+          ]
+        },
+        {
+          "category_name": "pos 2 - Most Matches Heroes",
+          "x_position": 0,
+          "y_position": 240,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  50.9%",
+          "x_position": 0,
+          "y_position": 270,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  2527",
+          "x_position": 0,
+          "y_position": 290,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            39
+          ]
+        },
+        {
+          "category_name": "  54.8%",
+          "x_position": 70,
+          "y_position": 270,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  1532",
+          "x_position": 70,
+          "y_position": 290,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            52
+          ]
+        },
+        {
+          "category_name": "  51.2%",
+          "x_position": 140,
+          "y_position": 270,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  1518",
+          "x_position": 140,
+          "y_position": 290,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            13
+          ]
+        },
+        {
+          "category_name": "  52.5%",
+          "x_position": 210,
+          "y_position": 270,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  1463",
+          "x_position": 210,
+          "y_position": 290,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            74
+          ]
+        },
+        {
+          "category_name": "  49.4%",
+          "x_position": 280,
+          "y_position": 270,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  1426",
+          "x_position": 280,
+          "y_position": 290,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            17
+          ]
+        },
+        {
+          "category_name": "  51.2%",
+          "x_position": 350,
+          "y_position": 270,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  1276",
+          "x_position": 350,
+          "y_position": 290,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            106
+          ]
+        },
+        {
+          "category_name": "  52.5%",
+          "x_position": 420,
+          "y_position": 270,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  1127",
+          "x_position": 420,
+          "y_position": 290,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            53
+          ]
+        },
+        {
+          "category_name": "  50.5%",
+          "x_position": 490,
+          "y_position": 270,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  966",
+          "x_position": 490,
+          "y_position": 290,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            47
+          ]
+        },
+        {
+          "category_name": "  51.2%",
+          "x_position": 560,
+          "y_position": 270,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  945",
+          "x_position": 560,
+          "y_position": 290,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            126
+          ]
+        },
+        {
+          "category_name": "  44.0%",
+          "x_position": 630,
+          "y_position": 270,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  888",
+          "x_position": 630,
+          "y_position": 290,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            11
+          ]
+        },
+        {
+          "category_name": "  53.3%",
+          "x_position": 700,
+          "y_position": 270,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  882",
+          "x_position": 700,
+          "y_position": 290,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            59
+          ]
+        },
+        {
+          "category_name": "  52.8%",
+          "x_position": 770,
+          "y_position": 270,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  848",
+          "x_position": 770,
+          "y_position": 290,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            36
+          ]
+        },
+        {
+          "category_name": "  44.1%",
+          "x_position": 840,
+          "y_position": 270,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  794",
+          "x_position": 840,
+          "y_position": 290,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            35
+          ]
+        },
+        {
+          "category_name": "  46.6%",
+          "x_position": 910,
+          "y_position": 270,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  601",
+          "x_position": 910,
+          "y_position": 290,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            49
+          ]
+        },
+        {
+          "category_name": "  50.1%",
+          "x_position": 980,
+          "y_position": 270,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  579",
+          "x_position": 980,
+          "y_position": 290,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            7
+          ]
+        },
+        {
+          "category_name": "  45.9%",
+          "x_position": 0,
+          "y_position": 430,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  555",
+          "x_position": 0,
+          "y_position": 450,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            86
+          ]
+        },
+        {
+          "category_name": "  48.9%",
+          "x_position": 70,
+          "y_position": 430,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  532",
+          "x_position": 70,
+          "y_position": 450,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            76
+          ]
+        },
+        {
+          "category_name": "  49.7%",
+          "x_position": 140,
+          "y_position": 430,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  473",
+          "x_position": 140,
+          "y_position": 450,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            28
+          ]
+        },
+        {
+          "category_name": "  52.2%",
+          "x_position": 210,
+          "y_position": 430,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  462",
+          "x_position": 210,
+          "y_position": 450,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            137
+          ]
+        },
+        {
+          "category_name": "  49.9%",
+          "x_position": 280,
+          "y_position": 430,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  443",
+          "x_position": 280,
+          "y_position": 450,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            101
+          ]
+        },
+        {
+          "category_name": "  46.2%",
+          "x_position": 350,
+          "y_position": 430,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  433",
+          "x_position": 350,
+          "y_position": 450,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            120
+          ]
+        },
+        {
+          "category_name": "  53.8%",
+          "x_position": 420,
+          "y_position": 430,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  405",
+          "x_position": 420,
+          "y_position": 450,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            14
+          ]
+        },
+        {
+          "category_name": "  46.9%",
+          "x_position": 490,
+          "y_position": 430,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  392",
+          "x_position": 490,
+          "y_position": 450,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            22
+          ]
+        },
+        {
+          "category_name": "  48.9%",
+          "x_position": 560,
+          "y_position": 430,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  368",
+          "x_position": 560,
+          "y_position": 450,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            21
+          ]
+        },
+        {
+          "category_name": "  48.7%",
+          "x_position": 630,
+          "y_position": 430,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  349",
+          "x_position": 630,
+          "y_position": 450,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            34
+          ]
+        },
+        {
+          "category_name": "  51.6%",
+          "x_position": 700,
+          "y_position": 430,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  341",
+          "x_position": 700,
+          "y_position": 450,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            98
+          ]
+        },
+        {
+          "category_name": "  49.4%",
+          "x_position": 770,
+          "y_position": 430,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  340",
+          "x_position": 770,
+          "y_position": 450,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            145
+          ]
+        },
+        {
+          "category_name": "  59.3%",
+          "x_position": 840,
+          "y_position": 430,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  337",
+          "x_position": 840,
+          "y_position": 450,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            82
+          ]
+        },
+        {
+          "category_name": "  50.2%",
+          "x_position": 910,
+          "y_position": 430,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  297",
+          "x_position": 910,
+          "y_position": 450,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            114
+          ]
+        },
+        {
+          "category_name": "  46.5%",
+          "x_position": 980,
+          "y_position": 430,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  273",
+          "x_position": 980,
+          "y_position": 450,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            97
+          ]
+        },
+        {
+          "category_name": "pos 1 - Top Rating Heroes",
+          "x_position": 0,
+          "y_position": 640,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  54.4%",
+          "x_position": 0,
+          "y_position": 670,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  3506",
+          "x_position": 0,
+          "y_position": 690,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            8
+          ]
+        },
+        {
+          "category_name": "  53.8%",
+          "x_position": 70,
+          "y_position": 670,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  2292",
+          "x_position": 70,
+          "y_position": 690,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            70
+          ]
+        },
+        {
+          "category_name": "  53.5%",
+          "x_position": 140,
+          "y_position": 670,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  1373",
+          "x_position": 140,
+          "y_position": 690,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            53
+          ]
+        },
+        {
+          "category_name": "  54.6%",
+          "x_position": 210,
+          "y_position": 670,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  920",
+          "x_position": 210,
+          "y_position": 690,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            102
+          ]
+        },
+        {
+          "category_name": "  52.3%",
+          "x_position": 280,
+          "y_position": 670,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  857",
+          "x_position": 280,
+          "y_position": 690,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            63
+          ]
+        },
+        {
+          "category_name": "  69.3%",
+          "x_position": 350,
+          "y_position": 670,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  75",
+          "x_position": 350,
+          "y_position": 690,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            61
+          ]
+        },
+        {
+          "category_name": "  58.0%",
+          "x_position": 420,
+          "y_position": 670,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  119",
+          "x_position": 420,
+          "y_position": 690,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            4
+          ]
+        },
+        {
+          "category_name": "  51.1%",
+          "x_position": 490,
+          "y_position": 670,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  783",
+          "x_position": 490,
+          "y_position": 690,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            6
+          ]
+        },
+        {
+          "category_name": "  55.9%",
+          "x_position": 560,
+          "y_position": 670,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  143",
+          "x_position": 560,
+          "y_position": 690,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            14
+          ]
+        },
+        {
+          "category_name": "  51.7%",
+          "x_position": 630,
+          "y_position": 670,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  704",
+          "x_position": 630,
+          "y_position": 690,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            41
+          ]
+        },
+        {
+          "category_name": "pos 1 - Most Matches Heroes",
+          "x_position": 0,
+          "y_position": 880,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  54.4%",
+          "x_position": 0,
+          "y_position": 910,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  3506",
+          "x_position": 0,
+          "y_position": 930,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            8
+          ]
+        },
+        {
+          "category_name": "  53.8%",
+          "x_position": 70,
+          "y_position": 910,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  2292",
+          "x_position": 70,
+          "y_position": 930,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            70
+          ]
+        },
+        {
+          "category_name": "  45.9%",
+          "x_position": 140,
+          "y_position": 910,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  1638",
+          "x_position": 140,
+          "y_position": 930,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            72
+          ]
+        },
+        {
+          "category_name": "  46.4%",
+          "x_position": 210,
+          "y_position": 910,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  1606",
+          "x_position": 210,
+          "y_position": 930,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            49
+          ]
+        },
+        {
+          "category_name": "  47.1%",
+          "x_position": 280,
+          "y_position": 910,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  1430",
+          "x_position": 280,
+          "y_position": 930,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            1
+          ]
+        },
+        {
+          "category_name": "  53.5%",
+          "x_position": 350,
+          "y_position": 910,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  1373",
+          "x_position": 350,
+          "y_position": 930,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            53
+          ]
+        },
+        {
+          "category_name": "  49.5%",
+          "x_position": 420,
+          "y_position": 910,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  1144",
+          "x_position": 420,
+          "y_position": 930,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            109
+          ]
+        },
+        {
+          "category_name": "  47.9%",
+          "x_position": 490,
+          "y_position": 910,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  1100",
+          "x_position": 490,
+          "y_position": 930,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            10
+          ]
+        },
+        {
+          "category_name": "  50.5%",
+          "x_position": 560,
+          "y_position": 910,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  1018",
+          "x_position": 560,
+          "y_position": 930,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            46
+          ]
+        },
+        {
+          "category_name": "  54.6%",
+          "x_position": 630,
+          "y_position": 910,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  920",
+          "x_position": 630,
+          "y_position": 930,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            102
+          ]
+        },
+        {
+          "category_name": "  52.3%",
+          "x_position": 700,
+          "y_position": 910,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  857",
+          "x_position": 700,
+          "y_position": 930,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            63
+          ]
+        },
+        {
+          "category_name": "  47.0%",
+          "x_position": 770,
+          "y_position": 910,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  834",
+          "x_position": 770,
+          "y_position": 930,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            54
+          ]
+        },
+        {
+          "category_name": "  48.7%",
+          "x_position": 840,
+          "y_position": 910,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  783",
+          "x_position": 840,
+          "y_position": 930,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            94
+          ]
+        },
+        {
+          "category_name": "  51.1%",
+          "x_position": 910,
+          "y_position": 910,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  783",
+          "x_position": 910,
+          "y_position": 930,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            6
+          ]
+        },
+        {
+          "category_name": "  50.1%",
+          "x_position": 980,
+          "y_position": 910,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  720",
+          "x_position": 980,
+          "y_position": 930,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            48
+          ]
+        },
+        {
+          "category_name": "  51.7%",
+          "x_position": 0,
+          "y_position": 1070,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  704",
+          "x_position": 0,
+          "y_position": 1090,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            41
+          ]
+        },
+        {
+          "category_name": "  48.7%",
+          "x_position": 70,
+          "y_position": 1070,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  661",
+          "x_position": 70,
+          "y_position": 1090,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            12
+          ]
+        },
+        {
+          "category_name": "  46.3%",
+          "x_position": 140,
+          "y_position": 1070,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  557",
+          "x_position": 140,
+          "y_position": 1090,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            18
+          ]
+        },
+        {
+          "category_name": "  42.6%",
+          "x_position": 210,
+          "y_position": 1070,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  526",
+          "x_position": 210,
+          "y_position": 1090,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            145
+          ]
+        },
+        {
+          "category_name": "  48.0%",
+          "x_position": 280,
+          "y_position": 1070,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  525",
+          "x_position": 280,
+          "y_position": 1090,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            93
+          ]
+        },
+        {
+          "category_name": "  47.0%",
+          "x_position": 350,
+          "y_position": 1070,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  498",
+          "x_position": 350,
+          "y_position": 1090,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            67
+          ]
+        },
+        {
+          "category_name": "  46.3%",
+          "x_position": 420,
+          "y_position": 1070,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  469",
+          "x_position": 420,
+          "y_position": 1090,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            95
+          ]
+        },
+        {
+          "category_name": "  51.8%",
+          "x_position": 490,
+          "y_position": 1070,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  409",
+          "x_position": 490,
+          "y_position": 1090,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            114
+          ]
+        },
+        {
+          "category_name": "  50.0%",
+          "x_position": 560,
+          "y_position": 1070,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  394",
+          "x_position": 560,
+          "y_position": 1090,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            11
+          ]
+        },
+        {
+          "category_name": "  42.4%",
+          "x_position": 630,
+          "y_position": 1070,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  269",
+          "x_position": 630,
+          "y_position": 1090,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            44
+          ]
+        },
+        {
+          "category_name": "  52.5%",
+          "x_position": 700,
+          "y_position": 1070,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  244",
+          "x_position": 700,
+          "y_position": 1090,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            21
+          ]
+        },
+        {
+          "category_name": "  53.3%",
+          "x_position": 770,
+          "y_position": 1070,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  240",
+          "x_position": 770,
+          "y_position": 1090,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            56
+          ]
+        },
+        {
+          "category_name": "  52.6%",
+          "x_position": 840,
+          "y_position": 1070,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  192",
+          "x_position": 840,
+          "y_position": 1090,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            42
+          ]
+        },
+        {
+          "category_name": "  48.7%",
+          "x_position": 910,
+          "y_position": 1070,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  191",
+          "x_position": 910,
+          "y_position": 1090,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            136
+          ]
+        },
+        {
+          "category_name": "  50.0%",
+          "x_position": 980,
+          "y_position": 1070,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  168",
+          "x_position": 980,
+          "y_position": 1090,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            73
+          ]
+        },
+        {
+          "category_name": "pos 3 - Top Rating Heroes",
+          "x_position": 0,
+          "y_position": 1280,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  55.4%",
+          "x_position": 0,
+          "y_position": 1310,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  1003",
+          "x_position": 0,
+          "y_position": 1330,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            14
+          ]
+        },
+        {
+          "category_name": "  53.3%",
+          "x_position": 70,
+          "y_position": 1310,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  1453",
+          "x_position": 70,
+          "y_position": 1330,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            104
+          ]
+        },
+        {
+          "category_name": "  52.8%",
+          "x_position": 140,
+          "y_position": 1310,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  1111",
+          "x_position": 140,
+          "y_position": 1330,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            135
+          ]
+        },
+        {
+          "category_name": "  51.4%",
+          "x_position": 210,
+          "y_position": 1310,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  2173",
+          "x_position": 210,
+          "y_position": 1330,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            98
+          ]
+        },
+        {
+          "category_name": "  59.1%",
+          "x_position": 280,
+          "y_position": 1310,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  237",
+          "x_position": 280,
+          "y_position": 1330,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            33
+          ]
+        },
+        {
+          "category_name": "  53.3%",
+          "x_position": 350,
+          "y_position": 1310,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  345",
+          "x_position": 350,
+          "y_position": 1330,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            136
+          ]
+        },
+        {
+          "category_name": "  54.2%",
+          "x_position": 420,
+          "y_position": 1310,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  264",
+          "x_position": 420,
+          "y_position": 1330,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            55
+          ]
+        },
+        {
+          "category_name": "  56.2%",
+          "x_position": 490,
+          "y_position": 1310,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  144",
+          "x_position": 490,
+          "y_position": 1330,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            63
+          ]
+        },
+        {
+          "category_name": "  51.6%",
+          "x_position": 560,
+          "y_position": 1310,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  799",
+          "x_position": 560,
+          "y_position": 1330,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            137
+          ]
+        },
+        {
+          "category_name": "  52.8%",
+          "x_position": 630,
+          "y_position": 1310,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  309",
+          "x_position": 630,
+          "y_position": 1330,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            20
+          ]
+        },
+        {
+          "category_name": "pos 3 - Most Matches Heroes",
+          "x_position": 0,
+          "y_position": 1520,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  48.9%",
+          "x_position": 0,
+          "y_position": 1550,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  2283",
+          "x_position": 0,
+          "y_position": 1570,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            129
+          ]
+        },
+        {
+          "category_name": "  51.4%",
+          "x_position": 70,
+          "y_position": 1550,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  2173",
+          "x_position": 70,
+          "y_position": 1570,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            98
+          ]
+        },
+        {
+          "category_name": "  49.4%",
+          "x_position": 140,
+          "y_position": 1550,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  2080",
+          "x_position": 140,
+          "y_position": 1570,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            2
+          ]
+        },
+        {
+          "category_name": "  53.3%",
+          "x_position": 210,
+          "y_position": 1550,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  1453",
+          "x_position": 210,
+          "y_position": 1570,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            104
+          ]
+        },
+        {
+          "category_name": "  47.9%",
+          "x_position": 280,
+          "y_position": 1550,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  1386",
+          "x_position": 280,
+          "y_position": 1570,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            96
+          ]
+        },
+        {
+          "category_name": "  50.0%",
+          "x_position": 350,
+          "y_position": 1550,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  1350",
+          "x_position": 350,
+          "y_position": 1570,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            28
+          ]
+        },
+        {
+          "category_name": "  52.8%",
+          "x_position": 420,
+          "y_position": 1550,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  1111",
+          "x_position": 420,
+          "y_position": 1570,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            135
+          ]
+        },
+        {
+          "category_name": "  55.4%",
+          "x_position": 490,
+          "y_position": 1550,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  1003",
+          "x_position": 490,
+          "y_position": 1570,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            14
+          ]
+        },
+        {
+          "category_name": "  51.6%",
+          "x_position": 560,
+          "y_position": 1550,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  799",
+          "x_position": 560,
+          "y_position": 1570,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            137
+          ]
+        },
+        {
+          "category_name": "  46.4%",
+          "x_position": 630,
+          "y_position": 1550,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  763",
+          "x_position": 630,
+          "y_position": 1570,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            7
+          ]
+        },
+        {
+          "category_name": "  48.4%",
+          "x_position": 700,
+          "y_position": 1550,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  739",
+          "x_position": 700,
+          "y_position": 1570,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            97
+          ]
+        },
+        {
+          "category_name": "  45.1%",
+          "x_position": 770,
+          "y_position": 1550,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  668",
+          "x_position": 770,
+          "y_position": 1570,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            38
+          ]
+        },
+        {
+          "category_name": "  49.8%",
+          "x_position": 840,
+          "y_position": 1550,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  651",
+          "x_position": 840,
+          "y_position": 1570,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            29
+          ]
+        },
+        {
+          "category_name": "  51.1%",
+          "x_position": 910,
+          "y_position": 1550,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  634",
+          "x_position": 910,
+          "y_position": 1570,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            60
+          ]
+        },
+        {
+          "category_name": "  49.9%",
+          "x_position": 980,
+          "y_position": 1550,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  601",
+          "x_position": 980,
+          "y_position": 1570,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            47
+          ]
+        },
+        {
+          "category_name": "  51.0%",
+          "x_position": 0,
+          "y_position": 1710,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  514",
+          "x_position": 0,
+          "y_position": 1730,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            102
+          ]
+        },
+        {
+          "category_name": "  48.0%",
+          "x_position": 70,
+          "y_position": 1710,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  485",
+          "x_position": 70,
+          "y_position": 1730,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            120
+          ]
+        },
+        {
+          "category_name": "  46.0%",
+          "x_position": 140,
+          "y_position": 1710,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  433",
+          "x_position": 140,
+          "y_position": 1730,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            49
+          ]
+        },
+        {
+          "category_name": "  50.2%",
+          "x_position": 210,
+          "y_position": 1710,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  432",
+          "x_position": 210,
+          "y_position": 1730,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            108
+          ]
+        },
+        {
+          "category_name": "  47.9%",
+          "x_position": 280,
+          "y_position": 1710,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  426",
+          "x_position": 280,
+          "y_position": 1730,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            21
+          ]
+        },
+        {
+          "category_name": "  49.3%",
+          "x_position": 350,
+          "y_position": 1710,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  406",
+          "x_position": 350,
+          "y_position": 1730,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            40
+          ]
+        },
+        {
+          "category_name": "  44.1%",
+          "x_position": 420,
+          "y_position": 1710,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  358",
+          "x_position": 420,
+          "y_position": 1730,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            16
+          ]
+        },
+        {
+          "category_name": "  53.3%",
+          "x_position": 490,
+          "y_position": 1710,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  345",
+          "x_position": 490,
+          "y_position": 1730,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            136
+          ]
+        },
+        {
+          "category_name": "  51.8%",
+          "x_position": 560,
+          "y_position": 1710,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  342",
+          "x_position": 560,
+          "y_position": 1730,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            53
+          ]
+        },
+        {
+          "category_name": "  50.5%",
+          "x_position": 630,
+          "y_position": 1710,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  319",
+          "x_position": 630,
+          "y_position": 1730,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            39
+          ]
+        },
+        {
+          "category_name": "  50.3%",
+          "x_position": 700,
+          "y_position": 1710,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  318",
+          "x_position": 700,
+          "y_position": 1730,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            69
+          ]
+        },
+        {
+          "category_name": "  52.8%",
+          "x_position": 770,
+          "y_position": 1710,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  309",
+          "x_position": 770,
+          "y_position": 1730,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            20
+          ]
+        },
+        {
+          "category_name": "  42.0%",
+          "x_position": 840,
+          "y_position": 1710,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  293",
+          "x_position": 840,
+          "y_position": 1730,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            99
+          ]
+        },
+        {
+          "category_name": "  49.5%",
+          "x_position": 910,
+          "y_position": 1710,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  275",
+          "x_position": 910,
+          "y_position": 1730,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            15
+          ]
+        },
+        {
+          "category_name": "  54.2%",
+          "x_position": 980,
+          "y_position": 1710,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  264",
+          "x_position": 980,
+          "y_position": 1730,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            55
+          ]
+        },
+        {
+          "category_name": "pos 4 - Top Rating Heroes",
+          "x_position": 0,
+          "y_position": 1920,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  57.3%",
+          "x_position": 0,
+          "y_position": 1950,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  393",
+          "x_position": 0,
+          "y_position": 1970,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            87
+          ]
+        },
+        {
+          "category_name": "  53.7%",
+          "x_position": 70,
+          "y_position": 1950,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  853",
+          "x_position": 70,
+          "y_position": 1970,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            40
+          ]
+        },
+        {
+          "category_name": "  53.9%",
+          "x_position": 140,
+          "y_position": 1950,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  803",
+          "x_position": 140,
+          "y_position": 1970,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            88
+          ]
+        },
+        {
+          "category_name": "  55.7%",
+          "x_position": 210,
+          "y_position": 1950,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  488",
+          "x_position": 210,
+          "y_position": 1970,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            45
+          ]
+        },
+        {
+          "category_name": "  55.9%",
+          "x_position": 280,
+          "y_position": 1950,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  374",
+          "x_position": 280,
+          "y_position": 1970,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            119
+          ]
+        },
+        {
+          "category_name": "  55.1%",
+          "x_position": 350,
+          "y_position": 1950,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  432",
+          "x_position": 350,
+          "y_position": 1970,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            74
+          ]
+        },
+        {
+          "category_name": "  51.7%",
+          "x_position": 420,
+          "y_position": 1950,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  1361",
+          "x_position": 420,
+          "y_position": 1970,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            71
+          ]
+        },
+        {
+          "category_name": "  52.8%",
+          "x_position": 490,
+          "y_position": 1950,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  724",
+          "x_position": 490,
+          "y_position": 1970,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            62
+          ]
+        },
+        {
+          "category_name": "  50.8%",
+          "x_position": 560,
+          "y_position": 1950,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  1139",
+          "x_position": 560,
+          "y_position": 1970,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            101
+          ]
+        },
+        {
+          "category_name": "  54.6%",
+          "x_position": 630,
+          "y_position": 1950,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  174",
+          "x_position": 630,
+          "y_position": 1970,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            68
+          ]
+        },
+        {
+          "category_name": "pos 4 - Most Matches Heroes",
+          "x_position": 0,
+          "y_position": 2160,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  51.1%",
+          "x_position": 0,
+          "y_position": 2190,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  1545",
+          "x_position": 0,
+          "y_position": 2210,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            128
+          ]
+        },
+        {
+          "category_name": "  46.7%",
+          "x_position": 70,
+          "y_position": 2190,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  1474",
+          "x_position": 70,
+          "y_position": 2210,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            86
+          ]
+        },
+        {
+          "category_name": "  50.8%",
+          "x_position": 140,
+          "y_position": 2190,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  1466",
+          "x_position": 140,
+          "y_position": 2210,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            14
+          ]
+        },
+        {
+          "category_name": "  51.7%",
+          "x_position": 210,
+          "y_position": 2190,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  1361",
+          "x_position": 210,
+          "y_position": 2210,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            71
+          ]
+        },
+        {
+          "category_name": "  50.8%",
+          "x_position": 280,
+          "y_position": 2190,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  1139",
+          "x_position": 280,
+          "y_position": 2210,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            101
+          ]
+        },
+        {
+          "category_name": "  50.0%",
+          "x_position": 350,
+          "y_position": 2190,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  1044",
+          "x_position": 350,
+          "y_position": 2210,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            21
+          ]
+        },
+        {
+          "category_name": "  49.3%",
+          "x_position": 420,
+          "y_position": 2190,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  921",
+          "x_position": 420,
+          "y_position": 2210,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            26
+          ]
+        },
+        {
+          "category_name": "  49.9%",
+          "x_position": 490,
+          "y_position": 2190,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  873",
+          "x_position": 490,
+          "y_position": 2210,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            7
+          ]
+        },
+        {
+          "category_name": "  50.4%",
+          "x_position": 560,
+          "y_position": 2190,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  863",
+          "x_position": 560,
+          "y_position": 2210,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            123
+          ]
+        },
+        {
+          "category_name": "  53.7%",
+          "x_position": 630,
+          "y_position": 2190,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  853",
+          "x_position": 630,
+          "y_position": 2210,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            40
+          ]
+        },
+        {
+          "category_name": "  48.4%",
+          "x_position": 700,
+          "y_position": 2190,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  816",
+          "x_position": 700,
+          "y_position": 2210,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            53
+          ]
+        },
+        {
+          "category_name": "  53.9%",
+          "x_position": 770,
+          "y_position": 2190,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  803",
+          "x_position": 770,
+          "y_position": 2210,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            88
+          ]
+        },
+        {
+          "category_name": "  50.5%",
+          "x_position": 840,
+          "y_position": 2190,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  734",
+          "x_position": 840,
+          "y_position": 2210,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            22
+          ]
+        },
+        {
+          "category_name": "  52.8%",
+          "x_position": 910,
+          "y_position": 2190,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  724",
+          "x_position": 910,
+          "y_position": 2210,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            62
+          ]
+        },
+        {
+          "category_name": "  48.9%",
+          "x_position": 980,
+          "y_position": 2190,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  724",
+          "x_position": 980,
+          "y_position": 2210,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            100
+          ]
+        },
+        {
+          "category_name": "  49.2%",
+          "x_position": 0,
+          "y_position": 2350,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  618",
+          "x_position": 0,
+          "y_position": 2370,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            105
+          ]
+        },
+        {
+          "category_name": "  48.5%",
+          "x_position": 70,
+          "y_position": 2350,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  573",
+          "x_position": 70,
+          "y_position": 2370,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            51
+          ]
+        },
+        {
+          "category_name": "  48.3%",
+          "x_position": 140,
+          "y_position": 2350,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  555",
+          "x_position": 140,
+          "y_position": 2370,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            64
+          ]
+        },
+        {
+          "category_name": "  47.1%",
+          "x_position": 210,
+          "y_position": 2350,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  539",
+          "x_position": 210,
+          "y_position": 2370,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            75
+          ]
+        },
+        {
+          "category_name": "  55.7%",
+          "x_position": 280,
+          "y_position": 2350,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  488",
+          "x_position": 280,
+          "y_position": 2370,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            45
+          ]
+        },
+        {
+          "category_name": "  48.4%",
+          "x_position": 350,
+          "y_position": 2350,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  479",
+          "x_position": 350,
+          "y_position": 2370,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            63
+          ]
+        },
+        {
+          "category_name": "  50.1%",
+          "x_position": 420,
+          "y_position": 2350,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  461",
+          "x_position": 420,
+          "y_position": 2370,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            27
+          ]
+        },
+        {
+          "category_name": "  55.1%",
+          "x_position": 490,
+          "y_position": 2350,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  432",
+          "x_position": 490,
+          "y_position": 2370,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            74
+          ]
+        },
+        {
+          "category_name": "  57.3%",
+          "x_position": 560,
+          "y_position": 2350,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  393",
+          "x_position": 560,
+          "y_position": 2370,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            87
+          ]
+        },
+        {
+          "category_name": "  47.5%",
+          "x_position": 630,
+          "y_position": 2350,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  387",
+          "x_position": 630,
+          "y_position": 2370,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            110
+          ]
+        },
+        {
+          "category_name": "  55.9%",
+          "x_position": 700,
+          "y_position": 2350,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  374",
+          "x_position": 700,
+          "y_position": 2370,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            119
+          ]
+        },
+        {
+          "category_name": "  48.8%",
+          "x_position": 770,
+          "y_position": 2350,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  361",
+          "x_position": 770,
+          "y_position": 2370,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            79
+          ]
+        },
+        {
+          "category_name": "  50.1%",
+          "x_position": 840,
+          "y_position": 2350,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  349",
+          "x_position": 840,
+          "y_position": 2370,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            131
+          ]
+        },
+        {
+          "category_name": "  51.2%",
+          "x_position": 910,
+          "y_position": 2350,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  326",
+          "x_position": 910,
+          "y_position": 2370,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            31
+          ]
+        },
+        {
+          "category_name": "  50.3%",
+          "x_position": 980,
+          "y_position": 2350,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  310",
+          "x_position": 980,
+          "y_position": 2370,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            30
+          ]
+        },
+        {
+          "category_name": "pos 5 - Top Rating Heroes",
+          "x_position": 0,
+          "y_position": 2560,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  54.5%",
+          "x_position": 0,
+          "y_position": 2590,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  1117",
+          "x_position": 0,
+          "y_position": 2610,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            40
+          ]
+        },
+        {
+          "category_name": "  57.7%",
+          "x_position": 70,
+          "y_position": 2590,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  546",
+          "x_position": 70,
+          "y_position": 2610,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            111
+          ]
+        },
+        {
+          "category_name": "  54.4%",
+          "x_position": 140,
+          "y_position": 2590,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  1065",
+          "x_position": 140,
+          "y_position": 2610,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            128
+          ]
+        },
+        {
+          "category_name": "  59.3%",
+          "x_position": 210,
+          "y_position": 2590,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  388",
+          "x_position": 210,
+          "y_position": 2610,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            3
+          ]
+        },
+        {
+          "category_name": "  57.2%",
+          "x_position": 280,
+          "y_position": 2590,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  320",
+          "x_position": 280,
+          "y_position": 2610,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            112
+          ]
+        },
+        {
+          "category_name": "  52.7%",
+          "x_position": 350,
+          "y_position": 2590,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  1100",
+          "x_position": 350,
+          "y_position": 2610,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            31
+          ]
+        },
+        {
+          "category_name": "  51.7%",
+          "x_position": 420,
+          "y_position": 2590,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  1141",
+          "x_position": 420,
+          "y_position": 2610,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            14
+          ]
+        },
+        {
+          "category_name": "  51.2%",
+          "x_position": 490,
+          "y_position": 2590,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  1591",
+          "x_position": 490,
+          "y_position": 2610,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            87
+          ]
+        },
+        {
+          "category_name": "  56.5%",
+          "x_position": 560,
+          "y_position": 2590,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  230",
+          "x_position": 560,
+          "y_position": 2610,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            83
+          ]
+        },
+        {
+          "category_name": "  57.1%",
+          "x_position": 630,
+          "y_position": 2590,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  147",
+          "x_position": 630,
+          "y_position": 2610,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            88
+          ]
+        },
+        {
+          "category_name": "pos 5 - Most Matches Heroes",
+          "x_position": 0,
+          "y_position": 2800,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  47.5%",
+          "x_position": 0,
+          "y_position": 2830,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  2106",
+          "x_position": 0,
+          "y_position": 2850,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            64
+          ]
+        },
+        {
+          "category_name": "  51.2%",
+          "x_position": 70,
+          "y_position": 2830,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  1591",
+          "x_position": 70,
+          "y_position": 2850,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            87
+          ]
+        },
+        {
+          "category_name": "  50.7%",
+          "x_position": 140,
+          "y_position": 2830,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  1440",
+          "x_position": 140,
+          "y_position": 2850,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            26
+          ]
+        },
+        {
+          "category_name": "  48.6%",
+          "x_position": 210,
+          "y_position": 2830,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  1240",
+          "x_position": 210,
+          "y_position": 2850,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            75
+          ]
+        },
+        {
+          "category_name": "  51.7%",
+          "x_position": 280,
+          "y_position": 2830,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  1141",
+          "x_position": 280,
+          "y_position": 2850,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            14
+          ]
+        },
+        {
+          "category_name": "  54.5%",
+          "x_position": 350,
+          "y_position": 2830,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  1117",
+          "x_position": 350,
+          "y_position": 2850,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            40
+          ]
+        },
+        {
+          "category_name": "  52.7%",
+          "x_position": 420,
+          "y_position": 2830,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  1100",
+          "x_position": 420,
+          "y_position": 2850,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            31
+          ]
+        },
+        {
+          "category_name": "  54.4%",
+          "x_position": 490,
+          "y_position": 2830,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  1065",
+          "x_position": 490,
+          "y_position": 2850,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            128
+          ]
+        },
+        {
+          "category_name": "  44.7%",
+          "x_position": 560,
+          "y_position": 2830,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  851",
+          "x_position": 560,
+          "y_position": 2850,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            37
+          ]
+        },
+        {
+          "category_name": "  51.3%",
+          "x_position": 630,
+          "y_position": 2830,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  822",
+          "x_position": 630,
+          "y_position": 2850,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            27
+          ]
+        },
+        {
+          "category_name": "  49.6%",
+          "x_position": 700,
+          "y_position": 2830,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  805",
+          "x_position": 700,
+          "y_position": 2850,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            5
+          ]
+        },
+        {
+          "category_name": "  48.1%",
+          "x_position": 770,
+          "y_position": 2830,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  749",
+          "x_position": 770,
+          "y_position": 2850,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            51
+          ]
+        },
+        {
+          "category_name": "  51.7%",
+          "x_position": 840,
+          "y_position": 2830,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  714",
+          "x_position": 840,
+          "y_position": 2850,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            45
+          ]
+        },
+        {
+          "category_name": "  48.9%",
+          "x_position": 910,
+          "y_position": 2830,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  708",
+          "x_position": 910,
+          "y_position": 2850,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            30
+          ]
+        },
+        {
+          "category_name": "  46.6%",
+          "x_position": 980,
+          "y_position": 2830,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  622",
+          "x_position": 980,
+          "y_position": 2850,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            84
+          ]
+        },
+        {
+          "category_name": "  48.1%",
+          "x_position": 0,
+          "y_position": 2990,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  621",
+          "x_position": 0,
+          "y_position": 3010,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            68
+          ]
+        },
+        {
+          "category_name": "  51.0%",
+          "x_position": 70,
+          "y_position": 2990,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  608",
+          "x_position": 70,
+          "y_position": 3010,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            100
+          ]
+        },
+        {
+          "category_name": "  47.8%",
+          "x_position": 140,
+          "y_position": 2990,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  596",
+          "x_position": 140,
+          "y_position": 3010,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            86
+          ]
+        },
+        {
+          "category_name": "  57.7%",
+          "x_position": 210,
+          "y_position": 2990,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  546",
+          "x_position": 210,
+          "y_position": 3010,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            111
+          ]
+        },
+        {
+          "category_name": "  51.9%",
+          "x_position": 280,
+          "y_position": 2990,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  534",
+          "x_position": 280,
+          "y_position": 3010,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            101
+          ]
+        },
+        {
+          "category_name": "  51.5%",
+          "x_position": 350,
+          "y_position": 2990,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  499",
+          "x_position": 350,
+          "y_position": 3010,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            131
+          ]
+        },
+        {
+          "category_name": "  48.9%",
+          "x_position": 420,
+          "y_position": 2990,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  458",
+          "x_position": 420,
+          "y_position": 3010,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            53
+          ]
+        },
+        {
+          "category_name": "  59.3%",
+          "x_position": 490,
+          "y_position": 2990,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  388",
+          "x_position": 490,
+          "y_position": 3010,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            3
+          ]
+        },
+        {
+          "category_name": "  50.0%",
+          "x_position": 560,
+          "y_position": 2990,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  378",
+          "x_position": 560,
+          "y_position": 3010,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            22
+          ]
+        },
+        {
+          "category_name": "  49.7%",
+          "x_position": 630,
+          "y_position": 2990,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  370",
+          "x_position": 630,
+          "y_position": 3010,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            50
+          ]
+        },
+        {
+          "category_name": "  49.3%",
+          "x_position": 700,
+          "y_position": 2990,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  367",
+          "x_position": 700,
+          "y_position": 3010,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            123
+          ]
+        },
+        {
+          "category_name": "  51.7%",
+          "x_position": 770,
+          "y_position": 2990,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  344",
+          "x_position": 770,
+          "y_position": 3010,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            79
+          ]
+        },
+        {
+          "category_name": "  47.8%",
+          "x_position": 840,
+          "y_position": 2990,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  343",
+          "x_position": 840,
+          "y_position": 3010,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            105
+          ]
+        },
+        {
+          "category_name": "  48.8%",
+          "x_position": 910,
+          "y_position": 2990,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  322",
+          "x_position": 910,
+          "y_position": 3010,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            85
+          ]
+        },
+        {
+          "category_name": "  57.2%",
+          "x_position": 980,
+          "y_position": 2990,
+          "width": 0,
+          "height": 0,
+          "hero_ids": []
+        },
+        {
+          "category_name": "  320",
+          "x_position": 980,
+          "y_position": 3010,
+          "width": 70,
+          "height": 110,
+          "hero_ids": [
+            112
+          ]
+        }
+      ]
+    }
+  ]
+}

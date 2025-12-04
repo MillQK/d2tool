@@ -1,13 +1,10 @@
-package heroesGrid
+package heroesLayout
 
 import (
 	"d2tool/providers"
-	"d2tool/utils"
 	"encoding/json"
 	"fmt"
-	"log/slog"
 	"os"
-	"path/filepath"
 	"strings"
 	"time"
 )
@@ -17,7 +14,7 @@ const (
 	d2tPrefix      = "[D2T]"
 )
 
-type UpdateHeroGridConfig struct {
+type UpdateHeroesLayoutConfig struct {
 	ConfigFilePaths []string
 	Positions       []string
 }
@@ -44,47 +41,8 @@ type heroGridPosition struct {
 	HeroIDs      []int   `json:"hero_ids"`
 }
 
-// UpdateHeroesGrid updates all hero grid config files with new hero data
-func UpdateHeroesGrid(config UpdateHeroGridConfig) error {
-	if len(config.ConfigFilePaths) == 0 {
-		slog.Info("No config files provided, skipping update")
-		return nil
-	}
-
-	// Fetch heroes data for all positions
-	positions := utils.Map(
-		config.Positions,
-		func(position string) string {
-			return fmt.Sprintf("%s%s", positionPrefix, position)
-		},
-	)
-
-	positionToHeroes := make(map[string][]providers.Hero)
-
-	for _, position := range positions {
-		heroes, err := providers.FetchHeroes(position)
-		if err != nil {
-			slog.Error(fmt.Sprintf("Error fetching heroes for position %s", position), "error", err)
-			continue
-		}
-		positionToHeroes[position] = heroes
-	}
-
-	// Process each config file
-	for _, configFile := range config.ConfigFilePaths {
-		slog.Info(fmt.Sprintf("Processing config file %s", configFile))
-		if err := processHeroGridConfig(configFile, positions, positionToHeroes); err != nil {
-			slog.Error(fmt.Sprintf("Error processing config file %s", configFile), "error", err)
-			continue
-		}
-		slog.Info(fmt.Sprintf("Successfully updated config file %s", configFile))
-	}
-
-	return nil
-}
-
-// generateHeroGridConfigs generates new hero grid configs for each role
-func generateHeroGridConfigs(positions []string, positionToHero map[string][]providers.Hero) []heroGridCategory {
+// generateHeroesLayoutConfigs generates new hero grid configs for each role
+func generateHeroesLayoutConfigs(positions []string, positionToHero map[string][]providers.Hero) []heroGridCategory {
 	var configs []heroGridCategory
 
 	// Create a single merged config
@@ -128,7 +86,10 @@ func generateHeroGridConfigs(positions []string, positionToHero map[string][]pro
 			yPos := currentY + row*(heroHeight+heroWinrateSpacing+heroRowSpacing)
 
 			// Calculate winrate
-			winrate := float64(hero.Wins) / float64(hero.Matches) * 100
+			winrate := 0.0
+			if hero.Matches > 0 {
+				winrate = float64(hero.Wins) / float64(hero.Matches) * 100
+			}
 
 			heroWinrateCategory := heroGridPosition{
 				CategoryName: fmt.Sprintf("  %.1f%%", winrate),
@@ -185,46 +146,8 @@ func generateHeroGridConfigs(positions []string, positionToHero map[string][]pro
 	return configs
 }
 
-// FindHeroGridConfigFiles finds all hero_grid_config.json files for all Steam users
-func FindHeroGridConfigFiles(steamPath string) ([]string, error) {
-	userdataPath := filepath.Join(steamPath, "userdata")
-
-	// Check if userdata directory exists
-	if _, err := os.Stat(userdataPath); os.IsNotExist(err) {
-		return nil, fmt.Errorf("userdata directory not found at %s", userdataPath)
-	}
-
-	var configFiles []string
-
-	// List all directories in userdata (each is a Steam user ID)
-	userDirs, err := os.ReadDir(userdataPath)
-	if err != nil {
-		return nil, fmt.Errorf("error reading userdata directory: %w", err)
-	}
-
-	for _, userDir := range userDirs {
-		if !userDir.IsDir() {
-			continue
-		}
-
-		// Construct path to hero_grid_config.json
-		configPath := filepath.Join(userdataPath, userDir.Name(), "570", "remote", "cfg", "hero_grid_config.json")
-
-		// Check if file exists
-		if _, err := os.Stat(configPath); err == nil {
-			configFiles = append(configFiles, configPath)
-		}
-	}
-
-	if len(configFiles) == 0 {
-		return nil, fmt.Errorf("no hero_grid_config.json files found")
-	}
-
-	return configFiles, nil
-}
-
-// processHeroGridConfig processes a hero_grid_config.json file
-func processHeroGridConfig(configPath string, positions []string, positionToHeroes map[string][]providers.Hero) error {
+// processHeroesLayoutConfig processes a hero_grid_config.json file
+func processHeroesLayoutConfig(configPath string, positions []string, positionToHeroes map[string][]providers.Hero) error {
 	// Read the existing config file
 	data, err := os.ReadFile(configPath)
 	if err != nil {
@@ -245,7 +168,7 @@ func processHeroGridConfig(configPath string, positions []string, positionToHero
 	}
 
 	// Generate new configs for each role
-	newConfigs := generateHeroGridConfigs(positions, positionToHeroes)
+	newConfigs := generateHeroesLayoutConfigs(positions, positionToHeroes)
 
 	// Merge configs
 	config.Configs = append(filteredConfigs, newConfigs...)
