@@ -215,7 +215,16 @@ func extractFileFromArchive(
 	zipReaderFile *zip.File,
 	rootDir string,
 ) error {
-	filePath := filepath.Join(rootDir, zipReaderFile.Name)
+	// Clean the root directory path and ensure it ends with separator
+	cleanRootDir := filepath.Clean(rootDir) + string(os.PathSeparator)
+
+	// Join and clean the target path
+	filePath := filepath.Clean(filepath.Join(rootDir, zipReaderFile.Name))
+
+	// Validate: resolved path must be inside rootDir (prevents path traversal attacks)
+	if !strings.HasPrefix(filePath, cleanRootDir) {
+		return fmt.Errorf("illegal file path in archive (path traversal attempt): %s", zipReaderFile.Name)
+	}
 
 	if zipReaderFile.FileInfo().IsDir() {
 		if err := os.Mkdir(filePath, 0755); err != nil {
