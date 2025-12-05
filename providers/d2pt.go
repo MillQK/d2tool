@@ -25,7 +25,7 @@ type Hero struct {
 }
 
 // FetchHeroes fetches heroes data from the API for a specific position
-func FetchHeroes(position string) ([]Hero, error) {
+func FetchHeroes(position string, httpClient *http.Client) ([]Hero, error) {
 	params := url.Values{
 		"mmr":         {"7000"},
 		"order_by":    {"matches"},
@@ -47,7 +47,7 @@ func FetchHeroes(position string) ([]Hero, error) {
 	req.Header.Add("Referer", "https://dota2protracker.com")
 
 	// Execute the request
-	resp, err := http.DefaultClient.Do(req)
+	resp, err := httpClient.Do(req)
 	if err != nil {
 		return nil, fmt.Errorf("error fetching data: %w", err)
 	}

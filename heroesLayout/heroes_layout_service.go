@@ -6,6 +6,7 @@ import (
 	"d2tool/utils"
 	"fmt"
 	"log/slog"
+	"net/http"
 	"sync"
 	"time"
 )
@@ -15,13 +16,17 @@ type HeroesLayoutService interface {
 }
 
 type HeroesLayoutServiceImpl struct {
-	mu     sync.Mutex
-	config *config.Config
+	mu         sync.Mutex
+	config     *config.Config
+	httpClient *http.Client
 }
 
 func NewHeroesLayoutService(config *config.Config) *HeroesLayoutServiceImpl {
 	return &HeroesLayoutServiceImpl{
 		config: config,
+		httpClient: &http.Client{
+			Timeout: 30 * time.Second,
+		},
 	}
 }
 
@@ -56,7 +61,7 @@ func (s *HeroesLayoutServiceImpl) UpdateHeroesLayout() error {
 	var positionsFetchErr error
 
 	for _, position := range positions {
-		heroes, err := providers.FetchHeroes(position)
+		heroes, err := providers.FetchHeroes(position, s.httpClient)
 		if err != nil {
 			slog.Error(fmt.Sprintf("Error fetching heroes for position %s", position), "error", err)
 			positionsFetchErr = fmt.Errorf("error fetching heroes for position %s: %w", position, err)

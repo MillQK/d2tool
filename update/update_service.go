@@ -51,8 +51,10 @@ func NewUpdateService(
 	return &UpdateServiceImpl{
 		currentAppVersion: currentAppVersion,
 		githubClient:      githubClient,
-		downloadClient:    http.DefaultClient,
-		lastCheckTime:     time.UnixMilli(0),
+		downloadClient: &http.Client{
+			Timeout: 10 * time.Minute,
+		},
+		lastCheckTime: time.UnixMilli(0),
 	}
 }
 

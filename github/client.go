@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"time"
 )
 
 const (
@@ -24,7 +25,9 @@ type HttpClient struct {
 
 func NewHttpClient() *HttpClient {
 	return &HttpClient{
-		httpClient: http.DefaultClient,
+		httpClient: &http.Client{
+			Timeout: 30 * time.Second,
+		},
 	}
 }
 
