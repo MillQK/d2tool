@@ -7,7 +7,7 @@ export function AddHeroesLayoutFile(arg1:string):Promise<void>;
 
 export function CheckForAppUpdate():Promise<void>;
 
-export function DownloadAppUpdate():Promise<main.DownloadResult>;
+export function DownloadAppUpdate():Promise<void>;
 
 export function GetAppUpdateState():Promise<main.AppUpdateState>;
 

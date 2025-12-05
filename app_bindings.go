@@ -2,7 +2,7 @@ package main
 
 import (
 	"d2tool/config"
-	"d2tool/startup"
+	"fmt"
 	"log/slog"
 	"time"
 
@@ -17,20 +17,15 @@ type AppUpdateState struct {
 	UpdateAvailable bool   `json:"updateAvailable"`
 }
 
-// DownloadResult represents the result of a download operation
-type DownloadResult struct {
-	Success bool   `json:"success"`
-	Error   string `json:"error"`
-}
-
 // --- Heroes Layout Update ---
 
 // UpdateHeroesLayout performs the hero layout update synchronously
-func (a *App) UpdateHeroesLayout() {
-	err := a.heroesLayoutService.UpdateHeroesLayout()
-	if err != nil {
-		slog.Error("Error updating hero layout", "error", err)
+func (a *App) UpdateHeroesLayout() error {
+	if err := a.heroesLayoutService.UpdateHeroesLayout(); err != nil {
+		return fmt.Errorf("error updating hero layout: %w", err)
 	}
+
+	return nil
 }
 
 // --- Heroes Layout Files Bindings ---
@@ -56,7 +51,7 @@ func (a *App) SetHeroesLayoutFileEnabled(index int, enabled bool) {
 }
 
 // OpenFileDialog opens a file dialog and returns the selected path
-func (a *App) OpenFileDialog() string {
+func (a *App) OpenFileDialog() (string, error) {
 	selection, err := runtime.OpenFileDialog(a.ctx, runtime.OpenDialogOptions{
 		Title: "Select hero_grid_config.json",
 		Filters: []runtime.FileFilter{
@@ -67,10 +62,10 @@ func (a *App) OpenFileDialog() string {
 		},
 	})
 	if err != nil {
-		slog.Warn("Error opening file dialog", "error", err)
-		return ""
+		return "", fmt.Errorf("error opening file dialog: %w", err)
 	}
-	return selection
+
+	return selection, nil
 }
 
 // --- Positions Bindings ---
@@ -93,32 +88,32 @@ func (a *App) SetPositionEnabled(id string, enabled bool) {
 // --- Startup Tab Bindings ---
 
 // GetStartupEnabled returns whether the app is set to run on startup
-func (a *App) GetStartupEnabled() bool {
-	if !startup.SupportsStartup() {
-		return false
+func (a *App) GetStartupEnabled() (bool, error) {
+	if !a.startupService.SupportsStartup() {
+		return false, nil
 	}
-	registered, err := startup.IsStartupRegistered()
+	registered, err := a.startupService.IsStartupRegistered()
 	if err != nil {
 		slog.Warn("Error checking startup registration", "error", err)
-		return false
+		return false, fmt.Errorf("error checking startup registration: %w", err)
 	}
-	return registered
+	return registered, nil
 }
 
 // SetStartupEnabled enables or disables running on startup
 func (a *App) SetStartupEnabled(enabled bool) error {
-	if !startup.SupportsStartup() {
+	if !a.startupService.SupportsStartup() {
 		return nil
 	}
 	if enabled {
-		return startup.StartupRegister([]string{"-minimized"})
+		return a.startupService.StartupRegister()
 	}
-	return startup.StartupRemove()
+	return a.startupService.StartupRemove()
 }
 
 // IsStartupSupported returns whether startup registration is supported on this platform
 func (a *App) IsStartupSupported() bool {
-	return startup.SupportsStartup()
+	return a.startupService.SupportsStartup()
 }
 
 // --- App Update Tab Bindings ---
@@ -143,28 +138,21 @@ func (a *App) GetAppUpdateState() AppUpdateState {
 }
 
 // CheckForAppUpdate checks for application updates synchronously
-func (a *App) CheckForAppUpdate() {
-	err := a.updateService.CheckForUpdate()
-	if err != nil {
-		slog.Error("Error checking for updates", "error", err)
+func (a *App) CheckForAppUpdate() error {
+	if err := a.updateService.CheckForUpdate(); err != nil {
+		return fmt.Errorf("error checking for updates: %w", err)
 	}
+
+	return nil
 }
 
 // DownloadAppUpdate downloads and installs the update synchronously
-func (a *App) DownloadAppUpdate() DownloadResult {
-	err := a.updateService.UpdateApp()
-	if err != nil {
-		slog.Error("Error downloading update", "error", err)
-		return DownloadResult{
-			Success: false,
-			Error:   err.Error(),
-		}
+func (a *App) DownloadAppUpdate() error {
+	if err := a.updateService.UpdateApp(); err != nil {
+		return fmt.Errorf("error downloading update: %w", err)
 	}
 
-	return DownloadResult{
-		Success: true,
-		Error:   "",
-	}
+	return nil
 }
 
 // --- Background Tasks ---

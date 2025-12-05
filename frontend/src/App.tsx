@@ -1,14 +1,15 @@
 import { useEffect, useState } from 'react'
-import { EventsOn } from './wailsjs/runtime'
-import { GetAppUpdateState, AppUpdateState } from './wailsjs/go/main/App'
+import { EventsOn } from '../wailsjs/runtime'
+import { GetAppUpdateState } from '../wailsjs/go/main/App'
 import Sidebar, { PageId } from './components/Sidebar'
 import HeroesLayoutPage from './pages/HeroesLayoutPage'
 import StartupPage from './pages/StartupPage'
 import UpdatesPage from './pages/UpdatesPage'
+import { main } from "../wailsjs/go/models"
 
 function App() {
   const [activePage, setActivePage] = useState<PageId>('heroesLayout')
-  const [appUpdateState, setAppUpdateState] = useState<AppUpdateState | null>(null)
+  const [appUpdateState, setAppUpdateState] = useState<main.AppUpdateState | null>(null)
 
   const refreshAppUpdateState = () => {
     return GetAppUpdateState().then(setAppUpdateState).catch(console.error)

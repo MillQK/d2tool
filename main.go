@@ -5,6 +5,7 @@ import (
 	"d2tool/config"
 	"d2tool/github"
 	"d2tool/heroesLayout"
+	"d2tool/startup"
 	"d2tool/systray"
 	"d2tool/update"
 	"d2tool/utils"
@@ -38,7 +39,8 @@ func main() {
 	fmt.Println("D2Tool starting...")
 
 	// Parse command line flags
-	minimized := flag.Bool("minimized", false, "start the application minimized")
+	minimizedFlagName := "minimized"
+	minimized := flag.Bool(minimizedFlagName, false, "start the application minimized")
 	flag.Parse()
 
 	// Setup file logging
@@ -60,6 +62,7 @@ func main() {
 			github.NewHttpClient(),
 		),
 		heroesLayout.NewHeroesLayoutService(appConfig),
+		startup.NewStartupService([]string{fmt.Sprintf("-%s", minimizedFlagName)}),
 	)
 
 	// Initialize systray (Windows only, no-op on other platforms)
@@ -141,6 +144,7 @@ type App struct {
 	config              *config.Config
 	updateService       update.UpdateService
 	heroesLayoutService heroesLayout.HeroesLayoutService
+	startupService      startup.StartupService
 }
 
 // NewApp creates a new App application struct
@@ -148,11 +152,13 @@ func NewApp(
 	config *config.Config,
 	updateService update.UpdateService,
 	heroesLayoutService heroesLayout.HeroesLayoutService,
+	startupService startup.StartupService,
 ) *App {
 	return &App{
 		config:              config,
 		updateService:       updateService,
 		heroesLayoutService: heroesLayoutService,
+		startupService:      startupService,
 	}
 }
 
