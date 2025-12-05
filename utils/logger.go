@@ -2,6 +2,8 @@ package utils
 
 import (
 	"log/slog"
+	"os"
+	"runtime"
 
 	"github.com/wailsapp/wails/v2/pkg/logger"
 )
@@ -42,3 +44,12 @@ func (s *SlogAdapter) Fatal(message string) {
 }
 
 var _ logger.Logger = (*SlogAdapter)(nil)
+
+func IsStdoutAvailable() bool {
+	// On Windows GUI apps, Stdout file descriptor is invalid
+	if runtime.GOOS == "windows" {
+		_, err := os.Stdout.Stat()
+		return err == nil
+	}
+	return true
+}
