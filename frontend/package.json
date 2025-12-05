@@ -1,7 +1,6 @@
 {
   "name": "d2tool-frontend",
   "private": true,
-  "version": "0.0.6",
   "type": "module",
   "scripts": {
     "dev": "vite",
