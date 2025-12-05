@@ -41,6 +41,9 @@ jobs:
         working-directory: frontend
         run: npm install
 
+      - name: Build for testing
+        run: wails build -debug -nopackage
+
       - name: Run tests
         run: go test ./... -v
 
