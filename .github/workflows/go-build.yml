@@ -32,7 +32,7 @@ jobs:
           node-version: '18.19.1'
 
       - name: Install wails dependencies
-        run: sudo apt install libgtk-3-dev libwebkit2gtk-4.0-dev
+        run: sudo apt update && sudo apt install -y libgtk-3-dev libwebkit2gtk-4.1-dev
 
       - name: Install Wails CLI
         run: go install github.com/wailsapp/wails/v2/cmd/wails@v2.11.0
@@ -45,13 +45,13 @@ jobs:
         run: npm install
 
       - name: Build for testing
-        run: wails build -debug -nopackage
+        run: wails build -debug -nopackage -tags webkit2_41
 
       - name: Run tests
         run: go test ./... -v
 
       - name: Build for Windows (cross-compile)
-        run: wails build -platform ${{ matrix.build.platform }} -webview2 embed -o ${{ matrix.build.binary_name }}
+        run: wails build -clean -platform ${{ matrix.build.platform }} -webview2 embed -o ${{ matrix.build.binary_name }}
 
       - name: List build output
         run: ls -laR build/bin/
