@@ -28,7 +28,7 @@ D2Tool fetches hero statistics from Dota 2 Pro Tracker, then:
 
 ### Prerequisites
 
-- Go 1.23 or later
+- Go 1.25 or later
 - Node.js 18 or later
 - Wails CLI v2.11.0 or later
 - Steam and Dota 2 installed
