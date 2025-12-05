@@ -8,6 +8,7 @@ import (
 	"path/filepath"
 	"slices"
 	"sync"
+	"time"
 )
 
 const configFileName = "d2tool_config.json"
@@ -38,6 +39,11 @@ type Config struct {
 	mu sync.RWMutex
 
 	HeroesLayout HeroesLayoutConfig `json:"heroesLayout"`
+
+	// Debounce state for save operations (not persisted)
+	saveTimer *time.Timer
+	saveMu    sync.Mutex
+	saveDelay time.Duration
 }
 
 func getConfigPath() string {
@@ -65,6 +71,7 @@ func LoadConfig() *Config {
 			Files:     []FileConfig{},
 			Positions: defaultPositions(),
 		},
+		saveDelay: 500 * time.Millisecond,
 	}
 
 	configPath := getConfigPath()
@@ -143,16 +150,47 @@ func (c *Config) updateSteamLayoutFileAttributes() {
 	}
 }
 
-func (c *Config) Save() error {
+func (c *Config) save() error {
 	c.mu.RLock()
-	defer c.mu.RUnlock()
-
 	data, err := json.MarshalIndent(c, "", "  ")
+	c.mu.RUnlock()
+
 	if err != nil {
 		return err
 	}
 
 	return os.WriteFile(getConfigPath(), data, 0644)
+}
+
+// scheduleSave debounces save operations, coalescing rapid changes into a single save
+func (c *Config) scheduleSave() {
+	c.saveMu.Lock()
+	defer c.saveMu.Unlock()
+
+	// Cancel any pending save
+	if c.saveTimer != nil {
+		c.saveTimer.Stop()
+	}
+
+	// Schedule new save
+	c.saveTimer = time.AfterFunc(c.saveDelay, func() {
+		if err := c.save(); err != nil {
+			slog.Error("Failed to save config", "error", err)
+		}
+	})
+}
+
+// SaveNow cancels any pending debounced save and saves immediately.
+// Use this on shutdown to ensure all changes are persisted.
+func (c *Config) SaveNow() error {
+	c.saveMu.Lock()
+	if c.saveTimer != nil {
+		c.saveTimer.Stop()
+		c.saveTimer = nil
+	}
+	c.saveMu.Unlock()
+
+	return c.save()
 }
 
 // --- Heroes Layout File Methods ---
@@ -169,7 +207,7 @@ func (c *Config) SetHeroesLayoutFiles(files []FileConfig) {
 	c.mu.Lock()
 	defer c.mu.Unlock()
 	c.HeroesLayout.Files = files
-	go c.Save()
+	c.scheduleSave()
 }
 
 func (c *Config) AddHeroesLayoutFile(filePath string) {
@@ -188,7 +226,7 @@ func (c *Config) AddHeroesLayoutFile(filePath string) {
 		Enabled:    true,
 		Attributes: map[string]string{},
 	})
-	go c.Save()
+	c.scheduleSave()
 }
 
 func (c *Config) RemoveHeroesLayoutFile(index int) {
@@ -200,7 +238,7 @@ func (c *Config) RemoveHeroesLayoutFile(index int) {
 	}
 
 	c.HeroesLayout.Files = append(c.HeroesLayout.Files[:index], c.HeroesLayout.Files[index+1:]...)
-	go c.Save()
+	c.scheduleSave()
 }
 
 func (c *Config) SetHeroesLayoutFileEnabled(index int, enabled bool) {
@@ -212,7 +250,7 @@ func (c *Config) SetHeroesLayoutFileEnabled(index int, enabled bool) {
 	}
 
 	c.HeroesLayout.Files[index].Enabled = enabled
-	go c.Save()
+	c.scheduleSave()
 }
 
 func (c *Config) UpdateHeroesLayoutFileStatus(filePaths []string, timestampMillis int64, errorMessage string) {
@@ -226,7 +264,7 @@ func (c *Config) UpdateHeroesLayoutFileStatus(filePaths []string, timestampMilli
 			break
 		}
 	}
-	go c.Save()
+	c.scheduleSave()
 }
 
 // --- Heroes Layout Position Methods ---
@@ -243,7 +281,7 @@ func (c *Config) SetPositions(positions []PositionConfig) {
 	c.mu.Lock()
 	defer c.mu.Unlock()
 	c.HeroesLayout.Positions = positions
-	go c.Save()
+	c.scheduleSave()
 }
 
 func (c *Config) SetPositionEnabled(id string, enabled bool) {
@@ -256,7 +294,7 @@ func (c *Config) SetPositionEnabled(id string, enabled bool) {
 			break
 		}
 	}
-	go c.Save()
+	c.scheduleSave()
 }
 
 // --- Helper Methods for Update Logic ---

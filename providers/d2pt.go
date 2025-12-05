@@ -7,6 +7,11 @@ import (
 	"net/http"
 	"net/url"
 	"sort"
+	"strings"
+)
+
+const (
+	apiD2ptUrl = "https://dota2protracker.com/api"
 )
 
 // Hero represents a Dota 2 hero with its statistics
@@ -25,7 +30,8 @@ type Hero struct {
 }
 
 // FetchHeroes fetches heroes data from the API for a specific position
-func FetchHeroes(position string) ([]Hero, error) {
+// If apiUrl is empty, the default API URL is used
+func FetchHeroes(position string, httpClient *http.Client, apiUrl string) ([]Hero, error) {
 	params := url.Values{
 		"mmr":         {"7000"},
 		"order_by":    {"matches"},
@@ -34,7 +40,12 @@ func FetchHeroes(position string) ([]Hero, error) {
 		"position":    {position},
 	}
 
-	d2ptUrl := fmt.Sprintf("https://dota2protracker.com/api/heroes/stats?%s", params.Encode())
+	apiUrl = strings.TrimRight(apiUrl, "/")
+	if apiUrl == "" {
+		apiUrl = apiD2ptUrl
+	}
+
+	d2ptUrl := fmt.Sprintf("%s/heroes/stats?%s", apiUrl, params.Encode())
 
 	// Create a new request
 	req, err := http.NewRequest("GET", d2ptUrl, nil)
@@ -47,7 +58,7 @@ func FetchHeroes(position string) ([]Hero, error) {
 	req.Header.Add("Referer", "https://dota2protracker.com")
 
 	// Execute the request
-	resp, err := http.DefaultClient.Do(req)
+	resp, err := httpClient.Do(req)
 	if err != nil {
 		return nil, fmt.Errorf("error fetching data: %w", err)
 	}

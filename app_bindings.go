@@ -187,10 +187,19 @@ func (a *App) startBackgroundTasks() {
 				}
 			}
 
-			<-time.After(waitDuration)
+			select {
+			case <-a.ctx.Done():
+				slog.Info("Stopping background hero layout update task")
+				return
+			case <-time.After(waitDuration):
+				// continue
+			}
 
+			slog.Info("Performing hero layout update after timeout")
 			// Perform background update
-			a.UpdateHeroesLayout()
+			if err := a.heroesLayoutService.UpdateHeroesLayout(); err != nil {
+				slog.Warn("Error updating hero layout", "error", err)
+			}
 
 			// Notify frontend that data was updated
 			runtime.EventsEmit(a.ctx, "heroesLayoutDataChanged")
@@ -201,14 +210,26 @@ func (a *App) startBackgroundTasks() {
 	go func() {
 		// Check for updates on startup after a short delay
 		slog.Info("Checking for updates on startup")
-		a.CheckForAppUpdate()
+		if err := a.updateService.CheckForUpdate(); err != nil {
+			slog.Warn("Error checking for updates on startup", "error", err)
+		}
+
 		runtime.EventsEmit(a.ctx, "appUpdateDataChanged")
 
 		// Periodic check loop
 		for {
-			<-time.After(1 * time.Hour)
-			slog.Debug("Checking for updates after timeout")
-			a.CheckForAppUpdate()
+			select {
+			case <-a.ctx.Done():
+				slog.Info("Stopping background app update check task")
+				return
+			case <-time.After(1 * time.Hour):
+				// continue
+			}
+
+			slog.Info("Checking for app updates after timeout")
+			if err := a.updateService.CheckForUpdate(); err != nil {
+				slog.Warn("Error checking for updates after timeout", "error", err)
+			}
 			runtime.EventsEmit(a.ctx, "appUpdateDataChanged")
 		}
 	}()

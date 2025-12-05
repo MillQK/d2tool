@@ -59,7 +59,7 @@ func main() {
 		appConfig,
 		update.NewUpdateService(
 			wailsProjectConfig.Info.ProductVersion,
-			github.NewHttpClient(),
+			github.NewHttpClient(""),
 		),
 		heroesLayout.NewHeroesLayoutService(appConfig),
 		startup.NewStartupService([]string{fmt.Sprintf("-%s", minimizedFlagName)}),
@@ -170,5 +170,7 @@ func (a *App) startup(ctx context.Context) {
 
 // shutdown is called when the app is closing
 func (a *App) shutdown(ctx context.Context) {
-	a.config.Save()
+	if err := a.config.SaveNow(); err != nil {
+		slog.Error("Failed to save config on shutdown", "error", err)
+	}
 }
