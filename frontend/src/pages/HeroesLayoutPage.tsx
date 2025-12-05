@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { EventsOn } from '../wailsjs/runtime'
+import { EventsOn } from '../../wailsjs/runtime'
 import {
   UpdateHeroesLayout,
   GetHeroesLayoutFiles,
@@ -10,9 +10,25 @@ import {
   GetPositions,
   SetPositions,
   SetPositionEnabled,
-  FileConfig,
-  PositionConfig,
-} from '../wailsjs/go/main/App'
+} from '../../wailsjs/go/main/App'
+import {config} from "../../wailsjs/go/models.ts";
+
+const AlertCircleIcon = () => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
+       strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="12" cy="12" r="10"/>
+    <line x1="12" y1="8" x2="12" y2="12"/>
+    <line x1="12" y1="16" x2="12.01" y2="16"/>
+  </svg>
+)
+
+const XIcon = () => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
+       strokeLinecap="round" strokeLinejoin="round">
+    <line x1="18" y1="6" x2="6" y2="18"/>
+    <line x1="6" y1="6" x2="18" y2="18"/>
+  </svg>
+)
 
 // Position name mapping
 const positionNames: Record<string, string> = {
@@ -58,8 +74,8 @@ const GripIcon = () => (
 )
 
 interface DragState {
-  draggedItem: PositionConfig
-  originalPositions: PositionConfig[]
+  draggedItem: config.PositionConfig
+  originalPositions: config.PositionConfig[]
 }
 
 function HeroesLayoutPage() {
@@ -67,13 +83,16 @@ function HeroesLayoutPage() {
   const [isUpdating, setIsUpdating] = useState(false)
 
   // Config files state
-  const [files, setFiles] = useState<FileConfig[]>([])
+  const [files, setFiles] = useState<config.FileConfig[]>([])
 
   // Positions state
-  const [positions, setPositions] = useState<PositionConfig[]>([])
+  const [positions, setPositions] = useState<config.PositionConfig[]>([])
 
   // Drag and drop state
   const [dragState, setDragState] = useState<DragState | null>(null)
+
+  // Error state
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     // Load initial states
@@ -92,18 +111,21 @@ function HeroesLayoutPage() {
 
   const handleUpdate = async () => {
     setIsUpdating(true)
+    setError(null)
     try {
       await UpdateHeroesLayout()
       const updatedFiles = await GetHeroesLayoutFiles()
       setFiles(updatedFiles)
-    } catch (error) {
-      console.error('Error updating heroes layout:', error)
+    } catch (err) {
+      console.error('Error updating heroes layout:', err)
+      setError(`Failed to update heroes layout: ${err}`)
     } finally {
       setIsUpdating(false)
     }
   }
 
   const handleAddFile = async () => {
+    setError(null)
     try {
       const path = await OpenFileDialog()
       if (path) {
@@ -111,9 +133,14 @@ function HeroesLayoutPage() {
         const updatedFiles = await GetHeroesLayoutFiles()
         setFiles(updatedFiles)
       }
-    } catch (error) {
-      console.error('Error adding file:', error)
+    } catch (err) {
+      console.error('Error adding file:', err)
+      setError(`Failed to add file: ${err}`)
     }
+  }
+
+  const dismissError = () => {
+    setError(null)
   }
 
   const handleRemoveFile = async (index: number) => {
@@ -147,7 +174,7 @@ function HeroesLayoutPage() {
   }
 
   // Drag and drop handlers
-  const handleDragStart = (e: React.DragEvent, position: PositionConfig) => {
+  const handleDragStart = (e: React.DragEvent, position: config.PositionConfig) => {
     setDragState({
       draggedItem: position,
       originalPositions: [...positions],
@@ -218,6 +245,19 @@ function HeroesLayoutPage() {
       </div>
 
       <div className="page-content">
+        {/* Error Banner */}
+        {error && (
+          <div className="error-banner">
+            <div className="error-banner-content">
+              <AlertCircleIcon />
+              <span>{error}</span>
+            </div>
+            <button className="error-banner-dismiss" onClick={dismissError}>
+              <XIcon />
+            </button>
+          </div>
+        )}
+
         {/* Update Status Card */}
         <div className="card">
           <div className="card-header">

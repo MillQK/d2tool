@@ -2,11 +2,17 @@ import {useState} from 'react'
 import {
     CheckForAppUpdate,
     DownloadAppUpdate,
-    AppUpdateState,
-} from '../wailsjs/go/main/App'
+} from '../../wailsjs/go/main/App'
+import {Quit} from '../../wailsjs/runtime'
+import {main} from "../../wailsjs/go/models.ts";
+
+interface DownloadResult {
+    success: boolean
+    message: string
+}
 
 interface UpdatesPageProps {
-    state: AppUpdateState | null
+    state: main.AppUpdateState | null
     onStateChange: () => void
 }
 
@@ -52,37 +58,64 @@ const ClockIcon = () => (
     </svg>
 )
 
+const XIcon = () => (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
+         strokeLinecap="round" strokeLinejoin="round">
+        <line x1="18" y1="6" x2="6" y2="18"/>
+        <line x1="6" y1="6" x2="18" y2="18"/>
+    </svg>
+)
+
 function UpdatesPage({ state, onStateChange }: UpdatesPageProps) {
     const [isChecking, setIsChecking] = useState(false)
     const [isDownloading, setIsDownloading] = useState(false)
+    const [downloadResult, setDownloadResult] = useState<DownloadResult | null>(null)
+    const [checkError, setCheckError] = useState<string | null>(null)
 
     const handleCheckForUpdates = async () => {
         setIsChecking(true)
+        setCheckError(null)
         try {
             await CheckForAppUpdate()
             onStateChange()
         } catch (error) {
             console.error('Error checking for updates:', error)
+            setCheckError(`Failed to check for updates: ${error}`)
         } finally {
             setIsChecking(false)
         }
     }
 
+    const dismissCheckError = () => {
+        setCheckError(null)
+    }
+
     const handleDownloadUpdate = async () => {
         setIsDownloading(true)
+        setDownloadResult(null)
         try {
-            const result = await DownloadAppUpdate()
-            if (result.success) {
-                alert('Update downloaded successfully. Please restart the application.')
-            } else {
-                alert(`Error downloading update: ${result.error}`)
-            }
+            await DownloadAppUpdate()
+            setDownloadResult({
+                success: true,
+                message: 'Update downloaded successfully. Please restart the application to apply the update.'
+            })
         } catch (error) {
             console.error('Error downloading update:', error)
-            alert('Error downloading update. Please try again.')
+            setDownloadResult({
+                success: false,
+                message: `Error downloading update: ${error}. Please try again.`
+            })
         } finally {
             setIsDownloading(false)
         }
+    }
+
+    const handleQuit = () => {
+        Quit()
+    }
+
+    const dismissResult = () => {
+        setDownloadResult(null)
     }
 
     const isLoading = isChecking || isDownloading
@@ -95,6 +128,19 @@ function UpdatesPage({ state, onStateChange }: UpdatesPageProps) {
             </div>
 
             <div className="page-content">
+                {/* Error Banner */}
+                {checkError && (
+                    <div className="error-banner">
+                        <div className="error-banner-content">
+                            <AlertCircleIcon/>
+                            <span>{checkError}</span>
+                        </div>
+                        <button className="error-banner-dismiss" onClick={dismissCheckError}>
+                            <XIcon/>
+                        </button>
+                    </div>
+                )}
+
                 {/* Version Info Card */}
                 <div className="card">
                     <div className="card-header">
@@ -180,6 +226,27 @@ function UpdatesPage({ state, onStateChange }: UpdatesPageProps) {
                         {isLoading && (
                             <div className="progress-bar mt-16">
                                 <div className="progress-bar-inner"></div>
+                            </div>
+                        )}
+
+                        {downloadResult && (
+                            <div className={`download-result mt-16 ${downloadResult.success ? 'download-result-success' : 'download-result-error'}`}>
+                                <div className="download-result-content">
+                                    <div className="download-result-icon">
+                                        {downloadResult.success ? <CheckCircleIcon/> : <AlertCircleIcon/>}
+                                    </div>
+                                    <div className="download-result-text">
+                                        <p>{downloadResult.message}</p>
+                                        {downloadResult.success && (
+                                            <button className="btn-quit" onClick={handleQuit}>
+                                                Quit the application
+                                            </button>
+                                        )}
+                                    </div>
+                                </div>
+                                <button className="download-result-dismiss" onClick={dismissResult}>
+                                    <XIcon/>
+                                </button>
                             </div>
                         )}
                     </div>

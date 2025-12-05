@@ -74,6 +74,10 @@ func (s *UpdateServiceImpl) CheckForUpdate() error {
 	s.lock.Lock()
 	defer s.lock.Unlock()
 
+	if err := cleanupOldFiles(); err != nil {
+		slog.Warn("Error cleaning up old files", "error", err)
+	}
+
 	release, err := s.githubClient.GetLatestRelease()
 	if err != nil {
 		return err
