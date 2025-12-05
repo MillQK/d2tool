@@ -231,17 +231,6 @@ func TestFetchHeroes_EmptyResponse(t *testing.T) {
 	}
 }
 
-func TestFetchHeroes_DefaultApiUrl(t *testing.T) {
-	// Test that empty apiUrl uses default (we can't actually test the real API,
-	// but we can verify the function doesn't panic with empty URL)
-	// This would make a real network call, so we skip it in normal tests
-	t.Skip("skipping test that would make real network call")
-
-	_, err := FetchHeroes("1", http.DefaultClient, "")
-	// Just verify it doesn't panic - actual result depends on network
-	_ = err
-}
-
 // Benchmark tests
 func BenchmarkGetTopHeroesByRating(b *testing.B) {
 	// Create a realistic dataset
