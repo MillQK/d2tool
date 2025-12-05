@@ -132,8 +132,12 @@ func setupLogger() {
 		Compress:   false, // disabled by default
 	}
 
-	multiWriter := io.MultiWriter(os.Stdout, fileLogger)
-	textHandler := slog.NewTextHandler(multiWriter, nil)
+	var writer io.Writer = fileLogger
+	if utils.IsStdoutAvailable() {
+		writer = io.MultiWriter(os.Stdout, fileLogger)
+	}
+
+	textHandler := slog.NewTextHandler(writer, nil)
 	slog.SetDefault(slog.New(textHandler))
 	slog.Info("Logger initialized", "path", logFilePath)
 }
