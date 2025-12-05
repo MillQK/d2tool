@@ -5,11 +5,12 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"strings"
 	"time"
 )
 
 const (
-	aptGithubUrl = "https://api.github.com"
+	apiGithubUrl = "https://api.github.com"
 	repoOwner    = "MillQK"
 	repoName     = "d2tool"
 )
@@ -21,18 +22,27 @@ type Client interface {
 
 type HttpClient struct {
 	httpClient *http.Client
+	apiUrl     string
 }
 
-func NewHttpClient() *HttpClient {
+// NewHttpClient creates a new GitHub API client
+// If apiUrl is empty, the default GitHub API URL will be used
+func NewHttpClient(apiUrl string) *HttpClient {
+	apiUrl = strings.TrimRight(apiUrl, "/")
+	if apiUrl == "" {
+		apiUrl = apiGithubUrl
+	}
+
 	return &HttpClient{
 		httpClient: &http.Client{
 			Timeout: 30 * time.Second,
 		},
+		apiUrl: apiUrl,
 	}
 }
 
 func (c *HttpClient) GetLatestRelease() (*Release, error) {
-	url := fmt.Sprintf("%s/repos/%s/%s/releases/latest", aptGithubUrl, repoOwner, repoName)
+	url := fmt.Sprintf("%s/repos/%s/%s/releases/latest", c.apiUrl, repoOwner, repoName)
 
 	request, err := http.NewRequest(http.MethodGet, url, nil)
 	if err != nil {
@@ -47,6 +57,10 @@ func (c *HttpClient) GetLatestRelease() (*Release, error) {
 	}
 
 	defer response.Body.Close()
+
+	if response.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("GitHub API returned status %d: %s", response.StatusCode, response.Status)
+	}
 
 	responseBody, err := io.ReadAll(response.Body)
 	if err != nil {

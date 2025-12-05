@@ -177,6 +177,10 @@ func (s *UpdateServiceImpl) downloadAndUnarchiveLatestReleaseVersion() error {
 
 	defer response.Body.Close()
 
+	if response.StatusCode != http.StatusOK {
+		return fmt.Errorf("failed to download asset: server returned status %d: %s", response.StatusCode, response.Status)
+	}
+
 	rootDir := filepath.Dir(executablePath)
 	file, err := os.Create(filepath.Join(rootDir, appAsset.Name))
 	if err != nil {

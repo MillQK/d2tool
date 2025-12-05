@@ -59,7 +59,7 @@ func main() {
 		appConfig,
 		update.NewUpdateService(
 			wailsProjectConfig.Info.ProductVersion,
-			github.NewHttpClient(),
+			github.NewHttpClient(""),
 		),
 		heroesLayout.NewHeroesLayoutService(appConfig),
 		startup.NewStartupService([]string{fmt.Sprintf("-%s", minimizedFlagName)}),

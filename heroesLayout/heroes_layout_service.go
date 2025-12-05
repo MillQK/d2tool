@@ -61,7 +61,7 @@ func (s *HeroesLayoutServiceImpl) UpdateHeroesLayout() error {
 	var positionsFetchErr error
 
 	for _, position := range positions {
-		heroes, err := providers.FetchHeroes(position, s.httpClient)
+		heroes, err := providers.FetchHeroes(position, s.httpClient, "")
 		if err != nil {
 			slog.Error(fmt.Sprintf("Error fetching heroes for position %s", position), "error", err)
 			positionsFetchErr = fmt.Errorf("error fetching heroes for position %s: %w", position, err)
@@ -85,7 +85,7 @@ func (s *HeroesLayoutServiceImpl) UpdateHeroesLayout() error {
 
 		if err := processHeroesLayoutConfig(configFile, positions, positionToHeroes); err != nil {
 			slog.Error(fmt.Sprintf("Error processing config file %s", configFile), "error", err)
-			errorMsg = fmt.Sprintf("error processing config file: %w", err)
+			errorMsg = fmt.Sprintf("error processing config file: %v", err)
 		} else {
 			slog.Info(fmt.Sprintf("Successfully updated config file %s", configFile))
 		}
