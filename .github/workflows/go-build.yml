@@ -48,7 +48,7 @@ jobs:
         run: ls -laR build/bin/
 
       - name: Zip output
-        run: mkdir -p build/archive && zip -r build/archive/d2tool-${{ matrix.build.artifact_name }}.zip build/bin
+        run: mkdir -p build/archive && cd build/bin && zip -r ../archive/d2tool-${{ matrix.build.artifact_name }}.zip ./
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
