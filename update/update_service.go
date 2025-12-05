@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"io/fs"
+	"log/slog"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -37,8 +38,10 @@ type UpdateServiceImpl struct {
 
 	currentAppVersion string
 	githubClient      github.Client
-	latestRelease     *github.Release
-	lastCheckTime     time.Time
+	downloadClient    *http.Client
+
+	latestRelease *github.Release
+	lastCheckTime time.Time
 }
 
 func NewUpdateService(
@@ -48,6 +51,7 @@ func NewUpdateService(
 	return &UpdateServiceImpl{
 		currentAppVersion: currentAppVersion,
 		githubClient:      githubClient,
+		downloadClient:    http.DefaultClient,
 		lastCheckTime:     time.UnixMilli(0),
 	}
 }
@@ -93,7 +97,7 @@ func (s *UpdateServiceImpl) UpdateApp() error {
 		return fmt.Errorf("no update available for current version %s and latest version %s", s.currentAppVersion, latestVersion)
 	}
 
-	return downloadAndUnarchiveLatestReleaseVersion(s.latestRelease)
+	return s.downloadAndUnarchiveLatestReleaseVersion()
 }
 
 func (s *UpdateServiceImpl) latestAvailableVersionLocked() string {
@@ -128,9 +132,7 @@ func cleanupOldFiles() error {
 	})
 }
 
-func downloadAndUnarchiveLatestReleaseVersion(
-	release *github.Release,
-) error {
+func (s *UpdateServiceImpl) downloadAndUnarchiveLatestReleaseVersion() error {
 	if err := cleanupOldFiles(); err != nil {
 		return fmt.Errorf("error cleaning up old files: %w", err)
 	}
@@ -142,7 +144,7 @@ func downloadAndUnarchiveLatestReleaseVersion(
 
 	archiveNamePrefix := constructArchiveNamePrefix()
 	var appAsset *github.ReleaseAsset
-	for _, asset := range release.Assets {
+	for _, asset := range s.latestRelease.Assets {
 		if strings.HasPrefix(asset.Name, archiveNamePrefix) {
 			appAsset = &asset
 			break
@@ -150,10 +152,19 @@ func downloadAndUnarchiveLatestReleaseVersion(
 	}
 
 	if appAsset == nil {
-		return fmt.Errorf("no asset with prefix %s found for release %s", archiveNamePrefix, release.TagName)
+		return fmt.Errorf("no asset with prefix %s found for release %s", archiveNamePrefix, s.latestRelease.TagName)
 	}
 
-	response, err := http.DefaultClient.Get(appAsset.URL)
+	slog.Info("Downloading and unarchiving latest release version", "asset", appAsset)
+
+	request, err := http.NewRequest(http.MethodGet, appAsset.URL, nil)
+	if err != nil {
+		return fmt.Errorf("error creating request: %w", err)
+	}
+
+	request.Header.Set("Accept", "application/octet-stream")
+
+	response, err := s.downloadClient.Do(request)
 	if err != nil {
 		return fmt.Errorf("error downloading asset: %w", err)
 	}
