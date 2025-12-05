@@ -41,6 +41,9 @@ jobs:
         working-directory: frontend
         run: npm install
 
+      - name: Run tests
+        run: go test ./... -v
+
       - name: Build for Windows (cross-compile)
         run: wails build -platform ${{ matrix.build.platform }} -webview2 embed -o ${{ matrix.build.binary_name }}
 
