@@ -85,6 +85,18 @@ func (a *App) SetPositionEnabled(id string, enabled bool) {
 	a.config.SetPositionEnabled(id, enabled)
 }
 
+// --- D2PT Provider Bindings ---
+
+// GetD2PTConfig returns the D2PT provider configuration
+func (a *App) GetD2PTConfig() config.D2PTConfig {
+	return a.config.GetD2PTConfig()
+}
+
+// SetD2PTPeriod sets the D2PT period parameter
+func (a *App) SetD2PTPeriod(period string) {
+	a.config.SetD2PTPeriod(period)
+}
+
 // --- Startup Tab Bindings ---
 
 // GetStartupEnabled returns whether the app is set to run on startup

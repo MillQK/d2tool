@@ -3,6 +3,7 @@ import { EventsOn } from '../wailsjs/runtime'
 import { GetAppUpdateState } from '../wailsjs/go/main/App'
 import Sidebar, { PageId } from './components/Sidebar'
 import HeroesLayoutPage from './pages/HeroesLayoutPage'
+import ProvidersPage from './pages/ProvidersPage'
 import StartupPage from './pages/StartupPage'
 import UpdatesPage from './pages/UpdatesPage'
 import { main } from "../wailsjs/go/models"
@@ -31,6 +32,8 @@ function App() {
     switch (activePage) {
       case 'heroesLayout':
         return <HeroesLayoutPage />
+      case 'providers':
+        return <ProvidersPage />
       case 'startup':
         return <StartupPage />
       case 'updates':

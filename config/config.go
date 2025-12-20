@@ -34,11 +34,23 @@ type HeroesLayoutConfig struct {
 	Positions []PositionConfig `json:"positions"`
 }
 
+// D2PTConfig contains Dota2ProTracker provider settings
+type D2PTConfig struct {
+	Period string `json:"period"` // "8" for last 8 days, "patch" for current patch
+}
+
+func defaultD2PTConfig() D2PTConfig {
+	return D2PTConfig{
+		Period: "8", // Default to last 8 days
+	}
+}
+
 // Config is the main configuration structure
 type Config struct {
 	mu sync.RWMutex
 
 	HeroesLayout HeroesLayoutConfig `json:"heroesLayout"`
+	D2PT         D2PTConfig         `json:"d2pt"`
 
 	// Debounce state for save operations (not persisted)
 	saveTimer *time.Timer
@@ -71,6 +83,7 @@ func LoadConfig() *Config {
 			Files:     []FileConfig{},
 			Positions: defaultPositions(),
 		},
+		D2PT:      defaultD2PTConfig(),
 		saveDelay: 500 * time.Millisecond,
 	}
 
@@ -92,6 +105,11 @@ func LoadConfig() *Config {
 	// Ensure positions exist
 	if len(config.HeroesLayout.Positions) == 0 {
 		config.HeroesLayout.Positions = defaultPositions()
+	}
+
+	// Ensure D2PT config has valid period
+	if config.D2PT.Period != "8" && config.D2PT.Period != "patch" {
+		config.D2PT.Period = "8"
 	}
 
 	config.updateSteamLayoutFileAttributes()
@@ -325,4 +343,21 @@ func (c *Config) GetEnabledPositionIDs() []string {
 		}
 	}
 	return ids
+}
+
+// --- D2PT Config Methods ---
+
+// GetD2PTConfig returns the D2PT provider configuration
+func (c *Config) GetD2PTConfig() D2PTConfig {
+	c.mu.RLock()
+	defer c.mu.RUnlock()
+	return c.D2PT
+}
+
+// SetD2PTPeriod sets the D2PT period parameter
+func (c *Config) SetD2PTPeriod(period string) {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+	c.D2PT.Period = period
+	c.scheduleSave()
 }

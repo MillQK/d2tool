@@ -11,7 +11,9 @@ import (
 )
 
 const (
-	apiD2ptUrl = "https://dota2protracker.com/api"
+	apiD2ptUrl  = "https://dota2protracker.com/api"
+	period8Days = "8"
+	periodPatch = "patch"
 )
 
 // Hero represents a Dota 2 hero with its statistics
@@ -31,12 +33,21 @@ type Hero struct {
 
 // FetchHeroes fetches heroes data from the API for a specific position
 // If apiUrl is empty, the default API URL is used
-func FetchHeroes(position string, httpClient *http.Client, apiUrl string) ([]Hero, error) {
+// period should be "8" for last 8 days or "patch" for current patch
+func FetchHeroes(position string, period string, httpClient *http.Client, apiUrl string) ([]Hero, error) {
+	if period == "" {
+		period = period8Days // Default to last 8 days
+	}
+
+	if period != period8Days && period != periodPatch {
+		return nil, fmt.Errorf("invalid period value: %s", period)
+	}
+
 	params := url.Values{
 		"mmr":         {"7000"},
 		"order_by":    {"matches"},
 		"min_matches": {"20"},
-		"period":      {"8"},
+		"period":      {period},
 		"position":    {position},
 	}
 
