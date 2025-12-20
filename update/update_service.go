@@ -110,7 +110,7 @@ func (s *UpdateServiceImpl) latestAvailableVersionLocked() string {
 	if s.latestRelease == nil {
 		return ""
 	}
-	return s.latestRelease.TagName
+	return s.latestRelease.Name
 }
 
 func isUpdateAvailable(latestVersion string, currentVersion string) bool {
