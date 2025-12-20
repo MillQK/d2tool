@@ -38,7 +38,7 @@ func (s *HeroesLayoutServiceImpl) UpdateHeroesLayout() error {
 	enabledFilePaths := s.config.GetEnabledFilePaths()
 	enabledPositions := s.config.GetEnabledPositionIDs()
 
-	if len(enabledPositions) == 0 {
+	if len(enabledFilePaths) == 0 {
 		slog.Info("No config files provided, skipping update")
 		return nil
 	}
@@ -56,12 +56,16 @@ func (s *HeroesLayoutServiceImpl) UpdateHeroesLayout() error {
 		},
 	)
 
+	// Get the period from D2PT config
+	d2ptConfig := s.config.GetD2PTConfig()
+	period := d2ptConfig.Period
+
 	positionToHeroes := make(map[string][]providers.Hero)
 
 	var positionsFetchErr error
 
 	for _, position := range positions {
-		heroes, err := providers.FetchHeroes(position, s.httpClient, "")
+		heroes, err := providers.FetchHeroes(position, period, s.httpClient, "")
 		if err != nil {
 			slog.Error(fmt.Sprintf("Error fetching heroes for position %s", position), "error", err)
 			positionsFetchErr = fmt.Errorf("error fetching heroes for position %s: %w", position, err)

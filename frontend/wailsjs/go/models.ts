@@ -1,5 +1,17 @@
 export namespace config {
 	
+	export class D2PTConfig {
+	    period: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new D2PTConfig(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.period = source["period"];
+	    }
+	}
 	export class FileConfig {
 	    filePath: string;
 	    enabled: boolean;

@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-export type PageId = 'heroesLayout' | 'startup' | 'updates'
+export type PageId = 'heroesLayout' | 'providers' | 'startup' | 'updates'
 
 interface SidebarSection {
   id: string
@@ -47,6 +47,15 @@ const DownloadIcon = () => (
   </svg>
 )
 
+const PlugIcon = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M12 22v-5" />
+    <path d="M9 8V2" />
+    <path d="M15 8V2" />
+    <path d="M18 8v5a4 4 0 0 1-4 4h-4a4 4 0 0 1-4-4V8Z" />
+  </svg>
+)
+
 const ChevronIcon = ({ expanded }: { expanded: boolean }) => (
   <svg
     width="16"
@@ -81,6 +90,7 @@ function Sidebar({ activePage, onPageChange, updateAvailable }: SidebarProps) {
       id: 'settings',
       title: 'Settings',
       items: [
+        { id: 'providers', label: 'Providers', icon: <PlugIcon /> },
         { id: 'startup', label: 'Startup', icon: <RocketIcon /> },
         { id: 'updates', label: 'Updates', icon: <DownloadIcon /> },
       ],

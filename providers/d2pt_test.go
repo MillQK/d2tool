@@ -158,7 +158,7 @@ func TestFetchHeroes_Success(t *testing.T) {
 	}))
 	defer server.Close()
 
-	heroes, err := FetchHeroes("1", http.DefaultClient, server.URL)
+	heroes, err := FetchHeroes("1", "8", http.DefaultClient, server.URL)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -183,7 +183,7 @@ func TestFetchHeroes_HTTPError(t *testing.T) {
 	}))
 	defer server.Close()
 
-	_, err := FetchHeroes("1", http.DefaultClient, server.URL)
+	_, err := FetchHeroes("1", "8", http.DefaultClient, server.URL)
 	if err == nil {
 		t.Error("expected error for 500 response")
 	}
@@ -195,7 +195,7 @@ func TestFetchHeroes_NotFound(t *testing.T) {
 	}))
 	defer server.Close()
 
-	_, err := FetchHeroes("1", http.DefaultClient, server.URL)
+	_, err := FetchHeroes("1", "8", http.DefaultClient, server.URL)
 	if err == nil {
 		t.Error("expected error for 404 response")
 	}
@@ -208,7 +208,7 @@ func TestFetchHeroes_InvalidJSON(t *testing.T) {
 	}))
 	defer server.Close()
 
-	_, err := FetchHeroes("1", http.DefaultClient, server.URL)
+	_, err := FetchHeroes("1", "8", http.DefaultClient, server.URL)
 	if err == nil {
 		t.Error("expected error for invalid JSON")
 	}
@@ -221,7 +221,7 @@ func TestFetchHeroes_EmptyResponse(t *testing.T) {
 	}))
 	defer server.Close()
 
-	heroes, err := FetchHeroes("1", http.DefaultClient, server.URL)
+	heroes, err := FetchHeroes("1", "8", http.DefaultClient, server.URL)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}

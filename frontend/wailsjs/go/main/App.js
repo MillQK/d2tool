@@ -18,6 +18,10 @@ export function GetAppUpdateState() {
   return window['go']['main']['App']['GetAppUpdateState']();
 }
 
+export function GetD2PTConfig() {
+  return window['go']['main']['App']['GetD2PTConfig']();
+}
+
 export function GetHeroesLayoutFiles() {
   return window['go']['main']['App']['GetHeroesLayoutFiles']();
 }
@@ -40,6 +44,10 @@ export function OpenFileDialog() {
 
 export function RemoveHeroesLayoutFile(arg1) {
   return window['go']['main']['App']['RemoveHeroesLayoutFile'](arg1);
+}
+
+export function SetD2PTPeriod(arg1) {
+  return window['go']['main']['App']['SetD2PTPeriod'](arg1);
 }
 
 export function SetHeroesLayoutFileEnabled(arg1, arg2) {
