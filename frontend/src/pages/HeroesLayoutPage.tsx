@@ -261,14 +261,14 @@ function HeroesLayoutPage() {
         {/* Update Status Card */}
         <div className="card">
           <div className="card-header">
-            <h2 className="card-title">Update</h2>
+            <h2 className="card-title">Status</h2>
             <button
               className="btn btn-primary btn-sm"
               onClick={handleUpdate}
               disabled={isUpdating}
             >
               <RefreshIcon />
-              <span>{isUpdating ? 'Updating...' : 'Update Now'}</span>
+              <span>{isUpdating ? 'Generating...' : 'Generate Now'}</span>
             </button>
           </div>
           <div className="card-body">
