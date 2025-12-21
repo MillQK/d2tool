@@ -12,6 +12,7 @@ import (
 const (
 	positionPrefix = "pos "
 	d2tPrefix      = "[D2T]"
+	facetsPrefix   = "[Facets]"
 )
 
 type UpdateHeroesLayoutConfig struct {
@@ -42,12 +43,12 @@ type heroGridPosition struct {
 }
 
 // generateHeroesLayoutConfigs generates new hero grid configs for each role
-func generateHeroesLayoutConfigs(positions []string, positionToHero map[string][]providers.Hero) []heroGridCategory {
+func generateHeroesLayoutConfigs(configNamePrefix string, positions []string, positionToHero map[string][]providers.Hero, heroesPerRow int) []heroGridCategory {
 	var configs []heroGridCategory
 
 	// Create a single merged config
 	mergedConfig := heroGridCategory{
-		ConfigName: fmt.Sprintf("%s Heroes Meta %s", d2tPrefix, time.Now().Format("2006-01-02")),
+		ConfigName: fmt.Sprintf("%s Heroes Meta %s", configNamePrefix, time.Now().Format("2006-01-02")),
 		Categories: []heroGridPosition{},
 	}
 
@@ -56,12 +57,23 @@ func generateHeroesLayoutConfigs(positions []string, positionToHero map[string][
 	const heroHeight = 110
 	const categorySpacing = 50
 	const infoHeight = 30
-	const heroesPerRow = 15
 	const heroWinrateSpacing = 20
+	const heroFacetSpacing = 20
 	const heroRowSpacing = 30
+	const headerWidth = 100 // Width for row headers
 
 	// Current Y position for vertical layout
 	currentY := 0
+
+	// Check if any hero has facet info (used to determine row height)
+	hasFacetInfo := func(heroes []providers.Hero) bool {
+		for _, hero := range heroes {
+			if hero.FacetNumber > 0 {
+				return true
+			}
+		}
+		return false
+	}
 
 	generateCategoryFunc := func(categoryName string, heroes []providers.Hero) {
 		infoCategory := heroGridPosition{
@@ -75,15 +87,68 @@ func generateHeroesLayoutConfigs(positions []string, positionToHero map[string][
 		mergedConfig.Categories = append(mergedConfig.Categories, infoCategory)
 		currentY += infoHeight
 
+		// Determine if we need extra spacing for facet labels
+		showFacets := hasFacetInfo(heroes)
+		facetOffset := 0
+		if showFacets {
+			facetOffset = heroFacetSpacing
+		}
+
 		// Add each hero as a separate category with winrate and match count in the category name
 		for i, hero := range heroes {
 			// Calculate position in the grid
 			row := i / heroesPerRow
 			col := i % heroesPerRow
 
-			// Calculate x and y position
-			xPos := col * heroWidth
-			yPos := currentY + row*(heroHeight+heroWinrateSpacing+heroRowSpacing)
+			// Calculate x and y position (offset by headerWidth to make room for row headers)
+			xPos := headerWidth + col*heroWidth
+			yPos := currentY + row*(heroHeight+heroWinrateSpacing+facetOffset+heroRowSpacing)
+
+			labelYPos := yPos
+
+			// Add row headers at the start of each row
+			if col == 0 {
+				if showFacets {
+					mergedConfig.Categories = append(mergedConfig.Categories, heroGridPosition{
+						CategoryName: "Facet",
+						XPosition:    0,
+						YPosition:    float64(labelYPos),
+						Width:        0,
+						Height:       0,
+						HeroIDs:      []int{},
+					})
+				}
+				mergedConfig.Categories = append(mergedConfig.Categories, heroGridPosition{
+					CategoryName: "Winrate",
+					XPosition:    0,
+					YPosition:    float64(labelYPos + facetOffset),
+					Width:        0,
+					Height:       0,
+					HeroIDs:      []int{},
+				})
+				mergedConfig.Categories = append(mergedConfig.Categories, heroGridPosition{
+					CategoryName: "Matches",
+					XPosition:    0,
+					YPosition:    float64(labelYPos + facetOffset + heroWinrateSpacing),
+					Width:        0,
+					Height:       0,
+					HeroIDs:      []int{},
+				})
+			}
+
+			// Add facet label if present (above winrate)
+			if hero.FacetNumber > 0 {
+				heroFacetCategory := heroGridPosition{
+					CategoryName: fmt.Sprintf("  %d", hero.FacetNumber),
+					XPosition:    float64(xPos),
+					YPosition:    float64(labelYPos),
+					Width:        0,
+					Height:       0,
+					HeroIDs:      []int{},
+				}
+				mergedConfig.Categories = append(mergedConfig.Categories, heroFacetCategory)
+				labelYPos += heroFacetSpacing
+			}
 
 			// Calculate winrate
 			winrate := 0.0
@@ -94,7 +159,7 @@ func generateHeroesLayoutConfigs(positions []string, positionToHero map[string][
 			heroWinrateCategory := heroGridPosition{
 				CategoryName: fmt.Sprintf("  %.1f%%", winrate),
 				XPosition:    float64(xPos),
-				YPosition:    float64(yPos),
+				YPosition:    float64(labelYPos),
 				Width:        0,
 				Height:       0,
 				HeroIDs:      []int{},
@@ -106,7 +171,7 @@ func generateHeroesLayoutConfigs(positions []string, positionToHero map[string][
 			heroCategory := heroGridPosition{
 				CategoryName: fmt.Sprintf("  %d", hero.Matches),
 				XPosition:    float64(xPos),
-				YPosition:    float64(yPos + heroWinrateSpacing),
+				YPosition:    float64(labelYPos + heroWinrateSpacing),
 				Width:        heroWidth,
 				Height:       heroHeight,
 				HeroIDs:      []int{hero.HeroID},
@@ -116,7 +181,7 @@ func generateHeroesLayoutConfigs(positions []string, positionToHero map[string][
 
 		// Update currentY to account for all rows of heroes
 		rows := (len(heroes) + heroesPerRow - 1) / heroesPerRow // Ceiling division
-		currentY += rows*(heroHeight+heroWinrateSpacing+heroRowSpacing) + categorySpacing
+		currentY += rows*(heroHeight+heroWinrateSpacing+facetOffset+heroRowSpacing) + categorySpacing
 	}
 
 	// Generate categories for each position in the specified order
@@ -147,19 +212,22 @@ func generateHeroesLayoutConfigs(positions []string, positionToHero map[string][
 }
 
 // processHeroesLayoutConfig processes a hero_grid_config.json file
-func processHeroesLayoutConfig(configPath string, positions []string, positionToHeroes map[string][]providers.Hero) error {
+func processHeroesLayoutConfig(configPath string, positions []string, positionToAggregatedHeroes map[string][]providers.Hero, positionToFacetedHeroes map[string][]providers.Hero, heroesPerRow int) error {
 	// Read the existing config file
 	data, err := os.ReadFile(configPath)
 	if err != nil {
 		return fmt.Errorf("error reading config file: %w", err)
 	}
 
-	var config heroGridConfig
+	config := heroGridConfig{
+		Version: 3,
+	}
+
 	if err := json.Unmarshal(data, &config); err != nil {
 		return fmt.Errorf("error parsing config file: %w", err)
 	}
 
-	// Filter out configs with {d2tPrefix} prefix
+	// Filter out configs with [D2T] prefix (removes both aggregated and faceted)
 	var filteredConfigs []heroGridCategory
 	for _, cfg := range config.Configs {
 		if !strings.HasPrefix(cfg.ConfigName, d2tPrefix) {
@@ -167,11 +235,17 @@ func processHeroesLayoutConfig(configPath string, positions []string, positionTo
 		}
 	}
 
-	// Generate new configs for each role
-	newConfigs := generateHeroesLayoutConfigs(positions, positionToHeroes)
+	config.Configs = filteredConfigs
 
-	// Merge configs
-	config.Configs = append(filteredConfigs, newConfigs...)
+	// Generate aggregated config (no facets)
+	aggregatedConfigs := generateHeroesLayoutConfigs(d2tPrefix, positions, positionToAggregatedHeroes, heroesPerRow)
+
+	// Generate faceted config (split by facets)
+	facetedConfigs := generateHeroesLayoutConfigs(fmt.Sprintf("%s %s", d2tPrefix, facetsPrefix), positions, positionToFacetedHeroes, heroesPerRow)
+
+	// Merge all configs
+	config.Configs = append(config.Configs, aggregatedConfigs...)
+	config.Configs = append(config.Configs, facetedConfigs...)
 
 	// Write the updated config back to file
 	updatedData, err := json.MarshalIndent(config, "", "  ")

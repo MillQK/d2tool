@@ -10,8 +10,10 @@ import {
   GetPositions,
   SetPositions,
   SetPositionEnabled,
+  GetHeroesPerRow,
+  SetHeroesPerRow,
 } from '../../wailsjs/go/main/App'
-import {config} from "../../wailsjs/go/models.ts";
+import { config } from '../../wailsjs/go/models'
 
 const AlertCircleIcon = () => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
@@ -29,6 +31,11 @@ const XIcon = () => (
     <line x1="6" y1="6" x2="18" y2="18"/>
   </svg>
 )
+
+// Heroes per row constraints
+const MIN_HEROES_PER_ROW = 1
+const MAX_HEROES_PER_ROW = 50
+const DEFAULT_HEROES_PER_ROW = 15
 
 // Position name mapping
 const positionNames: Record<string, string> = {
@@ -94,10 +101,18 @@ function HeroesLayoutPage() {
   // Error state
   const [error, setError] = useState<string | null>(null)
 
+  // Heroes per row state
+  const [heroesPerRow, setHeroesPerRowState] = useState<number>(DEFAULT_HEROES_PER_ROW)
+  const [heroesPerRowInput, setHeroesPerRowInput] = useState<string>(DEFAULT_HEROES_PER_ROW.toString())
+
   useEffect(() => {
     // Load initial states
     GetHeroesLayoutFiles().then(setFiles).catch(console.error)
     GetPositions().then(setPositions).catch(console.error)
+    GetHeroesPerRow().then((value: number) => {
+      setHeroesPerRowState(value)
+      setHeroesPerRowInput(value.toString())
+    }).catch(console.error)
 
     // Listen for background update notifications
     const offDataChanged = EventsOn('heroesLayoutDataChanged', () => {
@@ -141,6 +156,31 @@ function HeroesLayoutPage() {
 
   const dismissError = () => {
     setError(null)
+  }
+
+  const handleHeroesPerRowChange = async (value: string) => {
+    setHeroesPerRowInput(value)
+
+    // Only update backend if value is valid
+    const numValue = parseInt(value, 10)
+    if (!isNaN(numValue) && numValue >= MIN_HEROES_PER_ROW && numValue <= MAX_HEROES_PER_ROW) {
+      try {
+        await SetHeroesPerRow(numValue)
+        setHeroesPerRowState(numValue)
+        setError(null)
+      } catch (err) {
+        console.error('Error setting heroes per row:', err)
+        setError(`Failed to set heroes per row: ${err}`)
+      }
+    }
+  }
+
+  const handleHeroesPerRowBlur = () => {
+    // On blur, reset to last valid value if input is invalid
+    const numValue = parseInt(heroesPerRowInput, 10)
+    if (isNaN(numValue) || numValue < MIN_HEROES_PER_ROW || numValue > MAX_HEROES_PER_ROW) {
+      setHeroesPerRowInput(heroesPerRow.toString())
+    }
   }
 
   const handleRemoveFile = async (index: number) => {
@@ -354,6 +394,33 @@ function HeroesLayoutPage() {
                 ))}
               </div>
             )}
+          </div>
+        </div>
+
+        {/* Layout Settings Card */}
+        <div className="card">
+          <div className="card-header">
+            <h2 className="card-title">Layout Settings</h2>
+          </div>
+          <div className="card-body">
+            <div className="setting-row">
+              <div className="setting-info">
+                <div className="setting-label">Heroes Per Row</div>
+                <div className="setting-description">
+                  Number of hero icons to display in each row ({MIN_HEROES_PER_ROW}-{MAX_HEROES_PER_ROW})
+                </div>
+              </div>
+              <input
+                type="number"
+                className="select"
+                min={MIN_HEROES_PER_ROW}
+                max={MAX_HEROES_PER_ROW}
+                required
+                value={heroesPerRowInput}
+                onChange={(e) => handleHeroesPerRowChange(e.target.value)}
+                onBlur={handleHeroesPerRowBlur}
+              />
+            </div>
           </div>
         </div>
 

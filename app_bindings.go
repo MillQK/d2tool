@@ -97,6 +97,18 @@ func (a *App) SetD2PTPeriod(period string) {
 	a.config.SetD2PTPeriod(period)
 }
 
+// --- Heroes Layout Settings Bindings ---
+
+// GetHeroesPerRow returns the configured heroes per row
+func (a *App) GetHeroesPerRow() int {
+	return a.config.GetHeroesPerRow()
+}
+
+// SetHeroesPerRow sets the heroes per row value
+func (a *App) SetHeroesPerRow(heroesPerRow int) error {
+	return a.config.SetHeroesPerRow(heroesPerRow)
+}
+
 // --- Startup Tab Bindings ---
 
 // GetStartupEnabled returns whether the app is set to run on startup

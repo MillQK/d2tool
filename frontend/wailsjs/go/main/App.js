@@ -26,6 +26,10 @@ export function GetHeroesLayoutFiles() {
   return window['go']['main']['App']['GetHeroesLayoutFiles']();
 }
 
+export function GetHeroesPerRow() {
+  return window['go']['main']['App']['GetHeroesPerRow']();
+}
+
 export function GetPositions() {
   return window['go']['main']['App']['GetPositions']();
 }
@@ -52,6 +56,10 @@ export function SetD2PTPeriod(arg1) {
 
 export function SetHeroesLayoutFileEnabled(arg1, arg2) {
   return window['go']['main']['App']['SetHeroesLayoutFileEnabled'](arg1, arg2);
+}
+
+export function SetHeroesPerRow(arg1) {
+  return window['go']['main']['App']['SetHeroesPerRow'](arg1);
 }
 
 export function SetPositionEnabled(arg1, arg2) {

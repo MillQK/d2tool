@@ -15,6 +15,8 @@ export function GetD2PTConfig():Promise<config.D2PTConfig>;
 
 export function GetHeroesLayoutFiles():Promise<Array<config.FileConfig>>;
 
+export function GetHeroesPerRow():Promise<number>;
+
 export function GetPositions():Promise<Array<config.PositionConfig>>;
 
 export function GetStartupEnabled():Promise<boolean>;
@@ -28,6 +30,8 @@ export function RemoveHeroesLayoutFile(arg1:number):Promise<void>;
 export function SetD2PTPeriod(arg1:string):Promise<void>;
 
 export function SetHeroesLayoutFileEnabled(arg1:number,arg2:boolean):Promise<void>;
+
+export function SetHeroesPerRow(arg1:number):Promise<void>;
 
 export function SetPositionEnabled(arg1:string,arg2:boolean):Promise<void>;
 

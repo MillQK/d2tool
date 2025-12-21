@@ -60,7 +60,12 @@ func (s *HeroesLayoutServiceImpl) UpdateHeroesLayout() error {
 	d2ptConfig := s.config.GetD2PTConfig()
 	period := d2ptConfig.Period
 
-	positionToHeroes := make(map[string][]providers.Hero)
+	// Get heroes per row setting
+	heroesPerRow := s.config.GetHeroesPerRow()
+
+	// Prepare both aggregated and faceted hero data
+	positionToAggregatedHeroes := make(map[string][]providers.Hero)
+	positionToFacetedHeroes := make(map[string][]providers.Hero)
 
 	var positionsFetchErr error
 
@@ -71,7 +76,12 @@ func (s *HeroesLayoutServiceImpl) UpdateHeroesLayout() error {
 			positionsFetchErr = fmt.Errorf("error fetching heroes for position %s: %w", position, err)
 			break
 		}
-		positionToHeroes[position] = heroes
+
+		// Create aggregated version (facets merged)
+		positionToAggregatedHeroes[position] = providers.AggregateHeroesByID(heroes)
+
+		// Create faceted version (facets split with normalized numbers)
+		positionToFacetedHeroes[position] = providers.NormalizeFacetNumbers(heroes)
 	}
 
 	now := time.Now()
@@ -87,7 +97,7 @@ func (s *HeroesLayoutServiceImpl) UpdateHeroesLayout() error {
 
 		errorMsg := ""
 
-		if err := processHeroesLayoutConfig(configFile, positions, positionToHeroes); err != nil {
+		if err := processHeroesLayoutConfig(configFile, positions, positionToAggregatedHeroes, positionToFacetedHeroes, heroesPerRow); err != nil {
 			slog.Error(fmt.Sprintf("Error processing config file %s", configFile), "error", err)
 			errorMsg = fmt.Sprintf("error processing config file: %v", err)
 		} else {
