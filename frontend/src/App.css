@@ -803,6 +803,21 @@ body {
   padding: var(--spacing-sm);
 }
 
+/* Number input without spinners */
+input[type="number"].select {
+  -moz-appearance: textfield;
+  appearance: textfield;
+  background-image: none;
+  padding-right: var(--spacing-md);
+  min-width: 80px;
+}
+
+input[type="number"].select::-webkit-inner-spin-button,
+input[type="number"].select::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
 /* Version Grid */
 .version-grid {
   display: grid;

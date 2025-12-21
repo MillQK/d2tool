@@ -3,6 +3,7 @@ package config
 import (
 	"d2tool/steam"
 	"encoding/json"
+	"fmt"
 	"log/slog"
 	"os"
 	"path/filepath"
@@ -30,8 +31,9 @@ type PositionConfig struct {
 
 // HeroesLayoutConfig contains heroes layout related settings
 type HeroesLayoutConfig struct {
-	Files     []FileConfig     `json:"files"`
-	Positions []PositionConfig `json:"positions"`
+	Files        []FileConfig     `json:"files"`
+	Positions    []PositionConfig `json:"positions"`
+	HeroesPerRow int              `json:"heroesPerRow"`
 }
 
 // D2PTConfig contains Dota2ProTracker provider settings
@@ -77,11 +79,18 @@ func defaultPositions() []PositionConfig {
 	}
 }
 
+const (
+	defaultHeroesPerRow = 15
+	minHeroesPerRow     = 1
+	maxHeroesPerRow     = 50
+)
+
 func LoadConfig() *Config {
 	config := &Config{
 		HeroesLayout: HeroesLayoutConfig{
-			Files:     []FileConfig{},
-			Positions: defaultPositions(),
+			Files:        []FileConfig{},
+			Positions:    defaultPositions(),
+			HeroesPerRow: defaultHeroesPerRow,
 		},
 		D2PT:      defaultD2PTConfig(),
 		saveDelay: 500 * time.Millisecond,
@@ -110,6 +119,11 @@ func LoadConfig() *Config {
 	// Ensure D2PT config has valid period
 	if config.D2PT.Period != "8" && config.D2PT.Period != "patch" {
 		config.D2PT.Period = "8"
+	}
+
+	// Ensure HeroesPerRow is within valid range
+	if config.HeroesLayout.HeroesPerRow < minHeroesPerRow || config.HeroesLayout.HeroesPerRow > maxHeroesPerRow {
+		config.HeroesLayout.HeroesPerRow = defaultHeroesPerRow
 	}
 
 	config.updateSteamLayoutFileAttributes()
@@ -360,4 +374,25 @@ func (c *Config) SetD2PTPeriod(period string) {
 	defer c.mu.Unlock()
 	c.D2PT.Period = period
 	c.scheduleSave()
+}
+
+// --- Heroes Layout Settings Methods ---
+
+// GetHeroesPerRow returns the configured heroes per row value
+func (c *Config) GetHeroesPerRow() int {
+	c.mu.RLock()
+	defer c.mu.RUnlock()
+	return c.HeroesLayout.HeroesPerRow
+}
+
+// SetHeroesPerRow sets the heroes per row value with validation (1-50)
+func (c *Config) SetHeroesPerRow(heroesPerRow int) error {
+	if heroesPerRow < minHeroesPerRow || heroesPerRow > maxHeroesPerRow {
+		return fmt.Errorf("heroesPerRow must be between %d and %d, got %d", minHeroesPerRow, maxHeroesPerRow, heroesPerRow)
+	}
+	c.mu.Lock()
+	defer c.mu.Unlock()
+	c.HeroesLayout.HeroesPerRow = heroesPerRow
+	c.scheduleSave()
+	return nil
 }

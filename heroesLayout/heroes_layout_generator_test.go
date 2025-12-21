@@ -21,7 +21,7 @@ func TestGenerateHeroesLayoutConfigs_CreatesD2TPrefix(t *testing.T) {
 		},
 	}
 
-	configs := generateHeroesLayoutConfigs(d2tPrefix, positions, positionToHeroes)
+	configs := generateHeroesLayoutConfigs(d2tPrefix, positions, positionToHeroes, 15)
 
 	if len(configs) == 0 {
 		t.Fatal("expected at least one config")
@@ -42,7 +42,7 @@ func TestGenerateHeroesLayoutConfigs_CreatesCategories(t *testing.T) {
 		},
 	}
 
-	configs := generateHeroesLayoutConfigs(d2tPrefix, positions, positionToHeroes)
+	configs := generateHeroesLayoutConfigs(d2tPrefix, positions, positionToHeroes, 15)
 
 	if len(configs[0].Categories) == 0 {
 		t.Fatal("expected categories to be created")
@@ -76,7 +76,7 @@ func TestGenerateHeroesLayoutConfigs_CalculatesWinrate(t *testing.T) {
 		},
 	}
 
-	configs := generateHeroesLayoutConfigs(d2tPrefix, positions, positionToHeroes)
+	configs := generateHeroesLayoutConfigs(d2tPrefix, positions, positionToHeroes, 15)
 
 	// Find a category with winrate percentage
 	foundWinrate := false
@@ -113,7 +113,7 @@ func TestProcessHeroesLayoutConfig_PreservesUserConfigs(t *testing.T) {
 		"1": {{HeroID: 1, D2PTRating: 100, Matches: 100, Wins: 50}},
 	}
 
-	err := processHeroesLayoutConfig(configPath, positions, positionToHeroes, positionToHeroes)
+	err := processHeroesLayoutConfig(configPath, positions, positionToHeroes, positionToHeroes, 15)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -157,7 +157,7 @@ func TestProcessHeroesLayoutConfig_RemovesOldD2TConfigs(t *testing.T) {
 		"1": {{HeroID: 1, D2PTRating: 100, Matches: 100, Wins: 50}},
 	}
 
-	err := processHeroesLayoutConfig(configPath, positions, positionToHeroes, positionToHeroes)
+	err := processHeroesLayoutConfig(configPath, positions, positionToHeroes, positionToHeroes, 15)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -196,7 +196,7 @@ func TestProcessHeroesLayoutConfig_InvalidJSON(t *testing.T) {
 		"1": {{HeroID: 1}},
 	}
 
-	err := processHeroesLayoutConfig(configPath, positions, positionToHeroes, positionToHeroes)
+	err := processHeroesLayoutConfig(configPath, positions, positionToHeroes, positionToHeroes, 15)
 	if err == nil {
 		t.Error("expected error for invalid JSON")
 	}
@@ -208,7 +208,7 @@ func TestProcessHeroesLayoutConfig_FileNotFound(t *testing.T) {
 		"1": {{HeroID: 1}},
 	}
 
-	err := processHeroesLayoutConfig("/nonexistent/path/config.json", positions, positionToHeroes, positionToHeroes)
+	err := processHeroesLayoutConfig("/nonexistent/path/config.json", positions, positionToHeroes, positionToHeroes, 15)
 	if err == nil {
 		t.Error("expected error for nonexistent file")
 	}
@@ -230,7 +230,7 @@ func TestProcessHeroesLayoutConfig_PreservesVersion(t *testing.T) {
 		"1": {{HeroID: 1, D2PTRating: 100, Matches: 100, Wins: 50}},
 	}
 
-	err := processHeroesLayoutConfig(configPath, positions, positionToHeroes, positionToHeroes)
+	err := processHeroesLayoutConfig(configPath, positions, positionToHeroes, positionToHeroes, 15)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -248,7 +248,7 @@ func TestGenerateHeroesLayoutConfigs_EmptyPositions(t *testing.T) {
 	positions := []string{}
 	positionToHeroes := map[string][]providers.Hero{}
 
-	configs := generateHeroesLayoutConfigs(d2tPrefix, positions, positionToHeroes)
+	configs := generateHeroesLayoutConfigs(d2tPrefix, positions, positionToHeroes, 15)
 
 	if len(configs) != 1 {
 		t.Fatalf("expected 1 config even with empty positions, got %d", len(configs))
@@ -269,7 +269,7 @@ func TestGenerateHeroesLayoutConfigs_MultiplePositions(t *testing.T) {
 		}
 	}
 
-	configs := generateHeroesLayoutConfigs(d2tPrefix, positions, positionToHeroes)
+	configs := generateHeroesLayoutConfigs(d2tPrefix, positions, positionToHeroes, 15)
 
 	// Count position headers
 	positionHeaders := 0

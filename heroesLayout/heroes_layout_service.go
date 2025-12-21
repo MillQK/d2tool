@@ -60,6 +60,9 @@ func (s *HeroesLayoutServiceImpl) UpdateHeroesLayout() error {
 	d2ptConfig := s.config.GetD2PTConfig()
 	period := d2ptConfig.Period
 
+	// Get heroes per row setting
+	heroesPerRow := s.config.GetHeroesPerRow()
+
 	// Prepare both aggregated and faceted hero data
 	positionToAggregatedHeroes := make(map[string][]providers.Hero)
 	positionToFacetedHeroes := make(map[string][]providers.Hero)
@@ -94,7 +97,7 @@ func (s *HeroesLayoutServiceImpl) UpdateHeroesLayout() error {
 
 		errorMsg := ""
 
-		if err := processHeroesLayoutConfig(configFile, positions, positionToAggregatedHeroes, positionToFacetedHeroes); err != nil {
+		if err := processHeroesLayoutConfig(configFile, positions, positionToAggregatedHeroes, positionToFacetedHeroes, heroesPerRow); err != nil {
 			slog.Error(fmt.Sprintf("Error processing config file %s", configFile), "error", err)
 			errorMsg = fmt.Sprintf("error processing config file: %v", err)
 		} else {

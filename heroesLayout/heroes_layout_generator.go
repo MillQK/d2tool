@@ -43,7 +43,7 @@ type heroGridPosition struct {
 }
 
 // generateHeroesLayoutConfigs generates new hero grid configs for each role
-func generateHeroesLayoutConfigs(configNamePrefix string, positions []string, positionToHero map[string][]providers.Hero) []heroGridCategory {
+func generateHeroesLayoutConfigs(configNamePrefix string, positions []string, positionToHero map[string][]providers.Hero, heroesPerRow int) []heroGridCategory {
 	var configs []heroGridCategory
 
 	// Create a single merged config
@@ -57,7 +57,6 @@ func generateHeroesLayoutConfigs(configNamePrefix string, positions []string, po
 	const heroHeight = 110
 	const categorySpacing = 50
 	const infoHeight = 30
-	const heroesPerRow = 15
 	const heroWinrateSpacing = 20
 	const heroFacetSpacing = 20
 	const heroRowSpacing = 30
@@ -213,7 +212,7 @@ func generateHeroesLayoutConfigs(configNamePrefix string, positions []string, po
 }
 
 // processHeroesLayoutConfig processes a hero_grid_config.json file
-func processHeroesLayoutConfig(configPath string, positions []string, positionToAggregatedHeroes map[string][]providers.Hero, positionToFacetedHeroes map[string][]providers.Hero) error {
+func processHeroesLayoutConfig(configPath string, positions []string, positionToAggregatedHeroes map[string][]providers.Hero, positionToFacetedHeroes map[string][]providers.Hero, heroesPerRow int) error {
 	// Read the existing config file
 	data, err := os.ReadFile(configPath)
 	if err != nil {
@@ -239,10 +238,10 @@ func processHeroesLayoutConfig(configPath string, positions []string, positionTo
 	config.Configs = filteredConfigs
 
 	// Generate aggregated config (no facets)
-	aggregatedConfigs := generateHeroesLayoutConfigs(d2tPrefix, positions, positionToAggregatedHeroes)
+	aggregatedConfigs := generateHeroesLayoutConfigs(d2tPrefix, positions, positionToAggregatedHeroes, heroesPerRow)
 
 	// Generate faceted config (split by facets)
-	facetedConfigs := generateHeroesLayoutConfigs(fmt.Sprintf("%s %s", d2tPrefix, facetsPrefix), positions, positionToFacetedHeroes)
+	facetedConfigs := generateHeroesLayoutConfigs(fmt.Sprintf("%s %s", d2tPrefix, facetsPrefix), positions, positionToFacetedHeroes, heroesPerRow)
 
 	// Merge all configs
 	config.Configs = append(config.Configs, aggregatedConfigs...)
