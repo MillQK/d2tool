@@ -231,6 +231,96 @@ func TestFetchHeroes_EmptyResponse(t *testing.T) {
 	}
 }
 
+func TestAggregateHeroesByID_MultipleFacets(t *testing.T) {
+	heroes := []Hero{
+		{HeroID: 1, HeroName: "Anti-Mage", Matches: 100, Wins: 50, D2PTRating: 60, FacetName: "Facet A", FacetNumber: 1},
+		{HeroID: 1, HeroName: "Anti-Mage", Matches: 50, Wins: 30, D2PTRating: 90, FacetName: "Facet B", FacetNumber: 2},
+		{HeroID: 2, HeroName: "Axe", Matches: 200, Wins: 110, D2PTRating: 100, FacetName: "Facet C", FacetNumber: 1},
+	}
+
+	aggregated := AggregateHeroesByID(heroes)
+
+	if len(aggregated) != 2 {
+		t.Fatalf("expected 2 heroes after aggregation, got %d", len(aggregated))
+	}
+
+	// Find Anti-Mage in results
+	var antiMage *Hero
+	for i := range aggregated {
+		if aggregated[i].HeroID == 1 {
+			antiMage = &aggregated[i]
+			break
+		}
+	}
+
+	if antiMage == nil {
+		t.Fatal("Anti-Mage not found in aggregated results")
+	}
+
+	// Check aggregated values
+	if antiMage.Matches != 150 {
+		t.Errorf("expected 150 matches (100+50), got %d", antiMage.Matches)
+	}
+	if antiMage.Wins != 80 {
+		t.Errorf("expected 80 wins (50+30), got %d", antiMage.Wins)
+	}
+	if antiMage.D2PTRating != 70 {
+		t.Errorf("expected D2PT rating 70, got %d", antiMage.D2PTRating)
+	}
+	if antiMage.FacetName != "" {
+		t.Errorf("expected empty FacetName after aggregation, got %s", antiMage.FacetName)
+	}
+	if antiMage.FacetNumber >= 0 {
+		t.Errorf("expected invalid FacetNumber after aggregation, got %d", antiMage.FacetNumber)
+	}
+}
+
+func TestAggregateHeroesByID_EmptySlice(t *testing.T) {
+	heroes := []Hero{}
+	aggregated := AggregateHeroesByID(heroes)
+
+	if len(aggregated) != 0 {
+		t.Errorf("expected 0 heroes for empty input, got %d", len(aggregated))
+	}
+}
+
+func TestAggregateHeroesByID_SingleHero(t *testing.T) {
+	heroes := []Hero{
+		{HeroID: 1, HeroName: "Anti-Mage", Matches: 100, Wins: 50, FacetName: "Facet A", FacetNumber: 1},
+	}
+
+	aggregated := AggregateHeroesByID(heroes)
+
+	if len(aggregated) != 1 {
+		t.Fatalf("expected 1 hero, got %d", len(aggregated))
+	}
+	if aggregated[0].Matches != 100 {
+		t.Errorf("expected 100 matches, got %d", aggregated[0].Matches)
+	}
+	if aggregated[0].FacetName != "" {
+		t.Errorf("expected empty FacetName, got %s", aggregated[0].FacetName)
+	}
+}
+
+func TestAggregateHeroesByID_DoesNotModifyOriginal(t *testing.T) {
+	heroes := []Hero{
+		{HeroID: 1, HeroName: "Anti-Mage", Matches: 100, FacetName: "Facet A"},
+		{HeroID: 1, HeroName: "Anti-Mage", Matches: 50, FacetName: "Facet B"},
+	}
+
+	originalFacetName := heroes[0].FacetName
+	originalMatches := heroes[0].Matches
+
+	_ = AggregateHeroesByID(heroes)
+
+	if heroes[0].FacetName != originalFacetName {
+		t.Error("AggregateHeroesByID modified the original slice FacetName")
+	}
+	if heroes[0].Matches != originalMatches {
+		t.Error("AggregateHeroesByID modified the original slice Matches")
+	}
+}
+
 // Benchmark tests
 func BenchmarkGetTopHeroesByRating(b *testing.B) {
 	// Create a realistic dataset

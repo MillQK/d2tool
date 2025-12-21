@@ -48,21 +48,13 @@ function ProvidersPage() {
 
   const handlePeriodChange = async (newPeriod: string) => {
     setError(null)
-    const oldPeriod = d2ptConfig?.period
-
-    // Optimistically update UI
-    if (d2ptConfig) {
-      setD2ptConfig({ ...d2ptConfig, period: newPeriod })
-    }
-
     try {
       await SetD2PTPeriod(newPeriod)
+      if (d2ptConfig) {
+        setD2ptConfig({ ...d2ptConfig, period: newPeriod })
+      }
     } catch (err) {
       console.error('Error setting D2PT period:', err)
-      // Revert on error
-      if (d2ptConfig && oldPeriod) {
-        setD2ptConfig({ ...d2ptConfig, period: oldPeriod })
-      }
       setError(`Failed to update period: ${err}`)
     }
   }
