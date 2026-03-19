@@ -64,6 +64,7 @@ func FetchHeroes(position string, period string, httpClient *http.Client, apiUrl
 	// Add required headers
 	req.Header.Add("Accept", "application/json")
 	req.Header.Add("Referer", "https://dota2protracker.com")
+	req.Header.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36")
 
 	// Execute the request
 	resp, err := httpClient.Do(req)

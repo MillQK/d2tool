@@ -147,6 +147,9 @@ func TestFetchHeroes_Success(t *testing.T) {
 		if r.Header.Get("Referer") != "https://dota2protracker.com" {
 			t.Error("expected Referer header")
 		}
+		if r.Header.Get("User-Agent") == "" {
+			t.Error("expected User-Agent header")
+		}
 
 		heroes := []Hero{
 			{HeroID: 1, HeroName: "Anti-Mage", D2PTRating: 100, Matches: 500},
