@@ -394,7 +394,6 @@ func TestConfig_JSONMarshal(t *testing.T) {
 				{
 					FilePath:                  "/test.json",
 					Enabled:                   true,
-					Attributes:                map[string]string{"key": "value"},
 					LastUpdateTimestampMillis: 1234567890,
 					LastUpdateErrorMessage:    "",
 				},
@@ -511,5 +510,394 @@ func TestConfig_SaveFileFormat(t *testing.T) {
 	}
 	if loaded.HeroesLayout.Positions[1].Enabled {
 		t.Error("position 2 should be disabled")
+	}
+}
+
+func TestConfig_SteamConfig_Defaults(t *testing.T) {
+	cfg := &Config{
+		HeroesLayout: HeroesLayoutConfig{
+			Files:     []FileConfig{},
+			Positions: defaultPositions(),
+		},
+		Steam: SteamConfig{
+			AutoEnableNewAccounts: true,
+			Accounts:              []SteamAccountConfig{},
+		},
+		saveDelay: 50 * time.Millisecond,
+	}
+
+	steamCfg := cfg.GetSteamConfig()
+	if steamCfg.SteamPath != "" {
+		t.Errorf("expected empty steam path, got %q", steamCfg.SteamPath)
+	}
+	if !steamCfg.AutoEnableNewAccounts {
+		t.Error("expected AutoEnableNewAccounts to be true by default")
+	}
+	if len(steamCfg.Accounts) != 0 {
+		t.Errorf("expected 0 accounts, got %d", len(steamCfg.Accounts))
+	}
+}
+
+func TestConfig_SetSteamPath(t *testing.T) {
+	cfg := &Config{
+		HeroesLayout: HeroesLayoutConfig{
+			Files:     []FileConfig{},
+			Positions: defaultPositions(),
+		},
+		Steam: SteamConfig{
+			AutoEnableNewAccounts: true,
+			Accounts:              []SteamAccountConfig{},
+		},
+		saveDelay: 50 * time.Millisecond,
+	}
+
+	cfg.SetSteamPath("/home/user/.steam")
+
+	steamCfg := cfg.GetSteamConfig()
+	if steamCfg.SteamPath != "/home/user/.steam" {
+		t.Errorf("expected steam path '/home/user/.steam', got %q", steamCfg.SteamPath)
+	}
+}
+
+func TestConfig_SetAutoEnableNewAccounts(t *testing.T) {
+	cfg := &Config{
+		HeroesLayout: HeroesLayoutConfig{
+			Files:     []FileConfig{},
+			Positions: defaultPositions(),
+		},
+		Steam: SteamConfig{
+			AutoEnableNewAccounts: true,
+			Accounts:              []SteamAccountConfig{},
+		},
+		saveDelay: 50 * time.Millisecond,
+	}
+
+	cfg.SetAutoEnableNewAccounts(false)
+
+	steamCfg := cfg.GetSteamConfig()
+	if steamCfg.AutoEnableNewAccounts {
+		t.Error("expected AutoEnableNewAccounts to be false after toggle")
+	}
+
+	cfg.SetAutoEnableNewAccounts(true)
+
+	steamCfg = cfg.GetSteamConfig()
+	if !steamCfg.AutoEnableNewAccounts {
+		t.Error("expected AutoEnableNewAccounts to be true after toggle back")
+	}
+}
+
+func TestConfig_SetSteamAccounts(t *testing.T) {
+	cfg := &Config{
+		HeroesLayout: HeroesLayoutConfig{
+			Files:     []FileConfig{},
+			Positions: defaultPositions(),
+		},
+		Steam: SteamConfig{
+			AutoEnableNewAccounts: true,
+			Accounts:              []SteamAccountConfig{},
+		},
+		saveDelay: 50 * time.Millisecond,
+	}
+
+	accounts := []SteamAccountConfig{
+		{SteamID64: "76561198000000001", Enabled: true},
+		{SteamID64: "76561198000000002", Enabled: false},
+	}
+	cfg.SetSteamAccounts(accounts)
+
+	result := cfg.GetSteamAccounts()
+	if len(result) != 2 {
+		t.Fatalf("expected 2 accounts, got %d", len(result))
+	}
+	if result[0].SteamID64 != "76561198000000001" {
+		t.Errorf("expected first account ID '76561198000000001', got %q", result[0].SteamID64)
+	}
+	if !result[0].Enabled {
+		t.Error("first account should be enabled")
+	}
+	if result[1].SteamID64 != "76561198000000002" {
+		t.Errorf("expected second account ID '76561198000000002', got %q", result[1].SteamID64)
+	}
+	if result[1].Enabled {
+		t.Error("second account should be disabled")
+	}
+}
+
+func TestConfig_SetSteamAccountEnabled(t *testing.T) {
+	cfg := &Config{
+		HeroesLayout: HeroesLayoutConfig{
+			Files:     []FileConfig{},
+			Positions: defaultPositions(),
+		},
+		Steam: SteamConfig{
+			AutoEnableNewAccounts: true,
+			Accounts: []SteamAccountConfig{
+				{SteamID64: "76561198000000001", Enabled: true},
+				{SteamID64: "76561198000000002", Enabled: true},
+			},
+		},
+		saveDelay: 50 * time.Millisecond,
+	}
+
+	cfg.SetSteamAccountEnabled("76561198000000001", false)
+
+	accounts := cfg.GetSteamAccounts()
+	if accounts[0].Enabled {
+		t.Error("first account should be disabled")
+	}
+	if !accounts[1].Enabled {
+		t.Error("second account should still be enabled")
+	}
+}
+
+func TestConfig_UpdateSteamAccountStatus(t *testing.T) {
+	cfg := &Config{
+		HeroesLayout: HeroesLayoutConfig{
+			Files:     []FileConfig{},
+			Positions: defaultPositions(),
+		},
+		Steam: SteamConfig{
+			AutoEnableNewAccounts: true,
+			Accounts: []SteamAccountConfig{
+				{SteamID64: "76561198000000001", Enabled: true},
+				{SteamID64: "76561198000000002", Enabled: true},
+			},
+		},
+		saveDelay: 50 * time.Millisecond,
+	}
+
+	cfg.UpdateSteamAccountStatus("76561198000000001", 1700000000000, "some error")
+
+	accounts := cfg.GetSteamAccounts()
+	if accounts[0].LastUpdateTimestampMillis != 1700000000000 {
+		t.Errorf("expected timestamp 1700000000000, got %d", accounts[0].LastUpdateTimestampMillis)
+	}
+	if accounts[0].LastUpdateErrorMessage != "some error" {
+		t.Errorf("expected error 'some error', got %q", accounts[0].LastUpdateErrorMessage)
+	}
+	if accounts[1].LastUpdateTimestampMillis != 0 {
+		t.Error("second account's timestamp should not be updated")
+	}
+	if accounts[1].LastUpdateErrorMessage != "" {
+		t.Error("second account's error message should not be updated")
+	}
+}
+
+func TestConfig_GetSteamAccounts_ReturnsCopy(t *testing.T) {
+	cfg := &Config{
+		HeroesLayout: HeroesLayoutConfig{
+			Files:     []FileConfig{},
+			Positions: defaultPositions(),
+		},
+		Steam: SteamConfig{
+			AutoEnableNewAccounts: true,
+			Accounts: []SteamAccountConfig{
+				{SteamID64: "76561198000000001", Enabled: true},
+			},
+		},
+		saveDelay: 50 * time.Millisecond,
+	}
+
+	accounts1 := cfg.GetSteamAccounts()
+	accounts1[0].SteamID64 = "modified"
+
+	accounts2 := cfg.GetSteamAccounts()
+	if accounts2[0].SteamID64 == "modified" {
+		t.Error("GetSteamAccounts should return a copy, not the original")
+	}
+}
+
+func TestConfig_JSONMarshal_IncludesSteam(t *testing.T) {
+	cfg := &Config{
+		HeroesLayout: HeroesLayoutConfig{
+			Files:     []FileConfig{},
+			Positions: defaultPositions(),
+		},
+		Steam: SteamConfig{
+			SteamPath:             "/steam/path",
+			AutoEnableNewAccounts: true,
+			Accounts: []SteamAccountConfig{
+				{SteamID64: "76561198000000001", Enabled: true},
+			},
+		},
+		saveDelay: 50 * time.Millisecond,
+	}
+
+	data, err := json.MarshalIndent(cfg, "", "  ")
+	if err != nil {
+		t.Fatalf("failed to marshal config: %v", err)
+	}
+
+	jsonStr := string(data)
+	if !contains(jsonStr, "\"steam\"") {
+		t.Error("JSON should contain 'steam' key")
+	}
+	if !contains(jsonStr, "\"steamPath\"") {
+		t.Error("JSON should contain 'steamPath' key")
+	}
+	if !contains(jsonStr, "\"autoEnableNewAccounts\"") {
+		t.Error("JSON should contain 'autoEnableNewAccounts' key")
+	}
+	if !contains(jsonStr, "\"accounts\"") {
+		t.Error("JSON should contain 'accounts' key")
+	}
+	if !contains(jsonStr, "76561198000000001") {
+		t.Error("JSON should contain the steam ID")
+	}
+
+	// Verify roundtrip
+	var decoded Config
+	if err := json.Unmarshal(data, &decoded); err != nil {
+		t.Fatalf("failed to unmarshal config: %v", err)
+	}
+	if decoded.Steam.SteamPath != "/steam/path" {
+		t.Errorf("expected steam path '/steam/path', got %q", decoded.Steam.SteamPath)
+	}
+	if len(decoded.Steam.Accounts) != 1 {
+		t.Fatalf("expected 1 account, got %d", len(decoded.Steam.Accounts))
+	}
+	if decoded.Steam.Accounts[0].SteamID64 != "76561198000000001" {
+		t.Error("account not preserved in JSON roundtrip")
+	}
+}
+
+func TestConfig_Migration_SteamFilesToAccounts(t *testing.T) {
+	oldConfig := `{
+		"heroesLayout": {
+			"files": [
+				{
+					"filePath": "C:/Program Files/Steam/userdata/12345/570/remote/cfg/hero_grid_config.json",
+					"enabled": true,
+					"attributes": {"SteamID3": "12345"},
+					"lastUpdateTimestampMillis": 1000,
+					"lastUpdateErrorMessage": ""
+				},
+				{
+					"filePath": "/custom/path/hero_grid_config.json",
+					"enabled": false,
+					"attributes": {},
+					"lastUpdateTimestampMillis": 2000,
+					"lastUpdateErrorMessage": "some error"
+				}
+			],
+			"positions": [{"id": "1", "enabled": true}],
+			"heroesPerRow": 15
+		},
+		"d2pt": {"period": "8"}
+	}`
+
+	cfg := &Config{}
+	json.Unmarshal([]byte(oldConfig), cfg)
+	cfg.migrateToSteamAccounts()
+
+	// First file should be migrated to steam account
+	if len(cfg.Steam.Accounts) != 1 {
+		t.Fatalf("expected 1 steam account, got %d", len(cfg.Steam.Accounts))
+	}
+	acc := cfg.Steam.Accounts[0]
+	// 12345 + 76561197960265728 = 76561197960278073
+	if acc.SteamID64 != "76561197960278073" {
+		t.Errorf("expected SteamID64 76561197960278073, got %s", acc.SteamID64)
+	}
+	if !acc.Enabled {
+		t.Error("migrated account should preserve enabled=true")
+	}
+	if acc.LastUpdateTimestampMillis != 1000 {
+		t.Error("migrated account should preserve lastUpdateTimestampMillis")
+	}
+	if acc.LastUpdateErrorMessage != "" {
+		t.Error("migrated account should preserve empty lastUpdateErrorMessage")
+	}
+
+	// Second file should remain as a file
+	if len(cfg.HeroesLayout.Files) != 1 {
+		t.Fatalf("expected 1 remaining file, got %d", len(cfg.HeroesLayout.Files))
+	}
+	if cfg.HeroesLayout.Files[0].FilePath != "/custom/path/hero_grid_config.json" {
+		t.Error("non-steam file should be preserved")
+	}
+	remainingFile := cfg.HeroesLayout.Files[0]
+	if remainingFile.Enabled {
+		t.Error("remaining file should preserve enabled=false")
+	}
+	if remainingFile.LastUpdateTimestampMillis != 2000 {
+		t.Error("remaining file should preserve lastUpdateTimestampMillis")
+	}
+	if remainingFile.LastUpdateErrorMessage != "some error" {
+		t.Error("remaining file should preserve lastUpdateErrorMessage")
+	}
+
+	if !cfg.Steam.AutoEnableNewAccounts {
+		t.Error("autoEnableNewAccounts should default to true after migration")
+	}
+}
+
+func TestConfig_Migration_NoMigrationWhenSteamExists(t *testing.T) {
+	configWithSteam := `{
+		"steam": {"steamPath": "/some/path", "autoEnableNewAccounts": false, "accounts": []},
+		"heroesLayout": {"files": [], "positions": [], "heroesPerRow": 15},
+		"d2pt": {"period": "8"}
+	}`
+
+	cfg := &Config{}
+	json.Unmarshal([]byte(configWithSteam), cfg)
+
+	if cfg.Steam.AutoEnableNewAccounts != false {
+		t.Error("autoEnableNewAccounts should remain false from JSON, not be overwritten by migration")
+	}
+	if cfg.Steam.SteamPath != "/some/path" {
+		t.Error("steamPath should remain as set in JSON")
+	}
+}
+
+func TestConfig_Migration_WindowsBackslashPath(t *testing.T) {
+	oldConfig := `{
+		"heroesLayout": {
+			"files": [
+				{
+					"filePath": "C:\\Program Files\\Steam\\userdata\\12345\\570\\remote\\cfg\\hero_grid_config.json",
+					"enabled": true,
+					"lastUpdateTimestampMillis": 500,
+					"lastUpdateErrorMessage": ""
+				}
+			],
+			"positions": [],
+			"heroesPerRow": 15
+		},
+		"d2pt": {"period": "8"}
+	}`
+
+	cfg := &Config{}
+	json.Unmarshal([]byte(oldConfig), cfg)
+	cfg.migrateToSteamAccounts()
+
+	if len(cfg.Steam.Accounts) != 1 {
+		t.Fatalf("expected 1 steam account from backslash path, got %d", len(cfg.Steam.Accounts))
+	}
+	if cfg.Steam.Accounts[0].SteamID64 != "76561197960278073" {
+		t.Errorf("expected SteamID64 76561197960278073, got %s", cfg.Steam.Accounts[0].SteamID64)
+	}
+	if len(cfg.HeroesLayout.Files) != 0 {
+		t.Error("all files should have been migrated to accounts")
+	}
+}
+
+func TestConfig_FileConfig_NoAttributes(t *testing.T) {
+	fc := FileConfig{
+		FilePath:                  "/test.json",
+		Enabled:                   true,
+		LastUpdateTimestampMillis: 1234567890,
+		LastUpdateErrorMessage:    "",
+	}
+
+	data, err := json.Marshal(fc)
+	if err != nil {
+		t.Fatalf("failed to marshal FileConfig: %v", err)
+	}
+
+	jsonStr := string(data)
+	if contains(jsonStr, "attributes") {
+		t.Error("FileConfig JSON should not contain 'attributes' key")
 	}
 }

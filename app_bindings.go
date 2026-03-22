@@ -2,6 +2,7 @@ package main
 
 import (
 	"d2tool/config"
+	"d2tool/steam"
 	"fmt"
 	"log/slog"
 	"time"
@@ -179,6 +180,56 @@ func (a *App) DownloadAppUpdate() error {
 	return nil
 }
 
+// --- Steam Bindings ---
+
+func (a *App) GetSteamConfig() config.SteamConfig {
+	return a.config.GetSteamConfig()
+}
+
+func (a *App) SetSteamPath(path string) error {
+	a.config.SetSteamPath(path)
+	if err := a.steamService.Scan(); err != nil {
+		return fmt.Errorf("error scanning steam accounts: %w", err)
+	}
+	runtime.EventsEmit(a.ctx, EventSteamPathChanged)
+	runtime.EventsEmit(a.ctx, EventSteamAccountsChanged)
+	return nil
+}
+
+func (a *App) SetAutoEnableNewAccounts(enabled bool) {
+	a.config.SetAutoEnableNewAccounts(enabled)
+}
+
+func (a *App) GetSteamAccounts() []steam.SteamAccountView {
+	return a.steamService.GetAccounts()
+}
+
+func (a *App) SetSteamAccountEnabled(steamId64 string, enabled bool) {
+	a.steamService.SetAccountEnabled(steamId64, enabled)
+}
+
+func (a *App) RescanSteamAccounts() error {
+	if err := a.steamService.Scan(); err != nil {
+		return fmt.Errorf("error scanning steam accounts: %w", err)
+	}
+	runtime.EventsEmit(a.ctx, EventSteamAccountsChanged)
+	return nil
+}
+
+func (a *App) OpenDirectoryDialog() (string, error) {
+	selection, err := runtime.OpenDirectoryDialog(a.ctx, runtime.OpenDialogOptions{
+		Title: "Select Steam Directory",
+	})
+	if err != nil {
+		return "", fmt.Errorf("error opening directory dialog: %w", err)
+	}
+	return selection, nil
+}
+
+func (a *App) IsSteamPathValid() bool {
+	return a.steamService.IsPathValid()
+}
+
 // --- Background Tasks ---
 
 func (a *App) startBackgroundTasks() {
@@ -187,21 +238,23 @@ func (a *App) startBackgroundTasks() {
 		delay := time.Hour
 
 		for {
-			// Find the most recent update time across all files
-			files := a.config.GetHeroesLayoutFiles()
 			var lastUpdateTime time.Time
-			for _, f := range files {
-				if f.LastUpdateTimestampMillis > 0 {
-					t := time.UnixMilli(f.LastUpdateTimestampMillis)
-					if t.After(lastUpdateTime) {
+			updateIfNewer := func(millis int64) {
+				if millis > 0 {
+					if t := time.UnixMilli(millis); t.After(lastUpdateTime) {
 						lastUpdateTime = t
 					}
 				}
 			}
+			for _, f := range a.config.GetHeroesLayoutFiles() {
+				updateIfNewer(f.LastUpdateTimestampMillis)
+			}
+			for _, acc := range a.config.GetSteamAccounts() {
+				updateIfNewer(acc.LastUpdateTimestampMillis)
+			}
 
 			var waitDuration time.Duration
 			if lastUpdateTime.IsZero() {
-				// No files have been updated yet, wait for the full delay
 				waitDuration = delay
 			} else {
 				nextUpdate := lastUpdateTime.Add(delay)
@@ -219,14 +272,18 @@ func (a *App) startBackgroundTasks() {
 				// continue
 			}
 
+			// Rescan Steam accounts
+			if err := a.steamService.Scan(); err != nil {
+				slog.Warn("Error scanning steam accounts", "error", err)
+			}
+			runtime.EventsEmit(a.ctx, EventSteamAccountsChanged)
+
 			slog.Info("Performing hero layout update after timeout")
-			// Perform background update
 			if err := a.heroesLayoutService.UpdateHeroesLayout(); err != nil {
 				slog.Warn("Error updating hero layout", "error", err)
 			}
 
-			// Notify frontend that data was updated
-			runtime.EventsEmit(a.ctx, "heroesLayoutDataChanged")
+			runtime.EventsEmit(a.ctx, EventHeroesLayoutDataChanged)
 		}
 	}()
 
@@ -238,7 +295,7 @@ func (a *App) startBackgroundTasks() {
 			slog.Warn("Error checking for updates on startup", "error", err)
 		}
 
-		runtime.EventsEmit(a.ctx, "appUpdateDataChanged")
+		runtime.EventsEmit(a.ctx, EventAppUpdateDataChanged)
 
 		// Periodic check loop
 		for {
@@ -254,7 +311,7 @@ func (a *App) startBackgroundTasks() {
 			if err := a.updateService.CheckForUpdate(); err != nil {
 				slog.Warn("Error checking for updates after timeout", "error", err)
 			}
-			runtime.EventsEmit(a.ctx, "appUpdateDataChanged")
+			runtime.EventsEmit(a.ctx, EventAppUpdateDataChanged)
 		}
 	}()
 }

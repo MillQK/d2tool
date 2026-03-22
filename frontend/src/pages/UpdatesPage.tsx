@@ -5,6 +5,7 @@ import {
 } from '../../wailsjs/go/main/App'
 import {Quit} from '../../wailsjs/runtime'
 import {main} from "../../wailsjs/go/models.ts";
+import { XIcon, AlertCircleIcon, DownloadIcon, SearchIcon, CheckCircleIcon, ClockIcon } from '../components/Icons'
 
 interface DownloadResult {
     success: boolean
@@ -15,56 +16,6 @@ interface UpdatesPageProps {
     state: main.AppUpdateState | null
     onStateChange: () => void
 }
-
-const SearchIcon = () => (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
-         strokeLinecap="round" strokeLinejoin="round">
-        <circle cx="11" cy="11" r="8"/>
-        <line x1="21" y1="21" x2="16.65" y2="16.65"/>
-    </svg>
-)
-
-const DownloadIcon = () => (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
-         strokeLinecap="round" strokeLinejoin="round">
-        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-        <polyline points="7 10 12 15 17 10"/>
-        <line x1="12" y1="15" x2="12" y2="3"/>
-    </svg>
-)
-
-const CheckCircleIcon = () => (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
-         strokeLinecap="round" strokeLinejoin="round">
-        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
-        <polyline points="22 4 12 14.01 9 11.01"/>
-    </svg>
-)
-
-const AlertCircleIcon = () => (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
-         strokeLinecap="round" strokeLinejoin="round">
-        <circle cx="12" cy="12" r="10"/>
-        <line x1="12" y1="8" x2="12" y2="12"/>
-        <line x1="12" y1="16" x2="12.01" y2="16"/>
-    </svg>
-)
-
-const ClockIcon = () => (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
-         strokeLinecap="round" strokeLinejoin="round">
-        <circle cx="12" cy="12" r="10"/>
-        <polyline points="12 6 12 12 16 14"/>
-    </svg>
-)
-
-const XIcon = () => (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
-         strokeLinecap="round" strokeLinejoin="round">
-        <line x1="18" y1="6" x2="6" y2="18"/>
-        <line x1="6" y1="6" x2="18" y2="18"/>
-    </svg>
-)
 
 function UpdatesPage({ state, onStateChange }: UpdatesPageProps) {
     const [isChecking, setIsChecking] = useState(false)
@@ -132,7 +83,7 @@ function UpdatesPage({ state, onStateChange }: UpdatesPageProps) {
                 {checkError && (
                     <div className="error-banner">
                         <div className="error-banner-content">
-                            <AlertCircleIcon/>
+                            <AlertCircleIcon size={20}/>
                             <span>{checkError}</span>
                         </div>
                         <button className="error-banner-dismiss" onClick={dismissCheckError}>
@@ -181,7 +132,7 @@ function UpdatesPage({ state, onStateChange }: UpdatesPageProps) {
                         {state?.updateAvailable ? (
                             <div className="update-available">
                                 <div className="update-badge update-badge-warning">
-                                    <AlertCircleIcon/>
+                                    <AlertCircleIcon size={20}/>
                                     <span>Update Available</span>
                                 </div>
                                 <p className="update-message">
@@ -233,7 +184,7 @@ function UpdatesPage({ state, onStateChange }: UpdatesPageProps) {
                             <div className={`download-result mt-16 ${downloadResult.success ? 'download-result-success' : 'download-result-error'}`}>
                                 <div className="download-result-content">
                                     <div className="download-result-icon">
-                                        {downloadResult.success ? <CheckCircleIcon/> : <AlertCircleIcon/>}
+                                        {downloadResult.success ? <CheckCircleIcon/> : <AlertCircleIcon size={20}/>}
                                     </div>
                                     <div className="download-result-text">
                                         <p>{downloadResult.message}</p>

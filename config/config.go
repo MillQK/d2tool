@@ -1,26 +1,30 @@
 package config
 
 import (
-	"d2tool/steam"
+	"d2tool/steamid"
 	"encoding/json"
 	"fmt"
 	"log/slog"
 	"os"
 	"path/filepath"
+	"regexp"
 	"slices"
+	"strconv"
+	"strings"
 	"sync"
 	"time"
 )
 
 const configFileName = "d2tool_config.json"
 
+var heroGridConfigPathRegex = regexp.MustCompile(`userdata/(\d+)/570/remote/cfg/hero_grid_config\.json$`)
+
 // FileConfig represents a single config file entry
 type FileConfig struct {
-	FilePath                  string            `json:"filePath"`
-	Enabled                   bool              `json:"enabled"`
-	Attributes                map[string]string `json:"attributes"`
-	LastUpdateTimestampMillis int64             `json:"lastUpdateTimestampMillis"`
-	LastUpdateErrorMessage    string            `json:"lastUpdateErrorMessage"`
+	FilePath                  string `json:"filePath"`
+	Enabled                   bool   `json:"enabled"`
+	LastUpdateTimestampMillis int64  `json:"lastUpdateTimestampMillis"`
+	LastUpdateErrorMessage    string `json:"lastUpdateErrorMessage"`
 }
 
 // PositionConfig represents a position entry
@@ -41,6 +45,21 @@ type D2PTConfig struct {
 	Period string `json:"period"` // "8" for last 8 days, "patch" for current patch
 }
 
+// SteamConfig contains Steam-related settings
+type SteamConfig struct {
+	SteamPath             string               `json:"steamPath"`
+	AutoEnableNewAccounts bool                 `json:"autoEnableNewAccounts"`
+	Accounts              []SteamAccountConfig `json:"accounts"`
+}
+
+// SteamAccountConfig represents a single Steam account entry
+type SteamAccountConfig struct {
+	SteamID64                 string `json:"steamId64"`
+	Enabled                   bool   `json:"enabled"`
+	LastUpdateTimestampMillis int64  `json:"lastUpdateTimestampMillis"`
+	LastUpdateErrorMessage    string `json:"lastUpdateErrorMessage"`
+}
+
 func defaultD2PTConfig() D2PTConfig {
 	return D2PTConfig{
 		Period: "8", // Default to last 8 days
@@ -53,6 +72,7 @@ type Config struct {
 
 	HeroesLayout HeroesLayoutConfig `json:"heroesLayout"`
 	D2PT         D2PTConfig         `json:"d2pt"`
+	Steam        SteamConfig        `json:"steam"`
 
 	// Debounce state for save operations (not persisted)
 	saveTimer *time.Timer
@@ -92,7 +112,11 @@ func LoadConfig() *Config {
 			Positions:    defaultPositions(),
 			HeroesPerRow: defaultHeroesPerRow,
 		},
-		D2PT:      defaultD2PTConfig(),
+		D2PT: defaultD2PTConfig(),
+		Steam: SteamConfig{
+			AutoEnableNewAccounts: true,
+			Accounts:              []SteamAccountConfig{},
+		},
 		saveDelay: 500 * time.Millisecond,
 	}
 
@@ -100,15 +124,21 @@ func LoadConfig() *Config {
 	data, err := os.ReadFile(configPath)
 	if err != nil {
 		slog.Info("Config file not found, using defaults", "path", configPath)
-		// Try to auto-discover Steam paths
-		config.setSteamLayoutFiles()
 		return config
 	}
 
 	if err := json.Unmarshal(data, config); err != nil {
 		slog.Warn("Error parsing config file, using defaults", "error", err)
-		config.setSteamLayoutFiles()
 		return config
+	}
+
+	// Check if migration is needed (no "steam" section in the config file)
+	var rawConfig map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawConfig); err == nil {
+		if _, hasSteam := rawConfig["steam"]; !hasSteam {
+			slog.Info("Migrating config: adding steam section from existing files")
+			config.migrateToSteamAccounts()
+		}
 	}
 
 	// Ensure positions exist
@@ -126,60 +156,12 @@ func LoadConfig() *Config {
 		config.HeroesLayout.HeroesPerRow = defaultHeroesPerRow
 	}
 
-	config.updateSteamLayoutFileAttributes()
+	// Ensure Steam.Accounts is never nil
+	if config.Steam.Accounts == nil {
+		config.Steam.Accounts = []SteamAccountConfig{}
+	}
 
 	return config
-}
-
-func (c *Config) setSteamLayoutFiles() {
-	steamPath, err := steam.FindSteamPath()
-	if err != nil {
-		slog.Warn("Error finding Steam path", "error", err)
-		return
-	}
-
-	configFiles, err := steam.FindSteamHeroesLayoutConfigFiles(steamPath)
-	if err != nil {
-		slog.Warn("Error finding hero grid config files", "error", err)
-		return
-	}
-
-	for _, configFile := range configFiles {
-		c.HeroesLayout.Files = append(c.HeroesLayout.Files,
-			FileConfig{
-				FilePath:                  configFile.Path,
-				Enabled:                   true,
-				Attributes:                configFile.ToAttributesMap(),
-				LastUpdateTimestampMillis: 0,
-				LastUpdateErrorMessage:    "",
-			},
-		)
-	}
-}
-
-func (c *Config) updateSteamLayoutFileAttributes() {
-	steamPath, err := steam.FindSteamPath()
-	if err != nil {
-		slog.Warn("Error finding Steam path", "error", err)
-		return
-	}
-
-	configFiles, err := steam.FindSteamHeroesLayoutConfigFiles(steamPath)
-	if err != nil {
-		slog.Warn("Error finding hero grid config files", "error", err)
-		return
-	}
-
-	pathToConfigFile := map[string]steam.SteamHeroesLayoutConfigFileInfo{}
-	for _, configFile := range configFiles {
-		pathToConfigFile[configFile.Path] = configFile
-	}
-
-	for i := range c.HeroesLayout.Files {
-		if configFile, ok := pathToConfigFile[c.HeroesLayout.Files[i].FilePath]; ok {
-			c.HeroesLayout.Files[i].Attributes = configFile.ToAttributesMap()
-		}
-	}
 }
 
 func (c *Config) save() error {
@@ -194,7 +176,9 @@ func (c *Config) save() error {
 	return os.WriteFile(getConfigPath(), data, 0644)
 }
 
-// scheduleSave debounces save operations, coalescing rapid changes into a single save
+// scheduleSave debounces save operations, coalescing rapid changes into a single save.
+// Callers should use `go c.scheduleSave()` to avoid holding c.mu while acquiring
+// c.saveMu, which would invert the lock order with SaveNow and cause a deadlock.
 func (c *Config) scheduleSave() {
 	c.saveMu.Lock()
 	defer c.saveMu.Unlock()
@@ -239,7 +223,7 @@ func (c *Config) SetHeroesLayoutFiles(files []FileConfig) {
 	c.mu.Lock()
 	defer c.mu.Unlock()
 	c.HeroesLayout.Files = files
-	c.scheduleSave()
+	go c.scheduleSave()
 }
 
 func (c *Config) AddHeroesLayoutFile(filePath string) {
@@ -254,11 +238,10 @@ func (c *Config) AddHeroesLayoutFile(filePath string) {
 	}
 
 	c.HeroesLayout.Files = append(c.HeroesLayout.Files, FileConfig{
-		FilePath:   filePath,
-		Enabled:    true,
-		Attributes: map[string]string{},
+		FilePath: filePath,
+		Enabled:  true,
 	})
-	c.scheduleSave()
+	go c.scheduleSave()
 }
 
 func (c *Config) RemoveHeroesLayoutFile(index int) {
@@ -270,7 +253,7 @@ func (c *Config) RemoveHeroesLayoutFile(index int) {
 	}
 
 	c.HeroesLayout.Files = append(c.HeroesLayout.Files[:index], c.HeroesLayout.Files[index+1:]...)
-	c.scheduleSave()
+	go c.scheduleSave()
 }
 
 func (c *Config) SetHeroesLayoutFileEnabled(index int, enabled bool) {
@@ -282,7 +265,7 @@ func (c *Config) SetHeroesLayoutFileEnabled(index int, enabled bool) {
 	}
 
 	c.HeroesLayout.Files[index].Enabled = enabled
-	c.scheduleSave()
+	go c.scheduleSave()
 }
 
 func (c *Config) UpdateHeroesLayoutFileStatus(filePaths []string, timestampMillis int64, errorMessage string) {
@@ -293,10 +276,9 @@ func (c *Config) UpdateHeroesLayoutFileStatus(filePaths []string, timestampMilli
 		if slices.Contains(filePaths, c.HeroesLayout.Files[i].FilePath) {
 			c.HeroesLayout.Files[i].LastUpdateTimestampMillis = timestampMillis
 			c.HeroesLayout.Files[i].LastUpdateErrorMessage = errorMessage
-			break
 		}
 	}
-	c.scheduleSave()
+	go c.scheduleSave()
 }
 
 // --- Heroes Layout Position Methods ---
@@ -313,20 +295,19 @@ func (c *Config) SetPositions(positions []PositionConfig) {
 	c.mu.Lock()
 	defer c.mu.Unlock()
 	c.HeroesLayout.Positions = positions
-	c.scheduleSave()
+	go c.scheduleSave()
 }
 
 func (c *Config) SetPositionEnabled(id string, enabled bool) {
 	c.mu.Lock()
 	defer c.mu.Unlock()
-
 	for i := range c.HeroesLayout.Positions {
 		if c.HeroesLayout.Positions[i].ID == id {
 			c.HeroesLayout.Positions[i].Enabled = enabled
 			break
 		}
 	}
-	c.scheduleSave()
+	go c.scheduleSave()
 }
 
 // --- Helper Methods for Update Logic ---
@@ -373,7 +354,7 @@ func (c *Config) SetD2PTPeriod(period string) {
 	c.mu.Lock()
 	defer c.mu.Unlock()
 	c.D2PT.Period = period
-	c.scheduleSave()
+	go c.scheduleSave()
 }
 
 // --- Heroes Layout Settings Methods ---
@@ -393,6 +374,129 @@ func (c *Config) SetHeroesPerRow(heroesPerRow int) error {
 	c.mu.Lock()
 	defer c.mu.Unlock()
 	c.HeroesLayout.HeroesPerRow = heroesPerRow
-	c.scheduleSave()
+	go c.scheduleSave()
 	return nil
+}
+
+// --- Steam Config Methods ---
+
+// GetSteamConfig returns a copy of the Steam configuration
+func (c *Config) GetSteamConfig() SteamConfig {
+	c.mu.RLock()
+	defer c.mu.RUnlock()
+	cfg := c.Steam
+	cfg.Accounts = make([]SteamAccountConfig, len(c.Steam.Accounts))
+	copy(cfg.Accounts, c.Steam.Accounts)
+	return cfg
+}
+
+// SetSteamPath sets the Steam installation path
+func (c *Config) SetSteamPath(path string) {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+	c.Steam.SteamPath = path
+	go c.scheduleSave()
+}
+
+// SetAutoEnableNewAccounts sets whether newly discovered accounts are auto-enabled
+func (c *Config) SetAutoEnableNewAccounts(enabled bool) {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+	c.Steam.AutoEnableNewAccounts = enabled
+	go c.scheduleSave()
+}
+
+// GetSteamAccounts returns a copy of the Steam accounts list
+func (c *Config) GetSteamAccounts() []SteamAccountConfig {
+	c.mu.RLock()
+	defer c.mu.RUnlock()
+	result := make([]SteamAccountConfig, len(c.Steam.Accounts))
+	copy(result, c.Steam.Accounts)
+	return result
+}
+
+// SetSteamAccounts replaces the Steam accounts list
+func (c *Config) SetSteamAccounts(accounts []SteamAccountConfig) {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+	c.Steam.Accounts = accounts
+	go c.scheduleSave()
+}
+
+// SetSteamAccountEnabled enables or disables a specific Steam account by SteamID64
+func (c *Config) SetSteamAccountEnabled(steamId64 string, enabled bool) {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+	for i := range c.Steam.Accounts {
+		if c.Steam.Accounts[i].SteamID64 == steamId64 {
+			c.Steam.Accounts[i].Enabled = enabled
+			go c.scheduleSave()
+			return
+		}
+	}
+}
+
+// UpdateSteamAccountStatus updates the last update timestamp and error message for a Steam account
+func (c *Config) UpdateSteamAccountStatus(steamId64 string, timestampMillis int64, errorMessage string) {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+	for i := range c.Steam.Accounts {
+		if c.Steam.Accounts[i].SteamID64 == steamId64 {
+			c.Steam.Accounts[i].LastUpdateTimestampMillis = timestampMillis
+			c.Steam.Accounts[i].LastUpdateErrorMessage = errorMessage
+			go c.scheduleSave()
+			return
+		}
+	}
+}
+
+// GetSteamPath returns the configured Steam installation path
+func (c *Config) GetSteamPath() string {
+	c.mu.RLock()
+	defer c.mu.RUnlock()
+	return c.Steam.SteamPath
+}
+
+// --- Migration Logic ---
+
+func (c *Config) migrateToSteamAccounts() {
+	c.Steam.AutoEnableNewAccounts = true
+	c.Steam.Accounts = []SteamAccountConfig{}
+
+	var remainingFiles []FileConfig
+	for _, f := range c.HeroesLayout.Files {
+		steamId3 := extractSteamId3FromPath(f.FilePath)
+		if steamId3 != "" {
+			steamId3Num, err := strconv.ParseUint(steamId3, 10, 64)
+			if err == nil {
+				steamId64 := strconv.FormatUint(steamid.ID3toID64(steamId3Num), 10)
+				c.Steam.Accounts = append(c.Steam.Accounts, SteamAccountConfig{
+					SteamID64:                 steamId64,
+					Enabled:                   f.Enabled,
+					LastUpdateTimestampMillis: f.LastUpdateTimestampMillis,
+					LastUpdateErrorMessage:    f.LastUpdateErrorMessage,
+				})
+				continue
+			}
+		}
+		remainingFiles = append(remainingFiles, FileConfig{
+			FilePath:                  f.FilePath,
+			Enabled:                   f.Enabled,
+			LastUpdateTimestampMillis: f.LastUpdateTimestampMillis,
+			LastUpdateErrorMessage:    f.LastUpdateErrorMessage,
+		})
+	}
+	if remainingFiles == nil {
+		remainingFiles = []FileConfig{}
+	}
+	c.HeroesLayout.Files = remainingFiles
+}
+
+func extractSteamId3FromPath(filePath string) string {
+	normalized := strings.ReplaceAll(filePath, "\\", "/")
+	matches := heroGridConfigPathRegex.FindStringSubmatch(normalized)
+	if len(matches) == 2 {
+		return matches[1]
+	}
+	return ""
 }

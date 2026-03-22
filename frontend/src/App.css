@@ -400,7 +400,6 @@ body {
   padding: var(--spacing-md) var(--spacing-lg);
   border-radius: var(--radius-md);
   font-size: 14px;
-  margin-top: var(--spacing-lg);
 }
 
 .alert-error {
@@ -413,6 +412,20 @@ body {
   background-color: var(--color-info-bg);
   color: var(--color-text-secondary);
   border: 1px solid var(--color-border);
+}
+
+.alert-warning {
+  background-color: rgba(234, 179, 8, 0.1);
+  color: #eab308;
+  border: 1px solid rgba(234, 179, 8, 0.2);
+}
+
+* + .alert, .alert + * {
+  margin-top: var(--spacing-md);
+}
+
+.alert svg {
+  flex-shrink: 0;
 }
 
 /* List */
@@ -563,6 +576,63 @@ body {
 
 .file-attribute-key {
   color: var(--color-text-muted);
+}
+
+/* Account card layout */
+.account-card-header {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  padding: var(--spacing-md) var(--spacing-lg);
+}
+
+.account-avatar {
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-bg-secondary);
+}
+
+.account-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.account-avatar svg {
+  width: 32px;
+  height: 32px;
+  color: var(--color-text-muted);
+}
+
+.account-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.account-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.account-username {
+  font-size: 12px;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .file-card-footer {
