@@ -14,7 +14,8 @@ jobs:
       fail-fast: false
       matrix:
         build: [
-          { binary_name: d2tool.exe, platform: windows/amd64, artifact_name: windows-amd64 },
+          { name: Windows (x64), binary_name: d2tool.exe, platform: windows/amd64, artifact_name: windows-amd64 },
+          { name: Linux (x64), binary_name: d2tool, platform: linux/amd64, artifact_name: linux-amd64 },
         ]
 
     runs-on: ubuntu-latest
@@ -50,7 +51,7 @@ jobs:
       - name: Run tests
         run: go test ./... -v
 
-      - name: Build for Windows (cross-compile)
+      - name: Build for ${{ matrix.build.name }}
         run: wails build -clean -platform ${{ matrix.build.platform }} -webview2 embed -o ${{ matrix.build.binary_name }}
 
       - name: List build output
