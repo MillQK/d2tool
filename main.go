@@ -6,6 +6,7 @@ import (
 	"d2tool/github"
 	"d2tool/heroesLayout"
 	"d2tool/startup"
+	"d2tool/steam"
 	"d2tool/systray"
 	"d2tool/update"
 	"d2tool/utils"
@@ -53,6 +54,8 @@ func main() {
 	}
 
 	appConfig := config.LoadConfig()
+	steamService := steam.NewSteamService(appConfig)
+	steamService.Init()
 
 	// Create an instance of the app structure
 	app := NewApp(
@@ -61,8 +64,9 @@ func main() {
 			wailsProjectConfig.Info.ProductVersion,
 			github.NewHttpClient(""),
 		),
-		heroesLayout.NewHeroesLayoutService(appConfig),
+		heroesLayout.NewHeroesLayoutService(appConfig, steamService),
 		startup.NewStartupService([]string{fmt.Sprintf("-%s", minimizedFlagName)}),
+		steamService,
 	)
 
 	// Initialize systray (Windows only, no-op on other platforms)
@@ -149,6 +153,7 @@ type App struct {
 	updateService       update.UpdateService
 	heroesLayoutService heroesLayout.HeroesLayoutService
 	startupService      startup.StartupService
+	steamService        *steam.SteamService
 }
 
 // NewApp creates a new App application struct
@@ -157,12 +162,14 @@ func NewApp(
 	updateService update.UpdateService,
 	heroesLayoutService heroesLayout.HeroesLayoutService,
 	startupService startup.StartupService,
+	steamService *steam.SteamService,
 ) *App {
 	return &App{
 		config:              config,
 		updateService:       updateService,
 		heroesLayoutService: heroesLayoutService,
 		startupService:      startupService,
+		steamService:        steamService,
 	}
 }
 

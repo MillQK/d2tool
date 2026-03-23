@@ -12,25 +12,13 @@ import {
   SetPositionEnabled,
   GetHeroesPerRow,
   SetHeroesPerRow,
+  GetSteamAccounts,
 } from '../../wailsjs/go/main/App'
-import { config } from '../../wailsjs/go/models'
-
-const AlertCircleIcon = () => (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
-       strokeLinecap="round" strokeLinejoin="round">
-    <circle cx="12" cy="12" r="10"/>
-    <line x1="12" y1="8" x2="12" y2="12"/>
-    <line x1="12" y1="16" x2="12.01" y2="16"/>
-  </svg>
-)
-
-const XIcon = () => (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
-       strokeLinecap="round" strokeLinejoin="round">
-    <line x1="18" y1="6" x2="6" y2="18"/>
-    <line x1="6" y1="6" x2="18" y2="18"/>
-  </svg>
-)
+import { config, steam } from '../../wailsjs/go/models'
+import { EventHeroesLayoutDataChanged, EventSteamAccountsChanged } from '../events'
+import AccountCard from '../components/AccountCard'
+import { AlertCircleIcon, GripIcon, PlusIcon, RefreshIcon, TrashIcon, XIcon } from '../components/Icons'
+import { formatLastUpdate } from '../utils/format'
 
 // Heroes per row constraints
 const MIN_HEROES_PER_ROW = 1
@@ -46,40 +34,6 @@ const positionNames: Record<string, string> = {
   '5': 'Hard Support',
 }
 
-// Icons
-const RefreshIcon = () => (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <polyline points="23 4 23 10 17 10" />
-    <polyline points="1 20 1 14 7 14" />
-    <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15" />
-  </svg>
-)
-
-const PlusIcon = () => (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <line x1="12" y1="5" x2="12" y2="19" />
-    <line x1="5" y1="12" x2="19" y2="12" />
-  </svg>
-)
-
-const TrashIcon = () => (
-  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <polyline points="3 6 5 6 21 6" />
-    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
-  </svg>
-)
-
-const GripIcon = () => (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <circle cx="9" cy="5" r="1" fill="currentColor" />
-    <circle cx="9" cy="12" r="1" fill="currentColor" />
-    <circle cx="9" cy="19" r="1" fill="currentColor" />
-    <circle cx="15" cy="5" r="1" fill="currentColor" />
-    <circle cx="15" cy="12" r="1" fill="currentColor" />
-    <circle cx="15" cy="19" r="1" fill="currentColor" />
-  </svg>
-)
-
 interface DragState {
   draggedItem: config.PositionConfig
   originalPositions: config.PositionConfig[]
@@ -91,6 +45,9 @@ function HeroesLayoutPage() {
 
   // Config files state
   const [files, setFiles] = useState<config.FileConfig[]>([])
+
+  // Steam accounts state
+  const [steamAccounts, setSteamAccounts] = useState<steam.SteamAccountView[]>([])
 
   // Positions state
   const [positions, setPositions] = useState<config.PositionConfig[]>([])
@@ -113,14 +70,20 @@ function HeroesLayoutPage() {
       setHeroesPerRowState(value)
       setHeroesPerRowInput(value.toString())
     }).catch(console.error)
+    GetSteamAccounts().then(setSteamAccounts).catch(console.error)
 
     // Listen for background update notifications
-    const offDataChanged = EventsOn('heroesLayoutDataChanged', () => {
+    const offDataChanged = EventsOn(EventHeroesLayoutDataChanged, () => {
       GetHeroesLayoutFiles().then(setFiles).catch(console.error)
+    })
+
+    const offSteamChanged = EventsOn(EventSteamAccountsChanged, () => {
+      GetSteamAccounts().then(setSteamAccounts).catch(console.error)
     })
 
     return () => {
       offDataChanged()
+      offSteamChanged()
     }
   }, [])
 
@@ -129,8 +92,12 @@ function HeroesLayoutPage() {
     setError(null)
     try {
       await UpdateHeroesLayout()
-      const updatedFiles = await GetHeroesLayoutFiles()
+      const [updatedFiles, updatedAccounts] = await Promise.all([
+        GetHeroesLayoutFiles(),
+        GetSteamAccounts(),
+      ])
       setFiles(updatedFiles)
+      setSteamAccounts(updatedAccounts)
     } catch (err) {
       console.error('Error updating heroes layout:', err)
       setError(`Failed to update heroes layout: ${err}`)
@@ -269,13 +236,11 @@ function HeroesLayoutPage() {
     return positionNames[id] || `Position ${id}`
   }
 
-  const formatLastUpdate = (timestampMillis: number) => {
-    if (timestampMillis === 0) return 'Never'
-    return new Date(timestampMillis).toLocaleString()
-  }
+  // Filter enabled accounts for display
+  const enabledAccounts = steamAccounts.filter(a => a.enabled)
 
-  // Check if any file has errors
-  const hasErrors = files.some(f => f.lastUpdateErrorMessage)
+  // Check if any file or account has errors
+  const hasErrors = files.some(f => f.lastUpdateErrorMessage) || enabledAccounts.some(a => a.lastUpdateErrorMessage)
 
   return (
     <div className="page">
@@ -332,10 +297,32 @@ function HeroesLayoutPage() {
           </div>
         </div>
 
-        {/* Config Files Card */}
+        {/* Accounts Card */}
         <div className="card">
           <div className="card-header">
-            <h2 className="card-title">Config Files</h2>
+            <h2 className="card-title">Accounts</h2>
+          </div>
+          <div className="card-body">
+            <p className="card-hint">Go to Steam settings to manage accounts</p>
+            {enabledAccounts.length === 0 ? (
+              <div className="empty-state">
+                <p>No Steam accounts enabled</p>
+                <p className="empty-state-hint">Configure accounts in Steam settings</p>
+              </div>
+            ) : (
+              <div className="file-list">
+                {enabledAccounts.map((account) => (
+                  <AccountCard key={account.steamId64} account={account} />
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Custom Files Card */}
+        <div className="card">
+          <div className="card-header">
+            <h2 className="card-title">Custom Files</h2>
             <button className="btn btn-secondary btn-sm" onClick={handleAddFile}>
               <PlusIcon />
               <span>Add File</span>
@@ -362,15 +349,6 @@ function HeroesLayoutPage() {
                       </label>
                       <div className="file-card-title">
                         <span className="file-path" title={file.filePath}>{file.filePath}</span>
-                        {file.attributes && Object.keys(file.attributes).length > 0 && (
-                          <div className="file-attributes">
-                            {Object.entries(file.attributes).map(([key, value]) => (
-                              <span key={key} className="file-attribute">
-                                <span className="file-attribute-key">{key}:</span> {value}
-                              </span>
-                            ))}
-                          </div>
-                        )}
                       </div>
                       <button
                         className="btn btn-icon btn-danger"

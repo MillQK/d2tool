@@ -1,6 +1,7 @@
 import { useState } from 'react'
+import { ChevronIcon, DownloadIcon, GridIcon, PlugIcon, RocketIcon, SteamIcon } from './Icons'
 
-export type PageId = 'heroesLayout' | 'providers' | 'startup' | 'updates'
+export type PageId = 'heroesLayout' | 'providers' | 'steam' | 'startup' | 'updates'
 
 interface SidebarSection {
   id: string
@@ -18,61 +19,10 @@ interface SidebarProps {
   activePage: PageId
   onPageChange: (page: PageId) => void
   updateAvailable?: boolean
+  steamPathInvalid?: boolean
 }
 
-// SVG Icons
-const GridIcon = () => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <rect x="3" y="3" width="7" height="7" />
-    <rect x="14" y="3" width="7" height="7" />
-    <rect x="14" y="14" width="7" height="7" />
-    <rect x="3" y="14" width="7" height="7" />
-  </svg>
-)
-
-const RocketIcon = () => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z" />
-    <path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z" />
-    <path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0" />
-    <path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5" />
-  </svg>
-)
-
-const DownloadIcon = () => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-    <polyline points="7 10 12 15 17 10" />
-    <line x1="12" y1="15" x2="12" y2="3" />
-  </svg>
-)
-
-const PlugIcon = () => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M12 22v-5" />
-    <path d="M9 8V2" />
-    <path d="M15 8V2" />
-    <path d="M18 8v5a4 4 0 0 1-4 4h-4a4 4 0 0 1-4-4V8Z" />
-  </svg>
-)
-
-const ChevronIcon = ({ expanded }: { expanded: boolean }) => (
-  <svg
-    width="16"
-    height="16"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    style={{ transform: expanded ? 'rotate(90deg)' : 'rotate(0deg)', transition: 'transform 0.2s ease' }}
-  >
-    <polyline points="9 18 15 12 9 6" />
-  </svg>
-)
-
-function Sidebar({ activePage, onPageChange, updateAvailable }: SidebarProps) {
+function Sidebar({ activePage, onPageChange, updateAvailable, steamPathInvalid }: SidebarProps) {
   const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({
     features: true,
     settings: true,
@@ -90,9 +40,10 @@ function Sidebar({ activePage, onPageChange, updateAvailable }: SidebarProps) {
       id: 'settings',
       title: 'Settings',
       items: [
+        { id: 'steam', label: 'Steam', icon: <SteamIcon /> },
         { id: 'providers', label: 'Providers', icon: <PlugIcon /> },
         { id: 'startup', label: 'Startup', icon: <RocketIcon /> },
-        { id: 'updates', label: 'Updates', icon: <DownloadIcon /> },
+        { id: 'updates', label: 'Updates', icon: <DownloadIcon size={20} /> },
       ],
     },
   ]
@@ -133,6 +84,9 @@ function Sidebar({ activePage, onPageChange, updateAvailable }: SidebarProps) {
                     <span className="sidebar-item-label">{item.label}</span>
                     {item.id === 'updates' && updateAvailable && (
                       <span className="sidebar-item-badge" />
+                    )}
+                    {item.id === 'steam' && steamPathInvalid && (
+                      <span className="sidebar-item-badge sidebar-item-badge-warning" />
                     )}
                   </button>
                 ))}

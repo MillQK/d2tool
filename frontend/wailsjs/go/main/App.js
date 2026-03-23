@@ -38,8 +38,24 @@ export function GetStartupEnabled() {
   return window['go']['main']['App']['GetStartupEnabled']();
 }
 
+export function GetSteamAccounts() {
+  return window['go']['main']['App']['GetSteamAccounts']();
+}
+
+export function GetSteamConfig() {
+  return window['go']['main']['App']['GetSteamConfig']();
+}
+
 export function IsStartupSupported() {
   return window['go']['main']['App']['IsStartupSupported']();
+}
+
+export function IsSteamPathValid() {
+  return window['go']['main']['App']['IsSteamPathValid']();
+}
+
+export function OpenDirectoryDialog() {
+  return window['go']['main']['App']['OpenDirectoryDialog']();
 }
 
 export function OpenFileDialog() {
@@ -48,6 +64,14 @@ export function OpenFileDialog() {
 
 export function RemoveHeroesLayoutFile(arg1) {
   return window['go']['main']['App']['RemoveHeroesLayoutFile'](arg1);
+}
+
+export function RescanSteamAccounts() {
+  return window['go']['main']['App']['RescanSteamAccounts']();
+}
+
+export function SetAutoEnableNewAccounts(arg1) {
+  return window['go']['main']['App']['SetAutoEnableNewAccounts'](arg1);
 }
 
 export function SetD2PTPeriod(arg1) {
@@ -72,6 +96,14 @@ export function SetPositions(arg1) {
 
 export function SetStartupEnabled(arg1) {
   return window['go']['main']['App']['SetStartupEnabled'](arg1);
+}
+
+export function SetSteamAccountEnabled(arg1, arg2) {
+  return window['go']['main']['App']['SetSteamAccountEnabled'](arg1, arg2);
+}
+
+export function SetSteamPath(arg1) {
+  return window['go']['main']['App']['SetSteamPath'](arg1);
 }
 
 export function UpdateHeroesLayout() {
