@@ -1,6 +1,6 @@
 import { steam } from '../../wailsjs/go/models'
-import { formatLastUpdate } from '../utils/format'
 import { UserIcon } from './Icons'
+import RelativeTime from './RelativeTime'
 
 interface AccountCardProps {
   account: steam.SteamAccountView
@@ -42,11 +42,7 @@ function AccountCard({ account, toggle }: AccountCardProps) {
         </div>
       </div>
       <div className="file-card-footer">
-        <span className="file-status">
-          {account.lastUpdateTimestampMillis > 0
-            ? `Updated: ${formatLastUpdate(account.lastUpdateTimestampMillis)}`
-            : 'Never updated'}
-        </span>
+        <RelativeTime timestampMillis={account.lastUpdateTimestampMillis} prefix="Updated: " />
         {account.lastUpdateErrorMessage && (
           <span className="file-error">{account.lastUpdateErrorMessage}</span>
         )}

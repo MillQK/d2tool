@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { EventsOn } from '../../wailsjs/runtime'
 import {
   UpdateHeroesLayout,
@@ -17,8 +17,8 @@ import {
 import { config, steam } from '../../wailsjs/go/models'
 import { EventHeroesLayoutDataChanged, EventSteamAccountsChanged } from '../events'
 import AccountCard from '../components/AccountCard'
-import { AlertCircleIcon, GripIcon, PlusIcon, RefreshIcon, TrashIcon, XIcon } from '../components/Icons'
-import { formatLastUpdate } from '../utils/format'
+import RelativeTime from '../components/RelativeTime'
+import { AlertCircleIcon, GripIcon, MoreIcon, RefreshIcon, TrashIcon, XIcon } from '../components/Icons'
 
 // Heroes per row constraints
 const MIN_HEROES_PER_ROW = 1
@@ -62,6 +62,10 @@ function HeroesLayoutPage() {
   const [heroesPerRow, setHeroesPerRowState] = useState<number>(DEFAULT_HEROES_PER_ROW)
   const [heroesPerRowInput, setHeroesPerRowInput] = useState<string>(DEFAULT_HEROES_PER_ROW.toString())
 
+  // Menu state
+  const [menuOpen, setMenuOpen] = useState(false)
+  const menuRef = useRef<HTMLDivElement>(null)
+
   useEffect(() => {
     // Load initial states
     GetHeroesLayoutFiles().then(setFiles).catch(console.error)
@@ -87,6 +91,23 @@ function HeroesLayoutPage() {
     }
   }, [])
 
+  // Close menu on outside click
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setMenuOpen(false)
+      }
+    }
+
+    if (menuOpen) {
+      document.addEventListener('mousedown', handleClickOutside)
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [menuOpen])
+
   const handleUpdate = async () => {
     setIsUpdating(true)
     setError(null)
@@ -107,6 +128,7 @@ function HeroesLayoutPage() {
   }
 
   const handleAddFile = async () => {
+    setMenuOpen(false)
     setError(null)
     try {
       const path = await OpenFileDialog()
@@ -150,9 +172,9 @@ function HeroesLayoutPage() {
     }
   }
 
-  const handleRemoveFile = async (index: number) => {
+  const handleRemoveFile = async (filePath: string) => {
     try {
-      await RemoveHeroesLayoutFile(index)
+      await RemoveHeroesLayoutFile(filePath)
       const updatedFiles = await GetHeroesLayoutFiles()
       setFiles(updatedFiles)
     } catch (error) {
@@ -160,9 +182,9 @@ function HeroesLayoutPage() {
     }
   }
 
-  const handleToggleFileEnabled = async (index: number, enabled: boolean) => {
+  const handleToggleFileEnabled = async (filePath: string, enabled: boolean) => {
     try {
-      await SetHeroesLayoutFileEnabled(index, enabled)
+      await SetHeroesLayoutFileEnabled(filePath, enabled)
       const updatedFiles = await GetHeroesLayoutFiles()
       setFiles(updatedFiles)
     } catch (error) {
@@ -239,15 +261,30 @@ function HeroesLayoutPage() {
   // Filter enabled accounts for display
   const enabledAccounts = steamAccounts.filter(a => a.enabled)
 
-  // Check if any file or account has errors
-  const hasErrors = files.some(f => f.lastUpdateErrorMessage) || enabledAccounts.some(a => a.lastUpdateErrorMessage)
+  const hasAccountsOrFiles = enabledAccounts.length > 0 || files.length > 0
 
   return (
     <div className="page">
       <div className="page-header">
-        <h1 className="page-title">Heroes Layout</h1>
-        <p className="page-description">Manage your heroes grid configuration and layout order</p>
+        <div className="page-header-text">
+          <h1 className="page-title">Heroes Layout</h1>
+          <p className="page-description">Manage your heroes grid configuration and layout order</p>
+        </div>
+        <button
+          className="btn btn-primary"
+          onClick={handleUpdate}
+          disabled={isUpdating}
+        >
+          <RefreshIcon />
+          <span>{isUpdating ? 'Updating...' : 'Update Grids'}</span>
+        </button>
       </div>
+
+      {isUpdating && (
+        <div className="progress-bar">
+          <div className="progress-bar-inner"></div>
+        </div>
+      )}
 
       <div className="page-content">
         {/* Error Banner */}
@@ -263,50 +300,31 @@ function HeroesLayoutPage() {
           </div>
         )}
 
-        {/* Update Status Card */}
-        <div className="card">
-          <div className="card-header">
-            <h2 className="card-title">Status</h2>
-            <button
-              className="btn btn-primary btn-sm"
-              onClick={handleUpdate}
-              disabled={isUpdating}
-            >
-              <RefreshIcon />
-              <span>{isUpdating ? 'Generating...' : 'Generate Now'}</span>
-            </button>
-          </div>
-          <div className="card-body">
-            {isUpdating && (
-              <div className="progress-bar">
-                <div className="progress-bar-inner"></div>
-              </div>
-            )}
-
-            {!isUpdating && hasErrors && (
-              <div className="alert alert-error">
-                <span>Some files failed to update. Check the file list below for details.</span>
-              </div>
-            )}
-
-            {!isUpdating && !hasErrors && files.length > 0 && (
-              <div className="alert alert-info">
-                <span>All files are up to date.</span>
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Accounts Card */}
+        {/* Accounts Card (merged with Custom Files) */}
         <div className="card">
           <div className="card-header">
             <h2 className="card-title">Accounts</h2>
+            <div className="dropdown" ref={menuRef}>
+              <button
+                className="btn btn-icon"
+                onClick={() => setMenuOpen(!menuOpen)}
+                title="More options"
+              >
+                <MoreIcon />
+              </button>
+              {menuOpen && (
+                <div className="dropdown-menu">
+                  <button className="dropdown-item" onClick={handleAddFile}>
+                    Add custom file...
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
           <div className="card-body">
-            <p className="card-hint">Go to Steam settings to manage accounts</p>
-            {enabledAccounts.length === 0 ? (
+            {!hasAccountsOrFiles ? (
               <div className="empty-state">
-                <p>No Steam accounts enabled</p>
+                <p>No accounts enabled</p>
                 <p className="empty-state-hint">Configure accounts in Steam settings</p>
               </div>
             ) : (
@@ -314,36 +332,14 @@ function HeroesLayoutPage() {
                 {enabledAccounts.map((account) => (
                   <AccountCard key={account.steamId64} account={account} />
                 ))}
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Custom Files Card */}
-        <div className="card">
-          <div className="card-header">
-            <h2 className="card-title">Custom Files</h2>
-            <button className="btn btn-secondary btn-sm" onClick={handleAddFile}>
-              <PlusIcon />
-              <span>Add File</span>
-            </button>
-          </div>
-          <div className="card-body">
-            {files.length === 0 ? (
-              <div className="empty-state">
-                <p>No config files added yet</p>
-                <p className="empty-state-hint">Click "Add File" to select a heroes grid config file</p>
-              </div>
-            ) : (
-              <div className="file-list">
-                {files.map((file, index) => (
+                {files.map((file) => (
                   <div key={file.filePath} className={`file-card ${!file.enabled ? 'disabled' : ''} ${file.lastUpdateErrorMessage ? 'has-error' : ''}`}>
                     <div className="file-card-header">
                       <label className="toggle toggle-sm">
                         <input
                           type="checkbox"
                           checked={file.enabled}
-                          onChange={(e) => handleToggleFileEnabled(index, e.target.checked)}
+                          onChange={(e) => handleToggleFileEnabled(file.filePath, e.target.checked)}
                         />
                         <span className="toggle-slider"></span>
                       </label>
@@ -352,18 +348,14 @@ function HeroesLayoutPage() {
                       </div>
                       <button
                         className="btn btn-icon btn-danger"
-                        onClick={() => handleRemoveFile(index)}
+                        onClick={() => handleRemoveFile(file.filePath)}
                         title="Remove file"
                       >
                         <TrashIcon />
                       </button>
                     </div>
                     <div className="file-card-footer">
-                      <span className="file-status">
-                        {file.lastUpdateTimestampMillis > 0
-                          ? `Updated: ${formatLastUpdate(file.lastUpdateTimestampMillis)}`
-                          : 'Never updated'}
-                      </span>
+                      <RelativeTime timestampMillis={file.lastUpdateTimestampMillis} prefix="Updated: " />
                       {file.lastUpdateErrorMessage && (
                         <span className="file-error">{file.lastUpdateErrorMessage}</span>
                       )}
@@ -375,40 +367,12 @@ function HeroesLayoutPage() {
           </div>
         </div>
 
-        {/* Layout Settings Card */}
-        <div className="card">
-          <div className="card-header">
-            <h2 className="card-title">Layout Settings</h2>
-          </div>
-          <div className="card-body">
-            <div className="setting-row">
-              <div className="setting-info">
-                <div className="setting-label">Heroes Per Row</div>
-                <div className="setting-description">
-                  Number of hero icons to display in each row ({MIN_HEROES_PER_ROW}-{MAX_HEROES_PER_ROW})
-                </div>
-              </div>
-              <input
-                type="number"
-                className="select"
-                min={MIN_HEROES_PER_ROW}
-                max={MAX_HEROES_PER_ROW}
-                required
-                value={heroesPerRowInput}
-                onChange={(e) => handleHeroesPerRowChange(e.target.value)}
-                onBlur={handleHeroesPerRowBlur}
-              />
-            </div>
-          </div>
-        </div>
-
         {/* Positions Order Card */}
         <div className="card">
           <div className="card-header">
             <h2 className="card-title">Positions Order</h2>
           </div>
           <div className="card-body">
-            <p className="card-hint">Drag to reorder, toggle to enable/disable positions</p>
             {positions.length === 0 ? (
               <div className="empty-state">
                 <p>No positions configured</p>
@@ -446,6 +410,34 @@ function HeroesLayoutPage() {
                 ))}
               </div>
             )}
+            <div className="card-hint">Drag to reorder, toggle to enable/disable positions</div>
+          </div>
+        </div>
+
+        {/* Layout Settings Card */}
+        <div className="card">
+          <div className="card-header">
+            <h2 className="card-title">Layout Settings</h2>
+          </div>
+          <div className="card-body">
+            <div className="setting-row">
+              <div className="setting-info">
+                <div className="setting-label">Heroes Per Row</div>
+                <div className="setting-description">
+                  Number of hero icons to display in each row ({MIN_HEROES_PER_ROW}-{MAX_HEROES_PER_ROW})
+                </div>
+              </div>
+              <input
+                type="number"
+                className="select"
+                min={MIN_HEROES_PER_ROW}
+                max={MAX_HEROES_PER_ROW}
+                required
+                value={heroesPerRowInput}
+                onChange={(e) => handleHeroesPerRowChange(e.target.value)}
+                onBlur={handleHeroesPerRowBlur}
+              />
+            </div>
           </div>
         </div>
       </div>

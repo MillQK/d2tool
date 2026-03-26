@@ -6,6 +6,7 @@ import {
 import {Quit} from '../../wailsjs/runtime'
 import {main} from "../../wailsjs/go/models.ts";
 import { XIcon, AlertCircleIcon, DownloadIcon, SearchIcon, CheckCircleIcon, ClockIcon } from '../components/Icons'
+import RelativeTime from '../components/RelativeTime'
 
 interface DownloadResult {
     success: boolean
@@ -74,8 +75,10 @@ function UpdatesPage({ state, onStateChange }: UpdatesPageProps) {
     return (
         <div className="page">
             <div className="page-header">
-                <h1 className="page-title">Updates</h1>
-                <p className="page-description">Check for and install application updates</p>
+                <div className="page-header-text">
+                    <h1 className="page-title">Updates</h1>
+                    <p className="page-description">Check for and install application updates</p>
+                </div>
             </div>
 
             <div className="page-content">
@@ -117,7 +120,11 @@ function UpdatesPage({ state, onStateChange }: UpdatesPageProps) {
                                     <ClockIcon/>
                                     <span>Last Checked</span>
                                 </div>
-                                <div className="status-value">{state?.lastCheckTime || 'Loading...'}</div>
+                                <RelativeTime
+                                    timestampMillis={state?.lastCheckTimeMillis ?? 0}
+                                    neverText="Never"
+                                    className="status-value"
+                                />
                             </div>
                         </div>
                     </div>

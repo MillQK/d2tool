@@ -93,8 +93,10 @@ function SteamPage() {
   return (
     <div className="page">
       <div className="page-header">
-        <h1 className="page-title">Steam</h1>
-        <p className="page-description">Manage Steam integration and account settings</p>
+        <div className="page-header-text">
+          <h1 className="page-title">Steam</h1>
+          <p className="page-description">Manage Steam integration and account settings</p>
+        </div>
       </div>
 
       <div className="page-content">

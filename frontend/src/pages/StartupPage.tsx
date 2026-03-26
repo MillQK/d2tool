@@ -56,7 +56,9 @@ function StartupPage() {
     return (
       <div className="page">
         <div className="page-header">
-          <h1 className="page-title">Startup</h1>
+          <div className="page-header-text">
+            <h1 className="page-title">Startup</h1>
+          </div>
         </div>
         <div className="page-content">
           <div className="card">
@@ -72,8 +74,10 @@ function StartupPage() {
   return (
     <div className="page">
       <div className="page-header">
-        <h1 className="page-title">Startup</h1>
-        <p className="page-description">Configure application startup behavior</p>
+        <div className="page-header-text">
+          <h1 className="page-title">Startup</h1>
+          <p className="page-description">Configure application startup behavior</p>
+        </div>
       </div>
 
       <div className="page-content">
