@@ -23,6 +23,7 @@ import (
 	"github.com/wailsapp/wails/v2/pkg/options"
 	"github.com/wailsapp/wails/v2/pkg/options/assetserver"
 	"github.com/wailsapp/wails/v2/pkg/options/windows"
+	"github.com/wailsapp/wails/v2/pkg/runtime"
 	"gopkg.in/natefinch/lumberjack.v2"
 )
 
@@ -82,7 +83,7 @@ func main() {
 		AssetServer: &assetserver.Options{
 			Assets: assets,
 		},
-		BackgroundColour: &options.RGBA{R: 15, G: 20, B: 25, A: 1},
+		BackgroundColour: &options.RGBA{R: 10, G: 10, B: 10, A: 1},
 		OnStartup: func(ctx context.Context) {
 			app.startup(ctx)
 			systray.StartSystray(ctx)
@@ -102,7 +103,10 @@ func main() {
 			UniqueId: "d2tool-019ad9f4-1416-7b10-b8ce-2ab89c12279e",
 			OnSecondInstanceLaunch: func(secondInstanceData options.SecondInstanceData) {
 				slog.Info("Second instance attempted to launch", "args", secondInstanceData.Args)
-				fmt.Println("Another instance is already running!")
+				if app.ctx != nil {
+					runtime.WindowUnminimise(app.ctx)
+					runtime.Show(app.ctx)
+				}
 			},
 		},
 		Logger:             utils.NewSlogAdapter(),

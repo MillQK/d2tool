@@ -49,7 +49,7 @@ function UpdatesPage({ state, onStateChange }: UpdatesPageProps) {
             await DownloadAppUpdate()
             setDownloadResult({
                 success: true,
-                message: 'Update downloaded successfully. Please restart the application to apply the update.'
+                message: 'Update downloaded successfully. Please quit and relaunch the application to apply the update.'
             })
         } catch (error) {
             console.error('Error downloading update:', error)

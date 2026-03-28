@@ -67,7 +67,7 @@ wails dev
 
 ### Pre-built Binaries
 
-Pre-built binaries for Windows are available in the [releases](https://github.com/MillQK/d2tool/releases) section.
+Pre-built binaries for Windows and Linux are available in the [releases](https://github.com/MillQK/d2tool/releases) section.
 
 ## Usage
 
@@ -110,6 +110,8 @@ If D2Tool cannot find your Steam installation:
 1. Click "Add File" and manually navigate to your hero grid config file
 2. The file is typically located at:
    - Windows: `C:\Program Files (x86)\Steam\userdata\<your-steam-id>\570\remote\cfg\hero_grid_config.json`
+   - macOS: `~/Library/Application Support/Steam/userdata/<your-steam-id>/570/remote/cfg/hero_grid_config.json`
+   - Linux: `~/.steam/steam/userdata/<your-steam-id>/570/remote/cfg/hero_grid_config.json`
 
 ### Changes Not Appearing in Dota 2
 

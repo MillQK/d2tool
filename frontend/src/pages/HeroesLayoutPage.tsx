@@ -40,6 +40,9 @@ interface DragState {
 }
 
 function HeroesLayoutPage() {
+  // Loading state
+  const [isLoading, setIsLoading] = useState(true)
+
   // Update state
   const [isUpdating, setIsUpdating] = useState(false)
 
@@ -68,13 +71,15 @@ function HeroesLayoutPage() {
 
   useEffect(() => {
     // Load initial states
-    GetHeroesLayoutFiles().then(setFiles).catch(console.error)
-    GetPositions().then(setPositions).catch(console.error)
-    GetHeroesPerRow().then((value: number) => {
-      setHeroesPerRowState(value)
-      setHeroesPerRowInput(value.toString())
-    }).catch(console.error)
-    GetSteamAccounts().then(setSteamAccounts).catch(console.error)
+    Promise.all([
+      GetHeroesLayoutFiles().then(setFiles),
+      GetPositions().then(setPositions),
+      GetHeroesPerRow().then((value: number) => {
+        setHeroesPerRowState(value)
+        setHeroesPerRowInput(value.toString())
+      }),
+      GetSteamAccounts().then(setSteamAccounts),
+    ]).catch(console.error).finally(() => setIsLoading(false))
 
     // Listen for background update notifications
     const offDataChanged = EventsOn(EventHeroesLayoutDataChanged, () => {
@@ -262,6 +267,19 @@ function HeroesLayoutPage() {
   const enabledAccounts = steamAccounts.filter(a => a.enabled)
 
   const hasAccountsOrFiles = enabledAccounts.length > 0 || files.length > 0
+
+  if (isLoading) {
+    return (
+      <div className="page">
+        <div className="page-header">
+          <div className="page-header-text">
+            <h1 className="page-title">Heroes Layout</h1>
+          </div>
+        </div>
+        <div className="loading-state">Loading...</div>
+      </div>
+    )
+  }
 
   return (
     <div className="page">

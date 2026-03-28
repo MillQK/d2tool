@@ -134,6 +134,42 @@ function SteamPage() {
           </div>
         </div>
 
+        {/* Steam Accounts Card */}
+        <div className="card">
+          <div className="card-header">
+            <h2 className="card-title">Steam Accounts</h2>
+            <button
+              className="btn btn-secondary btn-sm"
+              onClick={handleRescan}
+              disabled={isScanning}
+            >
+              <RefreshIcon />
+              <span>{isScanning ? 'Scanning...' : 'Rescan'}</span>
+            </button>
+          </div>
+          <div className="card-body">
+            {accounts.length === 0 ? (
+              <div className="empty-state">
+                <p>No Steam accounts found</p>
+                <p className="empty-state-hint">Make sure Steam path is correct and you have played Dota 2 on at least one account</p>
+              </div>
+            ) : (
+              <div className="file-list">
+                {accounts.map((account) => (
+                  <AccountCard
+                    key={account.steamId64}
+                    account={account}
+                    toggle={{
+                      checked: account.enabled,
+                      onChange: (enabled) => handleToggleAccountEnabled(account.steamId64, enabled),
+                    }}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+
         {/* New Account Discovery Card */}
         <div className="card">
           <div className="card-header">
@@ -156,42 +192,6 @@ function SteamPage() {
                 <span className="toggle-slider"></span>
               </label>
             </div>
-          </div>
-        </div>
-
-        {/* Steam Accounts Card */}
-        <div className="card">
-          <div className="card-header">
-            <h2 className="card-title">Steam Accounts</h2>
-            <button
-              className="btn btn-secondary btn-sm"
-              onClick={handleRescan}
-              disabled={isScanning}
-            >
-              <RefreshIcon />
-              <span>{isScanning ? 'Scanning...' : 'Rescan'}</span>
-            </button>
-          </div>
-          <div className="card-body">
-            {accounts.length === 0 ? (
-              <div className="empty-state">
-                <p>No Steam accounts found</p>
-                <p className="empty-state-hint">Make sure Steam path is correct and accounts have Dota 2 hero grid configs</p>
-              </div>
-            ) : (
-              <div className="file-list">
-                {accounts.map((account) => (
-                  <AccountCard
-                    key={account.steamId64}
-                    account={account}
-                    toggle={{
-                      checked: account.enabled,
-                      onChange: (enabled) => handleToggleAccountEnabled(account.steamId64, enabled),
-                    }}
-                  />
-                ))}
-              </div>
-            )}
           </div>
         </div>
       </div>
