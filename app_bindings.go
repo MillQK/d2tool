@@ -12,10 +12,10 @@ import (
 
 // AppUpdateState represents the state for the app update tab
 type AppUpdateState struct {
-	CurrentVersion  string `json:"currentVersion"`
-	LatestVersion   string `json:"latestVersion"`
-	LastCheckTime   string `json:"lastCheckTime"`
-	UpdateAvailable bool   `json:"updateAvailable"`
+	CurrentVersion      string `json:"currentVersion"`
+	LatestVersion       string `json:"latestVersion"`
+	LastCheckTimeMillis int64  `json:"lastCheckTimeMillis"`
+	UpdateAvailable     bool   `json:"updateAvailable"`
 }
 
 // --- Heroes Layout Update ---
@@ -41,14 +41,14 @@ func (a *App) AddHeroesLayoutFile(path string) {
 	a.config.AddHeroesLayoutFile(path)
 }
 
-// RemoveHeroesLayoutFile removes a config file by index
-func (a *App) RemoveHeroesLayoutFile(index int) {
-	a.config.RemoveHeroesLayoutFile(index)
+// RemoveHeroesLayoutFile removes a config file by path
+func (a *App) RemoveHeroesLayoutFile(filePath string) {
+	a.config.RemoveHeroesLayoutFile(filePath)
 }
 
-// SetHeroesLayoutFileEnabled enables or disables a file by index
-func (a *App) SetHeroesLayoutFileEnabled(index int, enabled bool) {
-	a.config.SetHeroesLayoutFileEnabled(index, enabled)
+// SetHeroesLayoutFileEnabled enables or disables a file by path
+func (a *App) SetHeroesLayoutFileEnabled(filePath string, enabled bool) {
+	a.config.SetHeroesLayoutFileEnabled(filePath, enabled)
 }
 
 // OpenFileDialog opens a file dialog and returns the selected path
@@ -147,18 +147,16 @@ func (a *App) IsStartupSupported() bool {
 func (a *App) GetAppUpdateState() AppUpdateState {
 	updateState := a.updateService.GetState()
 
-	var lastCheckTimeStr string
-	if updateState.LastCheckTime.IsZero() {
-		lastCheckTimeStr = "Never"
-	} else {
-		lastCheckTimeStr = updateState.LastCheckTime.Format("2006-01-02 15:04:05")
+	var lastCheckTimeMillis int64
+	if !updateState.LastCheckTime.IsZero() {
+		lastCheckTimeMillis = updateState.LastCheckTime.UnixMilli()
 	}
 
 	return AppUpdateState{
-		CurrentVersion:  updateState.CurrentAppVersion,
-		LatestVersion:   updateState.LatestAppVersion,
-		LastCheckTime:   lastCheckTimeStr,
-		UpdateAvailable: updateState.UpdateAvailable,
+		CurrentVersion:      updateState.CurrentAppVersion,
+		LatestVersion:       updateState.LatestAppVersion,
+		LastCheckTimeMillis: lastCheckTimeMillis,
+		UpdateAvailable:     updateState.UpdateAvailable,
 	}
 }
 
@@ -276,7 +274,6 @@ func (a *App) startBackgroundTasks() {
 			if err := a.steamService.Scan(); err != nil {
 				slog.Warn("Error scanning steam accounts", "error", err)
 			}
-			runtime.EventsEmit(a.ctx, EventSteamAccountsChanged)
 
 			slog.Info("Performing hero layout update after timeout")
 			if err := a.heroesLayoutService.UpdateHeroesLayout(); err != nil {
@@ -284,6 +281,7 @@ func (a *App) startBackgroundTasks() {
 			}
 
 			runtime.EventsEmit(a.ctx, EventHeroesLayoutDataChanged)
+			runtime.EventsEmit(a.ctx, EventSteamAccountsChanged)
 		}
 	}()
 

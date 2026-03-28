@@ -51,7 +51,9 @@ function ProvidersPage() {
     return (
       <div className="page">
         <div className="page-header">
-          <h1 className="page-title">Providers</h1>
+          <div className="page-header-text">
+            <h1 className="page-title">Providers</h1>
+          </div>
         </div>
         <div className="page-content">
           <div className="card">
@@ -67,8 +69,10 @@ function ProvidersPage() {
   return (
     <div className="page">
       <div className="page-header">
-        <h1 className="page-title">Providers</h1>
-        <p className="page-description">Configure data provider settings</p>
+        <div className="page-header-text">
+          <h1 className="page-title">Providers</h1>
+          <p className="page-description">Configure Dota 2 hero statistics data source</p>
+        </div>
       </div>
 
       <div className="page-content">

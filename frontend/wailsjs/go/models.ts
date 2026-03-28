@@ -104,7 +104,7 @@ export namespace main {
 	export class AppUpdateState {
 	    currentVersion: string;
 	    latestVersion: string;
-	    lastCheckTime: string;
+	    lastCheckTimeMillis: number;
 	    updateAvailable: boolean;
 	
 	    static createFrom(source: any = {}) {
@@ -115,7 +115,7 @@ export namespace main {
 	        if ('string' === typeof source) source = JSON.parse(source);
 	        this.currentVersion = source["currentVersion"];
 	        this.latestVersion = source["latestVersion"];
-	        this.lastCheckTime = source["lastCheckTime"];
+	        this.lastCheckTimeMillis = source["lastCheckTimeMillis"];
 	        this.updateAvailable = source["updateAvailable"];
 	    }
 	}

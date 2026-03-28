@@ -244,28 +244,30 @@ func (c *Config) AddHeroesLayoutFile(filePath string) {
 	go c.scheduleSave()
 }
 
-func (c *Config) RemoveHeroesLayoutFile(index int) {
+func (c *Config) RemoveHeroesLayoutFile(filePath string) {
 	c.mu.Lock()
 	defer c.mu.Unlock()
 
-	if index < 0 || index >= len(c.HeroesLayout.Files) {
-		return
+	for i, f := range c.HeroesLayout.Files {
+		if f.FilePath == filePath {
+			c.HeroesLayout.Files = append(c.HeroesLayout.Files[:i], c.HeroesLayout.Files[i+1:]...)
+			go c.scheduleSave()
+			return
+		}
 	}
-
-	c.HeroesLayout.Files = append(c.HeroesLayout.Files[:index], c.HeroesLayout.Files[index+1:]...)
-	go c.scheduleSave()
 }
 
-func (c *Config) SetHeroesLayoutFileEnabled(index int, enabled bool) {
+func (c *Config) SetHeroesLayoutFileEnabled(filePath string, enabled bool) {
 	c.mu.Lock()
 	defer c.mu.Unlock()
 
-	if index < 0 || index >= len(c.HeroesLayout.Files) {
-		return
+	for i, f := range c.HeroesLayout.Files {
+		if f.FilePath == filePath {
+			c.HeroesLayout.Files[i].Enabled = enabled
+			go c.scheduleSave()
+			return
+		}
 	}
-
-	c.HeroesLayout.Files[index].Enabled = enabled
-	go c.scheduleSave()
 }
 
 func (c *Config) UpdateHeroesLayoutFileStatus(filePaths []string, timestampMillis int64, errorMessage string) {

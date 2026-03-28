@@ -34,7 +34,7 @@ export function OpenDirectoryDialog():Promise<string>;
 
 export function OpenFileDialog():Promise<string>;
 
-export function RemoveHeroesLayoutFile(arg1:number):Promise<void>;
+export function RemoveHeroesLayoutFile(arg1:string):Promise<void>;
 
 export function RescanSteamAccounts():Promise<void>;
 
@@ -42,7 +42,7 @@ export function SetAutoEnableNewAccounts(arg1:boolean):Promise<void>;
 
 export function SetD2PTPeriod(arg1:string):Promise<void>;
 
-export function SetHeroesLayoutFileEnabled(arg1:number,arg2:boolean):Promise<void>;
+export function SetHeroesLayoutFileEnabled(arg1:string,arg2:boolean):Promise<void>;
 
 export function SetHeroesPerRow(arg1:number):Promise<void>;
 
