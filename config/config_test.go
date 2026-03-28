@@ -93,7 +93,7 @@ func TestConfig_RemoveHeroesLayoutFile(t *testing.T) {
 		saveDelay: 50 * time.Millisecond,
 	}
 
-	cfg.RemoveHeroesLayoutFile(1) // Remove middle file
+	cfg.RemoveHeroesLayoutFile("/file2.json") // Remove middle file
 
 	files := cfg.GetHeroesLayoutFiles()
 	if len(files) != 2 {
@@ -104,7 +104,7 @@ func TestConfig_RemoveHeroesLayoutFile(t *testing.T) {
 	}
 }
 
-func TestConfig_RemoveHeroesLayoutFile_InvalidIndex(t *testing.T) {
+func TestConfig_RemoveHeroesLayoutFile_NonExistentPath(t *testing.T) {
 	cfg := &Config{
 		HeroesLayout: HeroesLayoutConfig{
 			Files: []FileConfig{
@@ -115,13 +115,12 @@ func TestConfig_RemoveHeroesLayoutFile_InvalidIndex(t *testing.T) {
 		saveDelay: 50 * time.Millisecond,
 	}
 
-	// Should not panic with invalid indices
-	cfg.RemoveHeroesLayoutFile(-1)
-	cfg.RemoveHeroesLayoutFile(100)
+	// Should not panic with non-existent path
+	cfg.RemoveHeroesLayoutFile("/nonexistent.json")
 
 	files := cfg.GetHeroesLayoutFiles()
 	if len(files) != 1 {
-		t.Error("file should not be removed with invalid index")
+		t.Error("file should not be removed with non-existent path")
 	}
 }
 
@@ -136,14 +135,14 @@ func TestConfig_SetHeroesLayoutFileEnabled(t *testing.T) {
 		saveDelay: 50 * time.Millisecond,
 	}
 
-	cfg.SetHeroesLayoutFileEnabled(0, false)
+	cfg.SetHeroesLayoutFileEnabled("/file1.json", false)
 
 	files := cfg.GetHeroesLayoutFiles()
 	if files[0].Enabled {
 		t.Error("file should be disabled")
 	}
 
-	cfg.SetHeroesLayoutFileEnabled(0, true)
+	cfg.SetHeroesLayoutFileEnabled("/file1.json", true)
 
 	files = cfg.GetHeroesLayoutFiles()
 	if !files[0].Enabled {
