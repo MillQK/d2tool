@@ -65,7 +65,6 @@ func (s *HeroesLayoutServiceImpl) UpdateHeroesLayout() error {
 	heroesPerRow := s.config.GetHeroesPerRow()
 
 	positionToAggregatedHeroes := make(map[string][]providers.Hero)
-	positionToFacetedHeroes := make(map[string][]providers.Hero)
 
 	var positionsFetchErr error
 	for _, position := range positions {
@@ -76,7 +75,6 @@ func (s *HeroesLayoutServiceImpl) UpdateHeroesLayout() error {
 			break
 		}
 		positionToAggregatedHeroes[position] = providers.AggregateHeroesByID(heroes)
-		positionToFacetedHeroes[position] = providers.NormalizeFacetNumbers(heroes)
 	}
 
 	now := time.Now()
@@ -93,7 +91,7 @@ func (s *HeroesLayoutServiceImpl) UpdateHeroesLayout() error {
 		slog.Info("Processing config file", "path", configFile)
 
 		errorMsg := ""
-		if err := processHeroesLayoutConfig(configFile, positions, positionToAggregatedHeroes, positionToFacetedHeroes, heroesPerRow); err != nil {
+		if err := processHeroesLayoutConfig(configFile, positions, positionToAggregatedHeroes, heroesPerRow); err != nil {
 			slog.Error("Error processing config file", "path", configFile, "error", err)
 			errorMsg = fmt.Sprintf("error processing config file: %v", err)
 		} else {

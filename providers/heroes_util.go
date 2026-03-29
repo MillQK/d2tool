@@ -2,43 +2,7 @@ package providers
 
 import "sort"
 
-// NormalizeFacetNumbers normalizes facet numbers per hero_id to sequential 1, 2, 3, etc.
-// The API may return non-sequential numbers (e.g., 2, 3 instead of 1, 2), so we normalize them.
-func NormalizeFacetNumbers(heroes []Hero) []Hero {
-	// Group heroes by hero_id and collect their facet numbers
-	heroFacets := make(map[int][]int)
-	for _, hero := range heroes {
-		heroFacets[hero.HeroID] = append(heroFacets[hero.HeroID], hero.FacetNumber)
-	}
-
-	// For each hero_id, sort facet numbers and create mapping to normalized values
-	facetMapping := make(map[int]map[int]int) // hero_id -> original_facet -> normalized_facet
-	for heroID, facets := range heroFacets {
-		sort.Ints(facets)
-
-		// Create mapping: original -> normalized (1-based)
-		facetMapping[heroID] = make(map[int]int)
-		for i, f := range facets {
-			facetMapping[heroID][f] = i + 1
-		}
-	}
-
-	// Apply normalization to all heroes
-	result := make([]Hero, len(heroes))
-	for i, hero := range heroes {
-		result[i] = hero
-		if mapping, ok := facetMapping[hero.HeroID]; ok {
-			if normalized, ok := mapping[hero.FacetNumber]; ok {
-				result[i].FacetNumber = normalized
-			}
-		}
-	}
-
-	return result
-}
-
 // AggregateHeroesByID merges heroes with the same hero_id by summing wins and matches.
-// This is used when facet grouping is disabled to combine stats across all facets.
 func AggregateHeroesByID(heroes []Hero) []Hero {
 	heroIdToAllInstances := make(map[int][]Hero)
 	aggregatedHeroMap := make(map[int]Hero)
@@ -49,13 +13,11 @@ func AggregateHeroesByID(heroes []Hero) []Hero {
 
 	for heroId, mapHeroes := range heroIdToAllInstances {
 		aggregatedHero := Hero{
-			HeroID:      heroId,
-			Matches:     0,
-			Wins:        0,
-			HeroName:    mapHeroes[0].HeroName,
-			D2PTRating:  0,
-			FacetName:   "",
-			FacetNumber: -1,
+			HeroID:     heroId,
+			Matches:    0,
+			Wins:       0,
+			HeroName:   mapHeroes[0].HeroName,
+			D2PTRating: 0,
 		}
 
 		for _, hero := range mapHeroes {

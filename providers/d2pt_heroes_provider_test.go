@@ -348,11 +348,11 @@ func TestGetHeroesSortedByMatches_DoesNotModifyOriginal(t *testing.T) {
 	}
 }
 
-func TestAggregateHeroesByID_MultipleFacets(t *testing.T) {
+func TestAggregateHeroesByID_MultipleEntries(t *testing.T) {
 	heroes := []Hero{
-		{HeroID: 1, HeroName: "Anti-Mage", Matches: 100, Wins: 50, D2PTRating: 60, FacetName: "Facet A", FacetNumber: 1},
-		{HeroID: 1, HeroName: "Anti-Mage", Matches: 50, Wins: 30, D2PTRating: 90, FacetName: "Facet B", FacetNumber: 2},
-		{HeroID: 2, HeroName: "Axe", Matches: 200, Wins: 110, D2PTRating: 100, FacetName: "Facet C", FacetNumber: 1},
+		{HeroID: 1, HeroName: "Anti-Mage", Matches: 100, Wins: 50, D2PTRating: 60},
+		{HeroID: 1, HeroName: "Anti-Mage", Matches: 50, Wins: 30, D2PTRating: 90},
+		{HeroID: 2, HeroName: "Axe", Matches: 200, Wins: 110, D2PTRating: 100},
 	}
 
 	aggregated := AggregateHeroesByID(heroes)
@@ -382,12 +382,6 @@ func TestAggregateHeroesByID_MultipleFacets(t *testing.T) {
 	if antiMage.D2PTRating != 70 {
 		t.Errorf("expected D2PT rating 70, got %d", antiMage.D2PTRating)
 	}
-	if antiMage.FacetName != "" {
-		t.Errorf("expected empty FacetName after aggregation, got %s", antiMage.FacetName)
-	}
-	if antiMage.FacetNumber >= 0 {
-		t.Errorf("expected invalid FacetNumber after aggregation, got %d", antiMage.FacetNumber)
-	}
 }
 
 func TestAggregateHeroesByID_EmptySlice(t *testing.T) {
@@ -401,7 +395,7 @@ func TestAggregateHeroesByID_EmptySlice(t *testing.T) {
 
 func TestAggregateHeroesByID_SingleHero(t *testing.T) {
 	heroes := []Hero{
-		{HeroID: 1, HeroName: "Anti-Mage", Matches: 100, Wins: 50, FacetName: "Facet A", FacetNumber: 1},
+		{HeroID: 1, HeroName: "Anti-Mage", Matches: 100, Wins: 50},
 	}
 
 	aggregated := AggregateHeroesByID(heroes)
@@ -412,25 +406,18 @@ func TestAggregateHeroesByID_SingleHero(t *testing.T) {
 	if aggregated[0].Matches != 100 {
 		t.Errorf("expected 100 matches, got %d", aggregated[0].Matches)
 	}
-	if aggregated[0].FacetName != "" {
-		t.Errorf("expected empty FacetName, got %s", aggregated[0].FacetName)
-	}
 }
 
 func TestAggregateHeroesByID_DoesNotModifyOriginal(t *testing.T) {
 	heroes := []Hero{
-		{HeroID: 1, HeroName: "Anti-Mage", Matches: 100, FacetName: "Facet A"},
-		{HeroID: 1, HeroName: "Anti-Mage", Matches: 50, FacetName: "Facet B"},
+		{HeroID: 1, HeroName: "Anti-Mage", Matches: 100},
+		{HeroID: 1, HeroName: "Anti-Mage", Matches: 50},
 	}
 
-	originalFacetName := heroes[0].FacetName
 	originalMatches := heroes[0].Matches
 
 	_ = AggregateHeroesByID(heroes)
 
-	if heroes[0].FacetName != originalFacetName {
-		t.Error("AggregateHeroesByID modified the original slice FacetName")
-	}
 	if heroes[0].Matches != originalMatches {
 		t.Error("AggregateHeroesByID modified the original slice Matches")
 	}
