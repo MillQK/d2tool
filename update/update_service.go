@@ -31,10 +31,13 @@ type UpdateService interface {
 	GetState() UpdateState
 	CheckForUpdate() error
 	UpdateApp() error
+	GetAppDirectory() (string, error)
+	OpenAppDirectory() error
 }
 
 type UpdateServiceImpl struct {
-	lock sync.Mutex
+	stateLock sync.RWMutex // protects reads/writes of state fields (never held during I/O)
+	opLock    sync.Mutex   // serializes CheckForUpdate / UpdateApp (held during I/O)
 
 	currentAppVersion string
 	githubClient      github.Client
@@ -59,8 +62,8 @@ func NewUpdateService(
 }
 
 func (s *UpdateServiceImpl) GetState() UpdateState {
-	s.lock.Lock()
-	defer s.lock.Unlock()
+	s.stateLock.RLock()
+	defer s.stateLock.RUnlock()
 
 	latestVersion := s.latestAvailableVersionLocked()
 
@@ -73,8 +76,8 @@ func (s *UpdateServiceImpl) GetState() UpdateState {
 }
 
 func (s *UpdateServiceImpl) CheckForUpdate() error {
-	s.lock.Lock()
-	defer s.lock.Unlock()
+	s.opLock.Lock()
+	defer s.opLock.Unlock()
 
 	if err := cleanupOldFiles(); err != nil {
 		slog.Warn("Error cleaning up old files", "error", err)
@@ -85,25 +88,32 @@ func (s *UpdateServiceImpl) CheckForUpdate() error {
 		return err
 	}
 
+	s.stateLock.Lock()
 	s.latestRelease = release
 	s.lastCheckTime = time.Now()
+	s.stateLock.Unlock()
+
 	return nil
 }
 
 func (s *UpdateServiceImpl) UpdateApp() error {
-	s.lock.Lock()
-	defer s.lock.Unlock()
+	s.opLock.Lock()
+	defer s.opLock.Unlock()
 
-	if s.latestRelease == nil {
+	s.stateLock.RLock()
+	release := s.latestRelease
+	latestVersion := s.latestAvailableVersionLocked()
+	s.stateLock.RUnlock()
+
+	if release == nil {
 		return fmt.Errorf("no release available to update to")
 	}
 
-	latestVersion := s.latestAvailableVersionLocked()
 	if !isUpdateAvailable(latestVersion, s.currentAppVersion) {
 		return fmt.Errorf("no update available for current version %s and latest version %s", s.currentAppVersion, latestVersion)
 	}
 
-	return s.downloadAndUnarchiveLatestReleaseVersion()
+	return s.downloadAndUnarchiveRelease(release)
 }
 
 func (s *UpdateServiceImpl) latestAvailableVersionLocked() string {
@@ -113,16 +123,33 @@ func (s *UpdateServiceImpl) latestAvailableVersionLocked() string {
 	return s.latestRelease.Name
 }
 
+func (s *UpdateServiceImpl) GetAppDirectory() (string, error) {
+	execPath, err := os.Executable()
+	if err != nil {
+		return "", fmt.Errorf("error getting executable path: %w", err)
+	}
+	return filepath.Dir(execPath), nil
+}
+
+func (s *UpdateServiceImpl) OpenAppDirectory() error {
+	dir, err := s.GetAppDirectory()
+	if err != nil {
+		return err
+	}
+	return openDirectoryInFileManager(dir)
+}
+
 func isUpdateAvailable(latestVersion string, currentVersion string) bool {
 	return latestVersion != "" && currentVersion != latestVersion
 }
 
 func cleanupOldFiles() error {
-	rootDir, err := os.Executable()
+	execPath, err := os.Executable()
 	if err != nil {
 		return fmt.Errorf("error getting executable path: %w", err)
 	}
 
+	rootDir := filepath.Dir(execPath)
 	return filepath.WalkDir(rootDir, func(path string, entry fs.DirEntry, err error) error {
 		if err != nil {
 			return err
@@ -138,7 +165,7 @@ func cleanupOldFiles() error {
 	})
 }
 
-func (s *UpdateServiceImpl) downloadAndUnarchiveLatestReleaseVersion() error {
+func (s *UpdateServiceImpl) downloadAndUnarchiveRelease(release *github.Release) error {
 	if err := cleanupOldFiles(); err != nil {
 		return fmt.Errorf("error cleaning up old files: %w", err)
 	}
@@ -150,7 +177,7 @@ func (s *UpdateServiceImpl) downloadAndUnarchiveLatestReleaseVersion() error {
 
 	archiveNamePrefix := constructArchiveNamePrefix()
 	var appAsset *github.ReleaseAsset
-	for _, asset := range s.latestRelease.Assets {
+	for _, asset := range release.Assets {
 		if strings.HasPrefix(asset.Name, archiveNamePrefix) {
 			appAsset = &asset
 			break
@@ -158,7 +185,7 @@ func (s *UpdateServiceImpl) downloadAndUnarchiveLatestReleaseVersion() error {
 	}
 
 	if appAsset == nil {
-		return fmt.Errorf("no asset with prefix %s found for release %s", archiveNamePrefix, s.latestRelease.TagName)
+		return fmt.Errorf("no asset with prefix %s found for release %s", archiveNamePrefix, release.TagName)
 	}
 
 	slog.Info("Downloading and unarchiving latest release version", "asset", appAsset)

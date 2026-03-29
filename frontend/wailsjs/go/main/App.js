@@ -54,6 +54,10 @@ export function IsSteamPathValid() {
   return window['go']['main']['App']['IsSteamPathValid']();
 }
 
+export function OpenAppDirectory() {
+  return window['go']['main']['App']['OpenAppDirectory']();
+}
+
 export function OpenDirectoryDialog() {
   return window['go']['main']['App']['OpenDirectoryDialog']();
 }

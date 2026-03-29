@@ -106,6 +106,7 @@ export namespace main {
 	    latestVersion: string;
 	    lastCheckTimeMillis: number;
 	    updateAvailable: boolean;
+	    appDirectory: string;
 	
 	    static createFrom(source: any = {}) {
 	        return new AppUpdateState(source);
@@ -117,6 +118,7 @@ export namespace main {
 	        this.latestVersion = source["latestVersion"];
 	        this.lastCheckTimeMillis = source["lastCheckTimeMillis"];
 	        this.updateAvailable = source["updateAvailable"];
+	        this.appDirectory = source["appDirectory"];
 	    }
 	}
 
