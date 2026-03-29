@@ -16,6 +16,7 @@ type AppUpdateState struct {
 	LatestVersion       string `json:"latestVersion"`
 	LastCheckTimeMillis int64  `json:"lastCheckTimeMillis"`
 	UpdateAvailable     bool   `json:"updateAvailable"`
+	AppDirectory        string `json:"appDirectory"`
 }
 
 // --- Heroes Layout Update ---
@@ -152,11 +153,17 @@ func (a *App) GetAppUpdateState() AppUpdateState {
 		lastCheckTimeMillis = updateState.LastCheckTime.UnixMilli()
 	}
 
+	appDirectory, err := a.updateService.GetAppDirectory()
+	if err != nil {
+		slog.Warn("Error getting app directory", "error", err)
+	}
+
 	return AppUpdateState{
 		CurrentVersion:      updateState.CurrentAppVersion,
 		LatestVersion:       updateState.LatestAppVersion,
 		LastCheckTimeMillis: lastCheckTimeMillis,
 		UpdateAvailable:     updateState.UpdateAvailable,
+		AppDirectory:        appDirectory,
 	}
 }
 
@@ -173,6 +180,15 @@ func (a *App) CheckForAppUpdate() error {
 func (a *App) DownloadAppUpdate() error {
 	if err := a.updateService.UpdateApp(); err != nil {
 		return fmt.Errorf("error downloading update: %w", err)
+	}
+
+	return nil
+}
+
+// OpenAppDirectory opens the application directory in the OS file manager
+func (a *App) OpenAppDirectory() error {
+	if err := a.updateService.OpenAppDirectory(); err != nil {
+		return fmt.Errorf("error opening app directory: %w", err)
 	}
 
 	return nil
@@ -296,13 +312,15 @@ func (a *App) startBackgroundTasks() {
 		runtime.EventsEmit(a.ctx, EventAppUpdateDataChanged)
 
 		// Periodic check loop
+		timer := time.NewTimer(1 * time.Hour)
+		defer timer.Stop()
+
 		for {
 			select {
 			case <-a.ctx.Done():
 				slog.Info("Stopping background app update check task")
 				return
-			case <-time.After(1 * time.Hour):
-				// continue
+			case <-timer.C:
 			}
 
 			slog.Info("Checking for app updates after timeout")
@@ -310,6 +328,7 @@ func (a *App) startBackgroundTasks() {
 				slog.Warn("Error checking for updates after timeout", "error", err)
 			}
 			runtime.EventsEmit(a.ctx, EventAppUpdateDataChanged)
+			timer.Reset(1 * time.Hour)
 		}
 	}()
 }

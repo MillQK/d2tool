@@ -30,6 +30,8 @@ export function IsStartupSupported():Promise<boolean>;
 
 export function IsSteamPathValid():Promise<boolean>;
 
+export function OpenAppDirectory():Promise<void>;
+
 export function OpenDirectoryDialog():Promise<string>;
 
 export function OpenFileDialog():Promise<string>;

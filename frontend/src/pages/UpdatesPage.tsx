@@ -2,10 +2,11 @@ import {useState} from 'react'
 import {
     CheckForAppUpdate,
     DownloadAppUpdate,
+    OpenAppDirectory,
 } from '../../wailsjs/go/main/App'
 import {Quit} from '../../wailsjs/runtime'
 import {main} from "../../wailsjs/go/models.ts";
-import { XIcon, AlertCircleIcon, DownloadIcon, SearchIcon, CheckCircleIcon, ClockIcon } from '../components/Icons'
+import { XIcon, AlertCircleIcon, DownloadIcon, SearchIcon, CheckCircleIcon, ClockIcon, FolderIcon } from '../components/Icons'
 import RelativeTime from '../components/RelativeTime'
 
 interface DownloadResult {
@@ -49,7 +50,7 @@ function UpdatesPage({ state, onStateChange }: UpdatesPageProps) {
             await DownloadAppUpdate()
             setDownloadResult({
                 success: true,
-                message: 'Update downloaded successfully. Please quit and relaunch the application to apply the update.'
+                message: 'Update downloaded successfully. Open the app directory and run the new version.'
             })
         } catch (error) {
             console.error('Error downloading update:', error)
@@ -62,8 +63,21 @@ function UpdatesPage({ state, onStateChange }: UpdatesPageProps) {
         }
     }
 
-    const handleQuit = () => {
+    const handleOpenDirectoryAndQuit = async () => {
+        try {
+            await OpenAppDirectory()
+        } catch (error) {
+            console.error('Error opening app directory:', error)
+        }
         Quit()
+    }
+
+    const handleOpenDirectory = async () => {
+        try {
+            await OpenAppDirectory()
+        } catch (error) {
+            console.error('Error opening app directory:', error)
+        }
     }
 
     const dismissResult = () => {
@@ -127,6 +141,24 @@ function UpdatesPage({ state, onStateChange }: UpdatesPageProps) {
                                 />
                             </div>
                         </div>
+
+                        {state?.appDirectory && (
+                            <div className="status-row mt-16">
+                                <div className="status-info">
+                                    <div className="status-label">
+                                        <FolderIcon/>
+                                        <span>Install Location</span>
+                                    </div>
+                                    <span className="status-value">{state.appDirectory}</span>
+                                </div>
+                                <button
+                                    className="btn btn-secondary btn-sm"
+                                    onClick={handleOpenDirectory}
+                                >
+                                    Open
+                                </button>
+                            </div>
+                        )}
                     </div>
                 </div>
 
@@ -196,8 +228,9 @@ function UpdatesPage({ state, onStateChange }: UpdatesPageProps) {
                                     <div className="download-result-text">
                                         <p>{downloadResult.message}</p>
                                         {downloadResult.success && (
-                                            <button className="btn-quit" onClick={handleQuit}>
-                                                Quit the application
+                                            <button className="btn-quit" onClick={handleOpenDirectoryAndQuit}>
+                                                <FolderIcon/>
+                                                <span>Show in File Manager & Quit</span>
                                             </button>
                                         )}
                                     </div>
