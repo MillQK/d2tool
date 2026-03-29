@@ -5,6 +5,7 @@ import (
 	"d2tool/config"
 	"d2tool/github"
 	"d2tool/heroesLayout"
+	"d2tool/providers"
 	"d2tool/startup"
 	"d2tool/steam"
 	"d2tool/systray"
@@ -17,6 +18,7 @@ import (
 	"log/slog"
 	"os"
 	"path/filepath"
+	"time"
 
 	"github.com/wailsapp/wails/v2"
 	"github.com/wailsapp/wails/v2/pkg/logger"
@@ -58,6 +60,8 @@ func main() {
 	steamService := steam.NewSteamService(appConfig)
 	steamService.Init()
 
+	heroesProvider := providers.NewD2PTHeroesProvider(nil, "", 10*time.Minute)
+
 	// Create an instance of the app structure
 	app := NewApp(
 		appConfig,
@@ -65,7 +69,7 @@ func main() {
 			wailsProjectConfig.Info.ProductVersion,
 			github.NewHttpClient(""),
 		),
-		heroesLayout.NewHeroesLayoutService(appConfig, steamService),
+		heroesLayout.NewHeroesLayoutService(appConfig, steamService, heroesProvider),
 		startup.NewStartupService([]string{fmt.Sprintf("-%s", minimizedFlagName)}),
 		steamService,
 	)
