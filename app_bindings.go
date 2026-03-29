@@ -27,6 +27,9 @@ func (a *App) UpdateHeroesLayout() error {
 		return fmt.Errorf("error updating hero layout: %w", err)
 	}
 
+	runtime.EventsEmit(a.ctx, EventHeroesLayoutDataChanged)
+	runtime.EventsEmit(a.ctx, EventSteamAccountsChanged)
+
 	return nil
 }
 
@@ -290,14 +293,12 @@ func (a *App) startBackgroundTasks() {
 			if err := a.steamService.Scan(); err != nil {
 				slog.Warn("Error scanning steam accounts", "error", err)
 			}
+			runtime.EventsEmit(a.ctx, EventSteamAccountsChanged)
 
 			slog.Info("Performing hero layout update after timeout")
-			if err := a.heroesLayoutService.UpdateHeroesLayout(); err != nil {
+			if err := a.UpdateHeroesLayout(); err != nil {
 				slog.Warn("Error updating hero layout", "error", err)
 			}
-
-			runtime.EventsEmit(a.ctx, EventHeroesLayoutDataChanged)
-			runtime.EventsEmit(a.ctx, EventSteamAccountsChanged)
 		}
 	}()
 
