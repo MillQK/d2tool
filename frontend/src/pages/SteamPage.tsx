@@ -14,6 +14,7 @@ import { config, steam } from '../../wailsjs/go/models'
 import { EventSteamAccountsChanged, EventSteamPathChanged } from '../events'
 import AccountCard from '../components/AccountCard'
 import { AlertCircleIcon, FolderIcon, RefreshIcon } from '../components/Icons'
+import { useGridAutoUpdate } from '../components/GridAutoUpdateProvider'
 
 function SteamPage() {
   const [steamConfig, setSteamConfig] = useState<config.SteamConfig | null>(null)
@@ -21,6 +22,8 @@ function SteamPage() {
   const [pathValid, setPathValid] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [isScanning, setIsScanning] = useState(false)
+
+  const { scheduleGridUpdate } = useGridAutoUpdate()
 
   const refresh = () => {
     Promise.all([
@@ -73,6 +76,7 @@ function SteamPage() {
       setAccounts(prev => prev.map(a =>
         a.steamId64 === steamId64 ? { ...a, enabled } : a
       ))
+      scheduleGridUpdate()
     } catch (err) {
       console.error('Error toggling account:', err)
     }

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { GetD2PTConfig, SetD2PTPeriod } from '../../wailsjs/go/main/App'
 import { config } from '../../wailsjs/go/models'
 import { AlertCircleIcon, XIcon } from '../components/Icons'
+import { useGridAutoUpdate } from '../components/GridAutoUpdateProvider'
 
 // Period options for D2PT provider
 const periodOptions = [
@@ -13,6 +14,8 @@ function ProvidersPage() {
   const [d2ptConfig, setD2ptConfig] = useState<config.D2PTConfig | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+
+  const { scheduleGridUpdate } = useGridAutoUpdate()
 
   useEffect(() => {
     const loadConfig = async () => {
@@ -37,6 +40,7 @@ function ProvidersPage() {
       if (d2ptConfig) {
         setD2ptConfig({ ...d2ptConfig, period: newPeriod })
       }
+      scheduleGridUpdate()
     } catch (err) {
       console.error('Error setting D2PT period:', err)
       setError(`Failed to update period: ${err}`)

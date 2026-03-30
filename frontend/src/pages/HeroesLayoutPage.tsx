@@ -19,6 +19,7 @@ import { EventHeroesLayoutDataChanged, EventSteamAccountsChanged } from '../even
 import AccountCard from '../components/AccountCard'
 import RelativeTime from '../components/RelativeTime'
 import { AlertCircleIcon, GripIcon, MoreIcon, RefreshIcon, TrashIcon, XIcon } from '../components/Icons'
+import { useGridAutoUpdate } from '../components/GridAutoUpdateProvider'
 
 // Heroes per row constraints
 const MIN_HEROES_PER_ROW = 1
@@ -69,6 +70,8 @@ function HeroesLayoutPage() {
   const [menuOpen, setMenuOpen] = useState(false)
   const menuRef = useRef<HTMLDivElement>(null)
 
+  const { scheduleGridUpdate, cancelScheduledUpdate } = useGridAutoUpdate()
+
   useEffect(() => {
     // Load initial states
     Promise.all([
@@ -114,16 +117,11 @@ function HeroesLayoutPage() {
   }, [menuOpen])
 
   const handleUpdate = async () => {
+    cancelScheduledUpdate()
     setIsUpdating(true)
     setError(null)
     try {
       await UpdateHeroesLayout()
-      const [updatedFiles, updatedAccounts] = await Promise.all([
-        GetHeroesLayoutFiles(),
-        GetSteamAccounts(),
-      ])
-      setFiles(updatedFiles)
-      setSteamAccounts(updatedAccounts)
     } catch (err) {
       console.error('Error updating heroes layout:', err)
       setError(`Failed to update heroes layout: ${err}`)
@@ -141,6 +139,7 @@ function HeroesLayoutPage() {
         await AddHeroesLayoutFile(path)
         const updatedFiles = await GetHeroesLayoutFiles()
         setFiles(updatedFiles)
+        scheduleGridUpdate()
       }
     } catch (err) {
       console.error('Error adding file:', err)
@@ -162,6 +161,7 @@ function HeroesLayoutPage() {
         await SetHeroesPerRow(numValue)
         setHeroesPerRowState(numValue)
         setError(null)
+        scheduleGridUpdate()
       } catch (err) {
         console.error('Error setting heroes per row:', err)
         setError(`Failed to set heroes per row: ${err}`)
@@ -182,6 +182,7 @@ function HeroesLayoutPage() {
       await RemoveHeroesLayoutFile(filePath)
       const updatedFiles = await GetHeroesLayoutFiles()
       setFiles(updatedFiles)
+      scheduleGridUpdate()
     } catch (error) {
       console.error('Error removing file:', error)
     }
@@ -192,6 +193,7 @@ function HeroesLayoutPage() {
       await SetHeroesLayoutFileEnabled(filePath, enabled)
       const updatedFiles = await GetHeroesLayoutFiles()
       setFiles(updatedFiles)
+      scheduleGridUpdate()
     } catch (error) {
       console.error('Error toggling file:', error)
     }
@@ -202,6 +204,7 @@ function HeroesLayoutPage() {
       await SetPositionEnabled(id, enabled)
       const updatedPositions = await GetPositions()
       setPositions(updatedPositions)
+      scheduleGridUpdate()
     } catch (error) {
       console.error('Error toggling position:', error)
     }
@@ -231,6 +234,7 @@ function HeroesLayoutPage() {
     if (orderChanged) {
       try {
         await SetPositions(positions)
+        scheduleGridUpdate()
       } catch (error) {
         console.error('Error saving positions order:', error)
         // Revert on error

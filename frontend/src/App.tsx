@@ -9,6 +9,7 @@ import UpdatesPage from './pages/UpdatesPage'
 import SteamPage from './pages/SteamPage'
 import { main } from "../wailsjs/go/models"
 import { EventAppUpdateDataChanged, EventSteamPathChanged } from './events'
+import { GridAutoUpdateProvider } from './components/GridAutoUpdateProvider'
 
 function App() {
   const [activePage, setActivePage] = useState<PageId>('heroesLayout')
@@ -65,12 +66,14 @@ function App() {
   }
 
   return (
-    <div className="app-layout">
-      <Sidebar activePage={activePage} onPageChange={setActivePage} updateAvailable={appUpdateState?.updateAvailable} steamPathInvalid={!steamPathValid} />
-      <main className="main-content">
-        {renderPage()}
-      </main>
-    </div>
+    <GridAutoUpdateProvider>
+      <div className="app-layout">
+        <Sidebar activePage={activePage} onPageChange={setActivePage} updateAvailable={appUpdateState?.updateAvailable} steamPathInvalid={!steamPathValid} />
+        <main className="main-content">
+          {renderPage()}
+        </main>
+      </div>
+    </GridAutoUpdateProvider>
   )
 }
 
