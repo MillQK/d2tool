@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"os"
 	"path/filepath"
+	"strings"
 	"sync"
 	"testing"
 	"time"
@@ -38,6 +39,59 @@ func TestDefaultPositions(t *testing.T) {
 		}
 	}
 }
+
+func TestLoadConfig_AutoUpdateDefaultAndPersistence(t *testing.T) {
+	tests := []struct {
+		name     string
+		contents *string
+		want     bool
+	}{
+		{name: "new config", contents: nil, want: true},
+		{name: "legacy config", contents: ptr(`{"heroesLayout":{"files":[],"positions":[]}}`), want: true},
+		{name: "explicitly disabled", contents: ptr(`{"appUpdate":{"autoUpdateEnabled":false}}`), want: false},
+		{name: "explicitly enabled", contents: ptr(`{"appUpdate":{"autoUpdateEnabled":true}}`), want: true},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			path := filepath.Join(t.TempDir(), "d2tool_config.json")
+			if tt.contents != nil {
+				if err := os.WriteFile(path, []byte(*tt.contents), 0644); err != nil {
+					t.Fatal(err)
+				}
+			}
+
+			cfg := loadConfig(path)
+			if got := cfg.GetAutoUpdateEnabled(); got != tt.want {
+				t.Fatalf("GetAutoUpdateEnabled() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestConfig_SetAutoUpdateEnabled(t *testing.T) {
+	cfg := &Config{
+		AppUpdate: AppUpdateConfig{AutoUpdateEnabled: true},
+		saveDelay: time.Hour,
+	}
+	cfg.SetAutoUpdateEnabled(false)
+	if cfg.GetAutoUpdateEnabled() {
+		t.Fatal("automatic updates should be disabled")
+	}
+}
+
+func TestConfig_JSONMarshal_IncludesAppUpdate(t *testing.T) {
+	cfg := &Config{AppUpdate: AppUpdateConfig{AutoUpdateEnabled: false}}
+	data, err := json.Marshal(cfg)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !strings.Contains(string(data), `"appUpdate":{"autoUpdateEnabled":false}`) {
+		t.Fatalf("missing appUpdate JSON: %s", data)
+	}
+}
+
+func ptr(value string) *string { return &value }
 
 func TestConfig_AddHeroesLayoutFile(t *testing.T) {
 	cfg := &Config{
@@ -379,6 +433,20 @@ func TestConfig_ConcurrentAccess(t *testing.T) {
 		defer wg.Done()
 		for i := 0; i < iterations; i++ {
 			cfg.SetPositionEnabled("1", i%2 == 0)
+		}
+	}()
+
+	wg.Add(2)
+	go func() {
+		defer wg.Done()
+		for i := 0; i < iterations; i++ {
+			cfg.SetAutoUpdateEnabled(i%2 == 0)
+		}
+	}()
+	go func() {
+		defer wg.Done()
+		for i := 0; i < iterations; i++ {
+			_ = cfg.GetAutoUpdateEnabled()
 		}
 	}()
 

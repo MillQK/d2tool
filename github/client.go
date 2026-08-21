@@ -1,9 +1,9 @@
 package github
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
-	"io"
 	"net/http"
 	"strings"
 	"time"
@@ -17,7 +17,7 @@ const (
 
 type Client interface {
 	// GetLatestRelease fetches the latest release
-	GetLatestRelease() (*Release, error)
+	GetLatestRelease(ctx context.Context) (*Release, error)
 }
 
 type HttpClient struct {
@@ -41,10 +41,10 @@ func NewHttpClient(apiUrl string) *HttpClient {
 	}
 }
 
-func (c *HttpClient) GetLatestRelease() (*Release, error) {
+func (c *HttpClient) GetLatestRelease(ctx context.Context) (*Release, error) {
 	url := fmt.Sprintf("%s/repos/%s/%s/releases/latest", c.apiUrl, repoOwner, repoName)
 
-	request, err := http.NewRequest(http.MethodGet, url, nil)
+	request, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -62,14 +62,8 @@ func (c *HttpClient) GetLatestRelease() (*Release, error) {
 		return nil, fmt.Errorf("GitHub API returned status %d: %s", response.StatusCode, response.Status)
 	}
 
-	responseBody, err := io.ReadAll(response.Body)
-	if err != nil {
-		return nil, err
-	}
-
 	var release Release
-	err = json.Unmarshal(responseBody, &release)
-	if err != nil {
+	if err := json.NewDecoder(response.Body).Decode(&release); err != nil {
 		return nil, err
 	}
 

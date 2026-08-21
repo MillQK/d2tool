@@ -6,6 +6,7 @@ require (
 	fyne.io/systray v1.11.1-0.20250603113521-ca66a66d8b58
 	github.com/andygrunwald/vdf v1.1.0
 	github.com/wailsapp/wails/v2 v2.11.0
+	golang.org/x/mod v0.29.0
 	golang.org/x/sys v0.38.0
 	gopkg.in/natefinch/lumberjack.v2 v2.2.1
 )

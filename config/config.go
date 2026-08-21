@@ -60,6 +60,10 @@ type SteamAccountConfig struct {
 	LastUpdateErrorMessage    string `json:"lastUpdateErrorMessage"`
 }
 
+type AppUpdateConfig struct {
+	AutoUpdateEnabled bool `json:"autoUpdateEnabled"`
+}
+
 func defaultD2PTConfig() D2PTConfig {
 	return D2PTConfig{
 		Period: "8", // Default to last 8 days
@@ -73,6 +77,7 @@ type Config struct {
 	HeroesLayout HeroesLayoutConfig `json:"heroesLayout"`
 	D2PT         D2PTConfig         `json:"d2pt"`
 	Steam        SteamConfig        `json:"steam"`
+	AppUpdate    AppUpdateConfig    `json:"appUpdate"`
 
 	// Debounce state for save operations (not persisted)
 	saveTimer *time.Timer
@@ -106,6 +111,10 @@ const (
 )
 
 func LoadConfig() *Config {
+	return loadConfig(getConfigPath())
+}
+
+func loadConfig(configPath string) *Config {
 	config := &Config{
 		HeroesLayout: HeroesLayoutConfig{
 			Files:        []FileConfig{},
@@ -117,10 +126,10 @@ func LoadConfig() *Config {
 			AutoEnableNewAccounts: true,
 			Accounts:              []SteamAccountConfig{},
 		},
+		AppUpdate: AppUpdateConfig{AutoUpdateEnabled: true},
 		saveDelay: 500 * time.Millisecond,
 	}
 
-	configPath := getConfigPath()
 	data, err := os.ReadFile(configPath)
 	if err != nil {
 		slog.Info("Config file not found, using defaults", "path", configPath)
@@ -132,36 +141,52 @@ func LoadConfig() *Config {
 		return config
 	}
 
+	config.applyMigrationsAndDefaults(data)
+	return config
+}
+
+func (c *Config) GetAutoUpdateEnabled() bool {
+	c.mu.RLock()
+	defer c.mu.RUnlock()
+	return c.AppUpdate.AutoUpdateEnabled
+}
+
+func (c *Config) SetAutoUpdateEnabled(enabled bool) {
+	c.mu.Lock()
+	c.AppUpdate.AutoUpdateEnabled = enabled
+	c.mu.Unlock()
+	go c.scheduleSave()
+}
+
+func (c *Config) applyMigrationsAndDefaults(data []byte) {
 	// Check if migration is needed (no "steam" section in the config file)
 	var rawConfig map[string]json.RawMessage
 	if err := json.Unmarshal(data, &rawConfig); err == nil {
 		if _, hasSteam := rawConfig["steam"]; !hasSteam {
 			slog.Info("Migrating config: adding steam section from existing files")
-			config.migrateToSteamAccounts()
+			c.migrateToSteamAccounts()
 		}
 	}
 
 	// Ensure positions exist
-	if len(config.HeroesLayout.Positions) == 0 {
-		config.HeroesLayout.Positions = defaultPositions()
+	if len(c.HeroesLayout.Positions) == 0 {
+		c.HeroesLayout.Positions = defaultPositions()
 	}
 
 	// Ensure D2PT config has valid period
-	if config.D2PT.Period != "8" && config.D2PT.Period != "patch" {
-		config.D2PT.Period = "8"
+	if c.D2PT.Period != "8" && c.D2PT.Period != "patch" {
+		c.D2PT.Period = "8"
 	}
 
 	// Ensure HeroesPerRow is within valid range
-	if config.HeroesLayout.HeroesPerRow < minHeroesPerRow || config.HeroesLayout.HeroesPerRow > maxHeroesPerRow {
-		config.HeroesLayout.HeroesPerRow = defaultHeroesPerRow
+	if c.HeroesLayout.HeroesPerRow < minHeroesPerRow || c.HeroesLayout.HeroesPerRow > maxHeroesPerRow {
+		c.HeroesLayout.HeroesPerRow = defaultHeroesPerRow
 	}
 
 	// Ensure Steam.Accounts is never nil
-	if config.Steam.Accounts == nil {
-		config.Steam.Accounts = []SteamAccountConfig{}
+	if c.Steam.Accounts == nil {
+		c.Steam.Accounts = []SteamAccountConfig{}
 	}
-
-	return config
 }
 
 func (c *Config) save() error {

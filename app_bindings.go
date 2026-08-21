@@ -10,15 +10,6 @@ import (
 	"github.com/wailsapp/wails/v2/pkg/runtime"
 )
 
-// AppUpdateState represents the state for the app update tab
-type AppUpdateState struct {
-	CurrentVersion      string `json:"currentVersion"`
-	LatestVersion       string `json:"latestVersion"`
-	LastCheckTimeMillis int64  `json:"lastCheckTimeMillis"`
-	UpdateAvailable     bool   `json:"updateAvailable"`
-	AppDirectory        string `json:"appDirectory"`
-}
-
 // --- Heroes Layout Update ---
 
 // UpdateHeroesLayout performs the hero layout update synchronously
@@ -145,58 +136,6 @@ func (a *App) IsStartupSupported() bool {
 	return a.startupService.SupportsStartup()
 }
 
-// --- App Update Tab Bindings ---
-
-// GetAppUpdateState returns the current state for the app update tab
-func (a *App) GetAppUpdateState() AppUpdateState {
-	updateState := a.updateService.GetState()
-
-	var lastCheckTimeMillis int64
-	if !updateState.LastCheckTime.IsZero() {
-		lastCheckTimeMillis = updateState.LastCheckTime.UnixMilli()
-	}
-
-	appDirectory, err := a.updateService.GetAppDirectory()
-	if err != nil {
-		slog.Warn("Error getting app directory", "error", err)
-	}
-
-	return AppUpdateState{
-		CurrentVersion:      updateState.CurrentAppVersion,
-		LatestVersion:       updateState.LatestAppVersion,
-		LastCheckTimeMillis: lastCheckTimeMillis,
-		UpdateAvailable:     updateState.UpdateAvailable,
-		AppDirectory:        appDirectory,
-	}
-}
-
-// CheckForAppUpdate checks for application updates synchronously
-func (a *App) CheckForAppUpdate() error {
-	if err := a.updateService.CheckForUpdate(); err != nil {
-		return fmt.Errorf("error checking for updates: %w", err)
-	}
-
-	return nil
-}
-
-// DownloadAppUpdate downloads and installs the update synchronously
-func (a *App) DownloadAppUpdate() error {
-	if err := a.updateService.UpdateApp(); err != nil {
-		return fmt.Errorf("error downloading update: %w", err)
-	}
-
-	return nil
-}
-
-// OpenAppDirectory opens the application directory in the OS file manager
-func (a *App) OpenAppDirectory() error {
-	if err := a.updateService.OpenAppDirectory(); err != nil {
-		return fmt.Errorf("error opening app directory: %w", err)
-	}
-
-	return nil
-}
-
 // --- Steam Bindings ---
 
 func (a *App) GetSteamConfig() config.SteamConfig {
@@ -250,6 +189,12 @@ func (a *App) IsSteamPathValid() bool {
 // --- Background Tasks ---
 
 func (a *App) startBackgroundTasks() {
+	a.shutdownTasks.Add(1)
+	go func() {
+		defer a.shutdownTasks.Done()
+		a.appUpdater.Run(a.ctx)
+	}()
+
 	// Start periodic hero layout update
 	go func() {
 		delay := time.Hour
@@ -301,35 +246,11 @@ func (a *App) startBackgroundTasks() {
 			}
 		}
 	}()
+}
 
-	// Start periodic app update check
-	go func() {
-		// Check for updates on startup after a short delay
-		slog.Info("Checking for updates on startup")
-		if err := a.updateService.CheckForUpdate(); err != nil {
-			slog.Warn("Error checking for updates on startup", "error", err)
-		}
-
-		runtime.EventsEmit(a.ctx, EventAppUpdateDataChanged)
-
-		// Periodic check loop
-		timer := time.NewTimer(1 * time.Hour)
-		defer timer.Stop()
-
-		for {
-			select {
-			case <-a.ctx.Done():
-				slog.Info("Stopping background app update check task")
-				return
-			case <-timer.C:
-			}
-
-			slog.Info("Checking for app updates after timeout")
-			if err := a.updateService.CheckForUpdate(); err != nil {
-				slog.Warn("Error checking for updates after timeout", "error", err)
-			}
-			runtime.EventsEmit(a.ctx, EventAppUpdateDataChanged)
-			timer.Reset(1 * time.Hour)
-		}
-	}()
+func (a *App) stopBackgroundTasks() {
+	if a.cancelBackgroundTasks != nil {
+		a.cancelBackgroundTasks()
+	}
+	a.shutdownTasks.Wait()
 }
