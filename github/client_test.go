@@ -1,7 +1,9 @@
 package github
 
 import (
+	"context"
 	"encoding/json"
+	"errors"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -232,7 +234,7 @@ func TestGetLatestRelease_Success(t *testing.T) {
 	defer server.Close()
 
 	client := NewHttpClient(server.URL)
-	release, err := client.GetLatestRelease()
+	release, err := client.GetLatestRelease(context.Background())
 
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
@@ -256,7 +258,7 @@ func TestGetLatestRelease_NotFound(t *testing.T) {
 	defer server.Close()
 
 	client := NewHttpClient(server.URL)
-	_, err := client.GetLatestRelease()
+	_, err := client.GetLatestRelease(context.Background())
 
 	if err == nil {
 		t.Error("expected error for 404 response")
@@ -271,7 +273,7 @@ func TestGetLatestRelease_InvalidJSON(t *testing.T) {
 	defer server.Close()
 
 	client := NewHttpClient(server.URL)
-	_, err := client.GetLatestRelease()
+	_, err := client.GetLatestRelease(context.Background())
 
 	if err == nil {
 		t.Error("expected error for invalid JSON")
@@ -290,7 +292,7 @@ func TestGetLatestRelease_Timeout(t *testing.T) {
 		apiUrl:     server.URL,
 	}
 
-	_, err := client.GetLatestRelease()
+	_, err := client.GetLatestRelease(context.Background())
 	if err == nil {
 		t.Error("expected timeout error")
 	}
@@ -312,7 +314,7 @@ func TestGetLatestRelease_MultipleAssets(t *testing.T) {
 	defer server.Close()
 
 	client := NewHttpClient(server.URL)
-	release, err := client.GetLatestRelease()
+	release, err := client.GetLatestRelease(context.Background())
 
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
@@ -337,6 +339,17 @@ func TestGetLatestRelease_MultipleAssets(t *testing.T) {
 	}
 	if !foundDarwinArm {
 		t.Error("missing darwin arm64 asset")
+	}
+}
+
+func TestGetLatestRelease_CancelledContext(t *testing.T) {
+	client := NewHttpClient("https://example.invalid")
+	ctx, cancel := context.WithCancel(context.Background())
+	cancel()
+
+	_, err := client.GetLatestRelease(ctx)
+	if !errors.Is(err, context.Canceled) {
+		t.Fatalf("GetLatestRelease() error = %v, want context.Canceled", err)
 	}
 }
 

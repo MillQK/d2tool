@@ -98,9 +98,11 @@ Configure whether D2Tool runs automatically when your computer starts (Windows o
 
 ### Updates Page
 
-- View current and latest version information
-- Check for application updates
-- Download and install new versions
+- View the current and latest available D2Tool versions.
+- Enable or disable automatic updates; automatic updates are enabled by default.
+- D2Tool still checks for the latest version when automatic updates are disabled, but it does not download it.
+- When enabled, a newer release downloads in the background. The running app stays on its current version and the prepared version is used on the next start.
+- Failed updates are shown in the app and retried automatically.
 
 ## Troubleshooting
 

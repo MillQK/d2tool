@@ -59,7 +59,7 @@ function App() {
       case 'startup':
         return <StartupPage />
       case 'updates':
-        return <UpdatesPage state={appUpdateState} onStateChange={refreshAppUpdateState} />
+        return <UpdatesPage state={appUpdateState} />
       default:
         return <HeroesLayoutPage />
     }

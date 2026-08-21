@@ -1,23 +1,30 @@
 package update
 
 import (
-	"archive/zip"
-	"d2tool/github"
+	"context"
 	"fmt"
-	"io"
-	"io/fs"
-	"log/slog"
 	"net/http"
-	"os"
-	"path/filepath"
-	"runtime"
-	"strings"
 	"sync"
 	"time"
+
+	"d2tool/github"
 )
 
+type UpdateStatus string
+
 const (
-	oldFilesPrefix = ".old."
+	UpdateStatusIdle     UpdateStatus = "idle"
+	UpdateStatusUpdating UpdateStatus = "updating"
+	UpdateStatusReady    UpdateStatus = "ready"
+	UpdateStatusError    UpdateStatus = "error"
+)
+
+type updateErrorKind string
+
+const (
+	updateErrorCheck            updateErrorKind = "check"
+	updateErrorPrepare          updateErrorKind = "prepare"
+	updateErrorRecoveryRequired updateErrorKind = "recovery-required"
 )
 
 type UpdateState struct {
@@ -25,40 +32,81 @@ type UpdateState struct {
 	CurrentAppVersion string
 	LatestAppVersion  string
 	LastCheckTime     time.Time
+	Status            UpdateStatus
+	PreparedVersion   string
+	ErrorMessage      string
+	RecoveryRequired  bool
 }
 
 type UpdateService interface {
 	GetState() UpdateState
-	CheckForUpdate() error
-	UpdateApp() error
-	GetAppDirectory() (string, error)
-	OpenAppDirectory() error
+	StateChanges() <-chan struct{}
+	CheckForUpdate(ctx context.Context) error
+	PrepareUpdate(ctx context.Context) error
+	Cleanup() error
 }
 
 type UpdateServiceImpl struct {
 	stateLock sync.RWMutex // protects reads/writes of state fields (never held during I/O)
-	opLock    sync.Mutex   // serializes CheckForUpdate / UpdateApp (held during I/O)
+	opLock    sync.Mutex   // serializes CheckForUpdate / PrepareUpdate (held during I/O)
 
 	currentAppVersion string
 	githubClient      github.Client
-	downloadClient    *http.Client
+	installer         releaseInstaller
+	now               func() time.Time
+	stateChanges      chan struct{}
 
-	latestRelease *github.Release
-	lastCheckTime time.Time
+	latestRelease   *github.Release
+	lastCheckTime   time.Time
+	status          UpdateStatus
+	preparedVersion string
+	errorMessage    string
+	errorKind       updateErrorKind
 }
 
 func NewUpdateService(
 	currentAppVersion string,
 	githubClient github.Client,
 ) *UpdateServiceImpl {
+	downloadClient := &http.Client{Timeout: 10 * time.Minute}
+	return newUpdateService(
+		currentAppVersion,
+		githubClient,
+		newArchiveInstaller(downloadClient),
+		time.Now,
+	)
+}
+
+func newUpdateService(
+	currentAppVersion string,
+	githubClient github.Client,
+	installer releaseInstaller,
+	now func() time.Time,
+) *UpdateServiceImpl {
 	return &UpdateServiceImpl{
 		currentAppVersion: currentAppVersion,
 		githubClient:      githubClient,
-		downloadClient: &http.Client{
-			Timeout: 10 * time.Minute,
-		},
-		lastCheckTime: time.UnixMilli(0),
+		installer:         installer,
+		now:               now,
+		stateChanges:      make(chan struct{}, 8),
+		status:            UpdateStatusIdle,
+		lastCheckTime:     time.UnixMilli(0),
 	}
+}
+
+func (s *UpdateServiceImpl) Cleanup() error {
+	return s.installer.Cleanup()
+}
+
+func (s *UpdateServiceImpl) notifyStateChanged() {
+	select {
+	case s.stateChanges <- struct{}{}:
+	default:
+	}
+}
+
+func (s *UpdateServiceImpl) StateChanges() <-chan struct{} {
+	return s.stateChanges
 }
 
 func (s *UpdateServiceImpl) GetState() UpdateState {
@@ -72,48 +120,121 @@ func (s *UpdateServiceImpl) GetState() UpdateState {
 		CurrentAppVersion: s.currentAppVersion,
 		LatestAppVersion:  latestVersion,
 		LastCheckTime:     s.lastCheckTime,
+		Status:            s.status,
+		PreparedVersion:   s.preparedVersion,
+		ErrorMessage:      s.errorMessage,
+		RecoveryRequired:  s.errorKind == updateErrorRecoveryRequired,
 	}
 }
 
-func (s *UpdateServiceImpl) CheckForUpdate() error {
+func (s *UpdateServiceImpl) CheckForUpdate(ctx context.Context) error {
 	s.opLock.Lock()
 	defer s.opLock.Unlock()
 
-	if err := cleanupOldFiles(); err != nil {
-		slog.Warn("Error cleaning up old files", "error", err)
-	}
-
-	release, err := s.githubClient.GetLatestRelease()
+	release, err := s.githubClient.GetLatestRelease(ctx)
 	if err != nil {
+		wrapped := fmt.Errorf("check latest release: %w", err)
+		s.setError(updateErrorCheck, wrapped)
+		return wrapped
+	}
+	if release == nil {
+		err := fmt.Errorf("check latest release: GitHub returned no release")
+		s.setError(updateErrorCheck, err)
 		return err
+	}
+	if _, err := compareVersions(release.Name, s.currentAppVersion); err != nil {
+		wrapped := fmt.Errorf("validate latest release %q: %w", release.Name, err)
+		s.setError(updateErrorCheck, wrapped)
+		return wrapped
 	}
 
 	s.stateLock.Lock()
 	s.latestRelease = release
-	s.lastCheckTime = time.Now()
+	s.lastCheckTime = s.now()
+	if s.errorKind == updateErrorCheck {
+		s.status = UpdateStatusIdle
+		s.errorKind = ""
+		s.errorMessage = ""
+	}
 	s.stateLock.Unlock()
+	s.notifyStateChanged()
 
 	return nil
 }
 
-func (s *UpdateServiceImpl) UpdateApp() error {
+func (s *UpdateServiceImpl) PrepareUpdate(ctx context.Context) error {
 	s.opLock.Lock()
 	defer s.opLock.Unlock()
 
 	s.stateLock.RLock()
+	if s.preparedVersion != "" {
+		s.stateLock.RUnlock()
+		return nil
+	}
+	if s.errorKind == updateErrorRecoveryRequired {
+		s.stateLock.RUnlock()
+		return fmt.Errorf("prepare update blocked: recovery required")
+	}
 	release := s.latestRelease
-	latestVersion := s.latestAvailableVersionLocked()
 	s.stateLock.RUnlock()
 
 	if release == nil {
-		return fmt.Errorf("no release available to update to")
+		err := fmt.Errorf("prepare update: no release is available")
+		s.setError(updateErrorPrepare, err)
+		return err
+	}
+	comparison, err := compareVersions(release.Name, s.currentAppVersion)
+	if err != nil {
+		wrapped := fmt.Errorf("prepare update version %q: %w", release.Name, err)
+		s.setError(updateErrorPrepare, wrapped)
+		return wrapped
+	}
+	if comparison <= 0 {
+		err := fmt.Errorf("prepare update: release %q is not newer than current version %q", release.Name, s.currentAppVersion)
+		s.setError(updateErrorPrepare, err)
+		return err
 	}
 
-	if !isUpdateAvailable(latestVersion, s.currentAppVersion) {
-		return fmt.Errorf("no update available for current version %s and latest version %s", s.currentAppVersion, latestVersion)
+	s.stateLock.Lock()
+	s.status = UpdateStatusUpdating
+	s.errorKind = ""
+	s.errorMessage = ""
+	s.stateLock.Unlock()
+	s.notifyStateChanged()
+
+	if err := s.installer.Install(ctx, release); err != nil {
+		wrapped := fmt.Errorf("prepare update version %q: %w", release.Name, err)
+		kind := updateErrorPrepare
+		if isRecoveryRequired(err) {
+			kind = updateErrorRecoveryRequired
+		}
+		s.setError(kind, wrapped)
+		return wrapped
 	}
 
-	return s.downloadAndUnarchiveRelease(release)
+	s.stateLock.Lock()
+	s.status = UpdateStatusReady
+	s.preparedVersion = release.Name
+	s.errorKind = ""
+	s.errorMessage = ""
+	s.stateLock.Unlock()
+	s.notifyStateChanged()
+	return nil
+}
+
+func (s *UpdateServiceImpl) setError(kind updateErrorKind, err error) {
+	changed := false
+	s.stateLock.Lock()
+	if s.status != UpdateStatusReady && !(kind == updateErrorCheck && (s.errorKind == updateErrorPrepare || s.errorKind == updateErrorRecoveryRequired)) {
+		s.status = UpdateStatusError
+		s.errorKind = kind
+		s.errorMessage = err.Error()
+		changed = true
+	}
+	s.stateLock.Unlock()
+	if changed {
+		s.notifyStateChanged()
+	}
 }
 
 func (s *UpdateServiceImpl) latestAvailableVersionLocked() string {
@@ -121,189 +242,4 @@ func (s *UpdateServiceImpl) latestAvailableVersionLocked() string {
 		return ""
 	}
 	return s.latestRelease.Name
-}
-
-func (s *UpdateServiceImpl) GetAppDirectory() (string, error) {
-	execPath, err := os.Executable()
-	if err != nil {
-		return "", fmt.Errorf("error getting executable path: %w", err)
-	}
-	return filepath.Dir(execPath), nil
-}
-
-func (s *UpdateServiceImpl) OpenAppDirectory() error {
-	dir, err := s.GetAppDirectory()
-	if err != nil {
-		return err
-	}
-	return openDirectoryInFileManager(dir)
-}
-
-func isUpdateAvailable(latestVersion string, currentVersion string) bool {
-	return latestVersion != "" && currentVersion != latestVersion
-}
-
-func cleanupOldFiles() error {
-	execPath, err := os.Executable()
-	if err != nil {
-		return fmt.Errorf("error getting executable path: %w", err)
-	}
-
-	rootDir := filepath.Dir(execPath)
-	return filepath.WalkDir(rootDir, func(path string, entry fs.DirEntry, err error) error {
-		if err != nil {
-			return err
-		}
-
-		if strings.HasPrefix(entry.Name(), oldFilesPrefix) {
-			if err := os.Remove(path); err != nil {
-				return fmt.Errorf("error removing old file: %w", err)
-			}
-		}
-
-		return nil
-	})
-}
-
-func (s *UpdateServiceImpl) downloadAndUnarchiveRelease(release *github.Release) error {
-	if err := cleanupOldFiles(); err != nil {
-		return fmt.Errorf("error cleaning up old files: %w", err)
-	}
-
-	executablePath, err := os.Executable()
-	if err != nil {
-		return fmt.Errorf("error getting executable path: %w", err)
-	}
-
-	archiveNamePrefix := constructArchiveNamePrefix()
-	var appAsset *github.ReleaseAsset
-	for _, asset := range release.Assets {
-		if strings.HasPrefix(asset.Name, archiveNamePrefix) {
-			appAsset = &asset
-			break
-		}
-	}
-
-	if appAsset == nil {
-		return fmt.Errorf("no asset with prefix %s found for release %s", archiveNamePrefix, release.TagName)
-	}
-
-	slog.Info("Downloading and unarchiving latest release version", "asset", appAsset)
-
-	request, err := http.NewRequest(http.MethodGet, appAsset.URL, nil)
-	if err != nil {
-		return fmt.Errorf("error creating request: %w", err)
-	}
-
-	request.Header.Set("Accept", "application/octet-stream")
-
-	response, err := s.downloadClient.Do(request)
-	if err != nil {
-		return fmt.Errorf("error downloading asset: %w", err)
-	}
-
-	defer response.Body.Close()
-
-	if response.StatusCode != http.StatusOK {
-		return fmt.Errorf("failed to download asset: server returned status %d: %s", response.StatusCode, response.Status)
-	}
-
-	rootDir := filepath.Dir(executablePath)
-	file, err := os.Create(filepath.Join(rootDir, appAsset.Name))
-	if err != nil {
-		return fmt.Errorf("error creating file: %w", err)
-	}
-
-	defer file.Close()
-	defer os.Remove(file.Name())
-
-	written, err := io.Copy(file, response.Body)
-
-	if err != nil {
-		return fmt.Errorf("error copying asset: %w", err)
-	}
-
-	if written != appAsset.Size {
-		return fmt.Errorf("downloaded asset size mismatch: expected %d, got %d", appAsset.Size, written)
-	}
-
-	zipReader, err := zip.NewReader(file, written)
-	if err != nil {
-		return fmt.Errorf("error creating zip reader: %w", err)
-	}
-
-	for _, f := range zipReader.File {
-		err = extractFileFromArchive(f, rootDir)
-		if err != nil {
-			return err
-		}
-	}
-
-	return nil
-}
-
-func extractFileFromArchive(
-	zipReaderFile *zip.File,
-	rootDir string,
-) error {
-	// Clean the root directory path and ensure it ends with separator
-	cleanRootDir := filepath.Clean(rootDir) + string(os.PathSeparator)
-
-	// Join and clean the target path
-	filePath := filepath.Clean(filepath.Join(rootDir, zipReaderFile.Name))
-
-	// Validate: resolved path must be inside rootDir (prevents path traversal attacks)
-	if !strings.HasPrefix(filePath, cleanRootDir) {
-		return fmt.Errorf("illegal file path in archive (path traversal attempt): %s", zipReaderFile.Name)
-	}
-
-	if zipReaderFile.FileInfo().IsDir() {
-		if err := os.Mkdir(filePath, 0755); err != nil {
-			return fmt.Errorf("error creating directory: %w", err)
-		}
-		return nil
-	}
-
-	if err := os.MkdirAll(filepath.Dir(filePath), 0755); err != nil {
-		return fmt.Errorf("error creating parent directories: %w", err)
-	}
-
-	_, err := os.Stat(filePath)
-	if err == nil {
-		parentDir := filepath.Dir(filePath)
-		fileName := filepath.Base(filePath)
-		err = os.Rename(filePath, filepath.Join(parentDir, oldFilesPrefix+fileName))
-		if err != nil {
-			return fmt.Errorf("error renaming file: %w", err)
-		}
-	} else {
-		if !os.IsNotExist(err) {
-			return fmt.Errorf("error getting file info: %w", err)
-		}
-	}
-
-	dstFile, err := os.OpenFile(filePath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, zipReaderFile.Mode())
-	if err != nil {
-		return fmt.Errorf("error opening file: %w", err)
-	}
-
-	defer dstFile.Close()
-
-	fileInArchive, err := zipReaderFile.Open()
-	if err != nil {
-		return fmt.Errorf("error opening file in archive: %w", err)
-	}
-
-	defer fileInArchive.Close()
-
-	_, err = io.Copy(dstFile, fileInArchive)
-	if err != nil {
-		return fmt.Errorf("error copying file: %w", err)
-	}
-
-	return nil
-}
-
-func constructArchiveNamePrefix() string {
-	return fmt.Sprintf("d2tool-%s-%s", runtime.GOOS, runtime.GOARCH)
 }

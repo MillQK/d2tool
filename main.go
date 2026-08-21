@@ -18,6 +18,7 @@ import (
 	"log/slog"
 	"os"
 	"path/filepath"
+	"sync"
 	"time"
 
 	"github.com/wailsapp/wails/v2"
@@ -62,13 +63,21 @@ func main() {
 
 	heroesProvider := providers.NewD2PTHeroesProvider(nil, "", 10*time.Minute)
 
-	// Create an instance of the app structure
-	app := NewApp(
+	automaticUpdater := newAutomaticAppUpdater(
 		appConfig,
 		update.NewUpdateService(
 			wailsProjectConfig.Info.ProductVersion,
 			github.NewHttpClient(""),
 		),
+		time.Hour,
+		nil,
+		emitAppUpdateChanged,
+	)
+
+	// Create an instance of the app structure
+	app := NewApp(
+		appConfig,
+		automaticUpdater,
 		heroesLayout.NewHeroesLayoutService(appConfig, steamService, heroesProvider),
 		startup.NewStartupService([]string{fmt.Sprintf("-%s", minimizedFlagName)}),
 		steamService,
@@ -156,25 +165,27 @@ func setupLogger() {
 
 // App struct
 type App struct {
-	ctx                 context.Context
-	config              *config.Config
-	updateService       update.UpdateService
-	heroesLayoutService heroesLayout.HeroesLayoutService
-	startupService      startup.StartupService
-	steamService        *steam.SteamService
+	ctx                   context.Context
+	cancelBackgroundTasks context.CancelFunc
+	shutdownTasks         sync.WaitGroup
+	config                *config.Config
+	appUpdater            appUpdater
+	heroesLayoutService   heroesLayout.HeroesLayoutService
+	startupService        startup.StartupService
+	steamService          *steam.SteamService
 }
 
 // NewApp creates a new App application struct
 func NewApp(
 	config *config.Config,
-	updateService update.UpdateService,
+	updater appUpdater,
 	heroesLayoutService heroesLayout.HeroesLayoutService,
 	startupService startup.StartupService,
 	steamService *steam.SteamService,
 ) *App {
 	return &App{
 		config:              config,
-		updateService:       updateService,
+		appUpdater:          updater,
 		heroesLayoutService: heroesLayoutService,
 		startupService:      startupService,
 		steamService:        steamService,
@@ -183,12 +194,13 @@ func NewApp(
 
 // startup is called when the app starts
 func (a *App) startup(ctx context.Context) {
-	a.ctx = ctx
+	a.ctx, a.cancelBackgroundTasks = context.WithCancel(ctx)
 	a.startBackgroundTasks()
 }
 
 // shutdown is called when the app is closing
 func (a *App) shutdown(ctx context.Context) {
+	a.stopBackgroundTasks()
 	if err := a.config.SaveNow(); err != nil {
 		slog.Error("Failed to save config on shutdown", "error", err)
 	}

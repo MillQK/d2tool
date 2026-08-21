@@ -6,10 +6,6 @@ import {steam} from '../models';
 
 export function AddHeroesLayoutFile(arg1:string):Promise<void>;
 
-export function CheckForAppUpdate():Promise<void>;
-
-export function DownloadAppUpdate():Promise<void>;
-
 export function GetAppUpdateState():Promise<main.AppUpdateState>;
 
 export function GetD2PTConfig():Promise<config.D2PTConfig>;
@@ -30,8 +26,6 @@ export function IsStartupSupported():Promise<boolean>;
 
 export function IsSteamPathValid():Promise<boolean>;
 
-export function OpenAppDirectory():Promise<void>;
-
 export function OpenDirectoryDialog():Promise<string>;
 
 export function OpenFileDialog():Promise<string>;
@@ -41,6 +35,8 @@ export function RemoveHeroesLayoutFile(arg1:string):Promise<void>;
 export function RescanSteamAccounts():Promise<void>;
 
 export function SetAutoEnableNewAccounts(arg1:boolean):Promise<void>;
+
+export function SetAutoUpdateEnabled(arg1:boolean):Promise<void>;
 
 export function SetD2PTPeriod(arg1:string):Promise<void>;
 

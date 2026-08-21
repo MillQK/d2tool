@@ -6,14 +6,6 @@ export function AddHeroesLayoutFile(arg1) {
   return window['go']['main']['App']['AddHeroesLayoutFile'](arg1);
 }
 
-export function CheckForAppUpdate() {
-  return window['go']['main']['App']['CheckForAppUpdate']();
-}
-
-export function DownloadAppUpdate() {
-  return window['go']['main']['App']['DownloadAppUpdate']();
-}
-
 export function GetAppUpdateState() {
   return window['go']['main']['App']['GetAppUpdateState']();
 }
@@ -54,10 +46,6 @@ export function IsSteamPathValid() {
   return window['go']['main']['App']['IsSteamPathValid']();
 }
 
-export function OpenAppDirectory() {
-  return window['go']['main']['App']['OpenAppDirectory']();
-}
-
 export function OpenDirectoryDialog() {
   return window['go']['main']['App']['OpenDirectoryDialog']();
 }
@@ -76,6 +64,10 @@ export function RescanSteamAccounts() {
 
 export function SetAutoEnableNewAccounts(arg1) {
   return window['go']['main']['App']['SetAutoEnableNewAccounts'](arg1);
+}
+
+export function SetAutoUpdateEnabled(arg1) {
+  return window['go']['main']['App']['SetAutoUpdateEnabled'](arg1);
 }
 
 export function SetD2PTPeriod(arg1) {

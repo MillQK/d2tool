@@ -104,9 +104,11 @@ export namespace main {
 	export class AppUpdateState {
 	    currentVersion: string;
 	    latestVersion: string;
-	    lastCheckTimeMillis: number;
 	    updateAvailable: boolean;
-	    appDirectory: string;
+	    autoUpdateEnabled: boolean;
+	    status: string;
+	    preparedVersion: string;
+	    errorMessage: string;
 	
 	    static createFrom(source: any = {}) {
 	        return new AppUpdateState(source);
@@ -116,9 +118,11 @@ export namespace main {
 	        if ('string' === typeof source) source = JSON.parse(source);
 	        this.currentVersion = source["currentVersion"];
 	        this.latestVersion = source["latestVersion"];
-	        this.lastCheckTimeMillis = source["lastCheckTimeMillis"];
 	        this.updateAvailable = source["updateAvailable"];
-	        this.appDirectory = source["appDirectory"];
+	        this.autoUpdateEnabled = source["autoUpdateEnabled"];
+	        this.status = source["status"];
+	        this.preparedVersion = source["preparedVersion"];
+	        this.errorMessage = source["errorMessage"];
 	    }
 	}
 
