@@ -968,3 +968,17 @@ func TestConfig_FileConfig_NoAttributes(t *testing.T) {
 		t.Error("FileConfig JSON should not contain 'attributes' key")
 	}
 }
+
+func TestLoadConfigD2PTPeriod(t *testing.T) {
+	for _, tt := range []struct{ saved, want string }{
+		{"auto", "auto"}, {"patch", "patch"}, {"8", "8"}, {"", "8"}, {"unknown", "8"},
+	} {
+		path := filepath.Join(t.TempDir(), configFileName)
+		if err := os.WriteFile(path, []byte(`{"d2pt":{"period":"`+tt.saved+`"}}`), 0600); err != nil {
+			t.Fatal(err)
+		}
+		if got := loadConfig(path).GetD2PTConfig().Period; got != tt.want {
+			t.Errorf("saved period %q: loaded %q, want %q", tt.saved, got, tt.want)
+		}
+	}
+}

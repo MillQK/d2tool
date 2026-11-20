@@ -60,38 +60,25 @@ func (s *HeroesLayoutServiceImpl) UpdateHeroesLayout() error {
 		return fmt.Sprintf("%s%s", positionPrefix, position)
 	})
 
-	d2ptConfig := s.config.GetD2PTConfig()
-	period := d2ptConfig.Period
+	period := s.config.GetD2PTConfig().Period
 	heroesPerRow := s.config.GetHeroesPerRow()
 
-	positionToAggregatedHeroes := make(map[string][]providers.Hero)
-
-	var positionsFetchErr error
-	for _, position := range positions {
-		heroes, err := s.heroesProvider.FetchHeroes(position, period)
-		if err != nil {
-			slog.Error("Error fetching heroes for position", "position", position, "error", err)
-			positionsFetchErr = fmt.Errorf("error fetching heroes for position %s: %w", position, err)
-			break
-		}
-		positionToAggregatedHeroes[position] = providers.AggregateHeroesByID(heroes)
-	}
-
+	positionStats, fetchErr := s.heroesProvider.FetchPositions(positions, period)
 	now := time.Now()
-
-	if positionsFetchErr != nil {
+	if fetchErr != nil {
+		slog.Error("Error fetching hero statistics", "error", fetchErr)
 		for steamId64 := range steamAccountPaths {
-			s.steamService.UpdateAccountStatus(steamId64, now.UnixMilli(), positionsFetchErr.Error())
+			s.steamService.UpdateAccountStatus(steamId64, now.UnixMilli(), fetchErr.Error())
 		}
-		s.config.UpdateHeroesLayoutFileStatus(enabledFilePaths, now.UnixMilli(), positionsFetchErr.Error())
-		return positionsFetchErr
+		s.config.UpdateHeroesLayoutFileStatus(enabledFilePaths, now.UnixMilli(), fetchErr.Error())
+		return fetchErr
 	}
 
 	for _, configFile := range allPaths {
 		slog.Info("Processing config file", "path", configFile)
 
 		errorMsg := ""
-		if err := processHeroesLayoutConfig(configFile, positions, positionToAggregatedHeroes, heroesPerRow); err != nil {
+		if err := processHeroesLayoutConfig(configFile, positions, positionStats, heroesPerRow); err != nil {
 			slog.Error("Error processing config file", "path", configFile, "error", err)
 			errorMsg = fmt.Sprintf("error processing config file: %v", err)
 		} else {

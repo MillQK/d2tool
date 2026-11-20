@@ -11,14 +11,14 @@ import (
 
 func TestGenerateHeroesLayoutConfigs_CreatesD2TPrefix(t *testing.T) {
 	positions := []string{"1", "2"}
-	positionToHeroes := map[string][]providers.Hero{
-		"1": {
-			{HeroID: 1, HeroName: "Anti-Mage", D2PTRating: 100, Matches: 500, Wins: 275},
-			{HeroID: 2, HeroName: "Juggernaut", D2PTRating: 90, Matches: 400, Wins: 200},
-		},
-		"2": {
-			{HeroID: 10, HeroName: "Shadow Fiend", D2PTRating: 110, Matches: 600, Wins: 330},
-		},
+	positionToHeroes := map[string]providers.PositionStats{
+		"1": {Heroes: []providers.Hero{
+			{HeroID: 1, HeroName: "Anti-Mage", Matches: 500, Wins: 275},
+			{HeroID: 2, HeroName: "Juggernaut", Matches: 400, Wins: 200},
+		}},
+		"2": {Heroes: []providers.Hero{
+			{HeroID: 10, HeroName: "Shadow Fiend", Matches: 600, Wins: 330},
+		}},
 	}
 
 	configs := generateHeroesLayoutConfigs(d2tPrefix, positions, positionToHeroes, 15)
@@ -35,11 +35,11 @@ func TestGenerateHeroesLayoutConfigs_CreatesD2TPrefix(t *testing.T) {
 
 func TestGenerateHeroesLayoutConfigs_CreatesCategories(t *testing.T) {
 	positions := []string{"1"}
-	positionToHeroes := map[string][]providers.Hero{
-		"1": {
-			{HeroID: 1, D2PTRating: 100, Matches: 500, Wins: 250},
-			{HeroID: 2, D2PTRating: 90, Matches: 400, Wins: 200},
-		},
+	positionToHeroes := map[string]providers.PositionStats{
+		"1": {Heroes: []providers.Hero{
+			{HeroID: 1, Matches: 500, Wins: 250},
+			{HeroID: 2, Matches: 400, Wins: 200},
+		}},
 	}
 
 	configs := generateHeroesLayoutConfigs(d2tPrefix, positions, positionToHeroes, 15)
@@ -70,10 +70,10 @@ func TestGenerateHeroesLayoutConfigs_CreatesCategories(t *testing.T) {
 
 func TestGenerateHeroesLayoutConfigs_CalculatesWinrate(t *testing.T) {
 	positions := []string{"1"}
-	positionToHeroes := map[string][]providers.Hero{
-		"1": {
-			{HeroID: 1, D2PTRating: 100, Matches: 100, Wins: 55}, // 55% winrate
-		},
+	positionToHeroes := map[string]providers.PositionStats{
+		"1": {Heroes: []providers.Hero{
+			{HeroID: 1, Matches: 100, Wins: 55}, // 55% winrate
+		}},
 	}
 
 	configs := generateHeroesLayoutConfigs(d2tPrefix, positions, positionToHeroes, 15)
@@ -109,8 +109,8 @@ func TestProcessHeroesLayoutConfig_PreservesUserConfigs(t *testing.T) {
 
 	// Process with new heroes data
 	positions := []string{"1"}
-	positionToHeroes := map[string][]providers.Hero{
-		"1": {{HeroID: 1, D2PTRating: 100, Matches: 100, Wins: 50}},
+	positionToHeroes := map[string]providers.PositionStats{
+		"1": {Heroes: []providers.Hero{{HeroID: 1, Matches: 100, Wins: 50}}},
 	}
 
 	err := processHeroesLayoutConfig(configPath, positions, positionToHeroes, 15)
@@ -153,8 +153,8 @@ func TestProcessHeroesLayoutConfig_RemovesOldD2TConfigs(t *testing.T) {
 
 	// Process with new heroes data
 	positions := []string{"1"}
-	positionToHeroes := map[string][]providers.Hero{
-		"1": {{HeroID: 1, D2PTRating: 100, Matches: 100, Wins: 50}},
+	positionToHeroes := map[string]providers.PositionStats{
+		"1": {Heroes: []providers.Hero{{HeroID: 1, Matches: 100, Wins: 50}}},
 	}
 
 	err := processHeroesLayoutConfig(configPath, positions, positionToHeroes, 15)
@@ -191,8 +191,8 @@ func TestProcessHeroesLayoutConfig_InvalidJSON(t *testing.T) {
 	os.WriteFile(configPath, []byte("not valid json"), 0644)
 
 	positions := []string{"1"}
-	positionToHeroes := map[string][]providers.Hero{
-		"1": {{HeroID: 1}},
+	positionToHeroes := map[string]providers.PositionStats{
+		"1": {Heroes: []providers.Hero{{HeroID: 1}}},
 	}
 
 	err := processHeroesLayoutConfig(configPath, positions, positionToHeroes, 15)
@@ -203,8 +203,8 @@ func TestProcessHeroesLayoutConfig_InvalidJSON(t *testing.T) {
 
 func TestProcessHeroesLayoutConfig_FileNotFound(t *testing.T) {
 	positions := []string{"1"}
-	positionToHeroes := map[string][]providers.Hero{
-		"1": {{HeroID: 1}},
+	positionToHeroes := map[string]providers.PositionStats{
+		"1": {Heroes: []providers.Hero{{HeroID: 1}}},
 	}
 
 	err := processHeroesLayoutConfig("/nonexistent/path/config.json", positions, positionToHeroes, 15)
@@ -225,8 +225,8 @@ func TestProcessHeroesLayoutConfig_PreservesVersion(t *testing.T) {
 	os.WriteFile(configPath, data, 0644)
 
 	positions := []string{"1"}
-	positionToHeroes := map[string][]providers.Hero{
-		"1": {{HeroID: 1, D2PTRating: 100, Matches: 100, Wins: 50}},
+	positionToHeroes := map[string]providers.PositionStats{
+		"1": {Heroes: []providers.Hero{{HeroID: 1, Matches: 100, Wins: 50}}},
 	}
 
 	err := processHeroesLayoutConfig(configPath, positions, positionToHeroes, 15)
@@ -245,7 +245,7 @@ func TestProcessHeroesLayoutConfig_PreservesVersion(t *testing.T) {
 
 func TestGenerateHeroesLayoutConfigs_EmptyPositions(t *testing.T) {
 	positions := []string{}
-	positionToHeroes := map[string][]providers.Hero{}
+	positionToHeroes := map[string]providers.PositionStats{}
 
 	configs := generateHeroesLayoutConfigs(d2tPrefix, positions, positionToHeroes, 15)
 
@@ -261,11 +261,9 @@ func TestGenerateHeroesLayoutConfigs_EmptyPositions(t *testing.T) {
 
 func TestGenerateHeroesLayoutConfigs_MultiplePositions(t *testing.T) {
 	positions := []string{"1", "2", "3", "4", "5"}
-	positionToHeroes := map[string][]providers.Hero{}
+	positionToHeroes := map[string]providers.PositionStats{}
 	for _, pos := range positions {
-		positionToHeroes[pos] = []providers.Hero{
-			{HeroID: 1, D2PTRating: 100, Matches: 100, Wins: 50},
-		}
+		positionToHeroes[pos] = providers.PositionStats{Heroes: []providers.Hero{{HeroID: 1, Matches: 100, Wins: 50}}}
 	}
 
 	configs := generateHeroesLayoutConfigs(d2tPrefix, positions, positionToHeroes, 15)
