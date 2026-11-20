@@ -40,9 +40,15 @@ type HeroesLayoutConfig struct {
 	HeroesPerRow int              `json:"heroesPerRow"`
 }
 
+const (
+	D2PTPeriod8Days = "8"
+	D2PTPeriodPatch = "patch"
+	D2PTPeriodAuto  = "auto"
+)
+
 // D2PTConfig contains Dota2ProTracker provider settings
 type D2PTConfig struct {
-	Period string `json:"period"` // "8" for last 8 days, "patch" for current patch
+	Period string `json:"period"`
 }
 
 // SteamConfig contains Steam-related settings
@@ -66,7 +72,7 @@ type AppUpdateConfig struct {
 
 func defaultD2PTConfig() D2PTConfig {
 	return D2PTConfig{
-		Period: "8", // Default to last 8 days
+		Period: D2PTPeriod8Days,
 	}
 }
 
@@ -174,8 +180,10 @@ func (c *Config) applyMigrationsAndDefaults(data []byte) {
 	}
 
 	// Ensure D2PT config has valid period
-	if c.D2PT.Period != "8" && c.D2PT.Period != "patch" {
-		c.D2PT.Period = "8"
+	switch c.D2PT.Period {
+	case D2PTPeriod8Days, D2PTPeriodPatch, D2PTPeriodAuto:
+	default:
+		c.D2PT.Period = D2PTPeriod8Days
 	}
 
 	// Ensure HeroesPerRow is within valid range

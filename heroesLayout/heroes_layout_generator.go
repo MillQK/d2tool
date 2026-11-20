@@ -42,7 +42,7 @@ type heroGridPosition struct {
 }
 
 // generateHeroesLayoutConfigs generates new hero grid configs for each role
-func generateHeroesLayoutConfigs(configNamePrefix string, positions []string, positionToHero map[string][]providers.Hero, heroesPerRow int) []heroGridCategory {
+func generateHeroesLayoutConfigs(configNamePrefix string, positions []string, positionStats map[string]providers.PositionStats, heroesPerRow int) []heroGridCategory {
 	var configs []heroGridCategory
 
 	// Create a single merged config
@@ -143,10 +143,10 @@ func generateHeroesLayoutConfigs(configNamePrefix string, positions []string, po
 
 	// Generate categories for each position in the specified order
 	for _, position := range positions {
-		heroes := positionToHero[position]
+		stats := positionStats[position]
 
 		// Get top 10 heroes by rating
-		topRated := providers.GetTopHeroesByRating(heroes, 10)
+		topRated := stats.TopRated(10)
 
 		// Add list header for top rated heroes
 		generateCategoryFunc(
@@ -155,7 +155,7 @@ func generateHeroesLayoutConfigs(configNamePrefix string, positions []string, po
 		)
 
 		// Get top 30 heroes by matches
-		topMatches := providers.GetHeroesSortedByMatches(heroes, 30)
+		topMatches := stats.MostPlayed(30)
 
 		// Add list header for top matches heroes
 		generateCategoryFunc(
@@ -169,7 +169,7 @@ func generateHeroesLayoutConfigs(configNamePrefix string, positions []string, po
 }
 
 // processHeroesLayoutConfig processes a hero_grid_config.json file
-func processHeroesLayoutConfig(configPath string, positions []string, positionToAggregatedHeroes map[string][]providers.Hero, heroesPerRow int) error {
+func processHeroesLayoutConfig(configPath string, positions []string, positionStats map[string]providers.PositionStats, heroesPerRow int) error {
 	// Read the existing config file
 	data, err := os.ReadFile(configPath)
 	if err != nil {
@@ -195,7 +195,7 @@ func processHeroesLayoutConfig(configPath string, positions []string, positionTo
 	config.Configs = filteredConfigs
 
 	// Generate hero grid config
-	newConfigs := generateHeroesLayoutConfigs(d2tPrefix, positions, positionToAggregatedHeroes, heroesPerRow)
+	newConfigs := generateHeroesLayoutConfigs(d2tPrefix, positions, positionStats, heroesPerRow)
 
 	config.Configs = append(config.Configs, newConfigs...)
 

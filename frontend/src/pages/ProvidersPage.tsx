@@ -6,6 +6,7 @@ import { useGridAutoUpdate } from '../components/GridAutoUpdateProvider'
 
 // Period options for D2PT provider
 const periodOptions = [
+  { value: 'auto', label: 'Auto' },
   { value: '8', label: 'Last 8 days' },
   { value: 'patch', label: 'Current patch' },
 ]
@@ -103,11 +104,12 @@ function ProvidersPage() {
               <div className="setting-info">
                 <div className="setting-label">Period</div>
                 <div className="setting-description">
-                  Time period for hero statistics data
+                  Auto uses the current patch for its first 8 days, then the last 8 days.
                 </div>
               </div>
               <select
                 className="select"
+                aria-label="Period"
                 value={d2ptConfig?.period || '8'}
                 onChange={(e) => handlePeriodChange(e.target.value)}
               >
